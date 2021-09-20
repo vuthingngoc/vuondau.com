@@ -1,0 +1,48 @@
+.nav-link {
+  display: block;
+  width: fit-content;
+  color: rgb(0, 0, 0);
+  font-size: 1.5rem;
+  padding: 3px 16px 3px 16px;
+}
+
+.nav-link:hover {
+  color: white;
+}
+
+.dropdown-menu {
+  padding: 1em;
+}
+
+.dropdown-item:hover {
+  outline: none;
+  box-shadow: black;
+  background: #2ed12e;
+  text-decoration: none;
+}
+
+.dropdown-item p {
+  color: black;
+  font-size: 1.2rem;
+}
+
+.dropdown-item p:hover {
+  color: white;
+}
+
+.dropdown-item {
+  height: 2.5em;
+  padding-left: 1em;
+}
+
+.dropdown-header {
+  font-weight: 600;
+  padding-left: 0em;
+}
+
+@media only screen and (min-width: 600px) {
+  .eventsNav {
+    width: 16em;
+    padding-bottom: 1em;
+  }
+}
