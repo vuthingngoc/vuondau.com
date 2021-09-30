@@ -8,7 +8,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/styles.scss';
 
-import vuondauLogo from '../assets/image/vuondauLogo.png';
+import vuondauLogo from '../assets/img/vuondauLogo.png';
 
 const Top = styled.div`
   background-color: #2ed12e;
