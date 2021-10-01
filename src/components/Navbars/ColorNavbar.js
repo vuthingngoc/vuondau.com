@@ -60,7 +60,7 @@ function ColorNavbar() {
               Vuon Dau
             </NavbarBrand>
             <UncontrolledTooltip placement="bottom" target="navbar-brand">
-              Vuon Dau
+              Vuondau.com
             </UncontrolledTooltip>
             <button
               className="navbar-toggler"
@@ -132,6 +132,16 @@ function ColorNavbar() {
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
+              <Nav className="ml-auto" navbar>
+                <Button className="btn-neutral" color="link" href="/" onClick={(e) => e.preventDefault()}>
+                  News
+                </Button>
+              </Nav>
+              <Nav className="ml-auto" navbar>
+                <Button className="btn-neutral" color="link" href="/" onClick={(e) => e.preventDefault()}>
+                  Contact
+                </Button>
+              </Nav>
               <NavItem>
                 <Button className="btn-round" color="danger" href="/">
                   <i className="nc-icon nc-cart-simple" /> Your Cart

@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 
 //page
 import Homepage from './pages/HomePage';
-// import Header from './components/index';
 import Index from 'pages/Index';
 
 function App() {
@@ -11,7 +10,7 @@ function App() {
     <BrowserRouter>
       <Switch>
         <Route exact path="/" render={(props) => <Homepage {...props} />} />
-        <Route exact path="/index" render={(props) => <Index {...props} />} />
+        <Route exact path="/components" render={(props) => <Index {...props} />} />
         <Redirect to="/" />
       </Switch>
     </BrowserRouter>
