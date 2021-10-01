@@ -132,13 +132,17 @@ function ColorNavbar() {
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
-              <NavItem>
-                <Button className="btn-neutral" color="link" href="/" onClick={(e) => e.preventDefault()}>
+              <Nav className="ml-auto" navbar>
+                <Button className="btn-info" color="link" href="/" onClick={(e) => e.preventDefault()}>
                   News
                 </Button>
-                <Button className="btn-neutral" color="link" href="/" onClick={(e) => e.preventDefault()}>
+              </Nav>
+              <Nav className="ml-auto" navbar>
+                <Button className="btn-info" color="link" href="/" onClick={(e) => e.preventDefault()}>
                   Contact
                 </Button>
+              </Nav>
+              <NavItem>
                 <Button className="btn-round" color="danger" href="/">
                   <i className="nc-icon nc-cart-simple" /> Your Cart
                 </Button>
