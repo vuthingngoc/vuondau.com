@@ -5,7 +5,7 @@ import { Button, Container, Carousel, CarouselItem, CarouselIndicators, Col, Row
 //Fake data
 const items = [
   {
-    src: 'url(' + require('assets/img/sections/section-header-1.jpg').default + ')',
+    src: 'url(' + require('assets/img/sections/HeaderSlider-1.jpg').default + ')',
     content: (
       <Container>
         <Row>
@@ -17,7 +17,7 @@ const items = [
             </h5>
             <br />
             <div className="buttons">
-              <Button className="btn-round" color="danger" href="#pablo" onClick={(e) => e.preventDefault()} size="lg">
+              <Button className="btn-round" color="danger" href="/" onClick={(e) => e.preventDefault()} size="lg">
                 Xem thêm
               </Button>
             </div>
