@@ -17,10 +17,7 @@ function ProductPageHeader() {
       <div
         className="page-header page-header-xs"
         style={{
-          backgroundImage:
-            "url(" +
-            require("assets/img/sections/clark-street-mercantile.jpg").default +
-            ")",
+          backgroundImage: 'url(' + require('assets/img/sections/ProductPageHeader.jpg').default + ')',
         }}
       >
         <div className="filter" />
