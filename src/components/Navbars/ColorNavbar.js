@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 // nodejs library that concatenates strings
 import classnames from 'classnames';
 // JavaScript plugin that hides or shows a component based on your scroll
@@ -122,13 +122,13 @@ function ColorNavbar() {
                   Account
                 </DropdownToggle>
                 <DropdownMenu className="dropdown-danger" right>
-                  <DropdownItem to="/about-us" tag={Link}>
+                  <DropdownItem to="/login" tag={NavLink}>
                     <i className="nc-icon nc-circle-10" />
-                    Sign In
+                    Login
                   </DropdownItem>
-                  <DropdownItem to="/add-product" tag={Link}>
+                  <DropdownItem to="/register" tag={NavLink}>
                     <i className="nc-icon nc-badge" />
-                    Sign Up
+                    register
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
