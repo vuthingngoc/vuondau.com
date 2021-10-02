@@ -15,37 +15,24 @@ function FooterBlack() {
             <nav className="footer-nav">
               <ul>
                 <li>
-                  <a
-                    href="https://www.creative-tim.com?ref=pkpr-black-footer"
-                    target="_blank"
-                    className="mr-1"
-                  >
-                    Creative Tim
+                  <a href="/" className="mr-1">
+                    TRANG CHỦ
                   </a>
                 </li>
                 <li>
-                  <a
-                    href="http://blog.creative-tim.com/?ref=pkpr-black-footer"
-                    target="_blank"
-                    className="mr-1"
-                  >
-                    Blog
+                  <a href="/" className="mr-1">
+                    TIN TỨC
                   </a>
                 </li>
                 <li>
-                  <a
-                    href="https://www.creative-tim.com/license?ref=pkpr-black-footer"
-                    target="_blank"
-                  >
-                    Licenses
-                  </a>
+                  <a href="/">LIÊN HỆ</a>
                 </li>
               </ul>
             </nav>
             <div className="credits ml-auto">
               <span className="copyright">
                 © {new Date().getFullYear()}
-                , made with <i className="fa fa-heart heart" /> by Creative Tim
+                , made with <i className="fa fa-heart heart" /> by vuondau
               </span>
             </div>
           </Row>
