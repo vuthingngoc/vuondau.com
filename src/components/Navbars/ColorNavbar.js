@@ -106,13 +106,13 @@ function ColorNavbar() {
                   Farms
                 </DropdownToggle>
                 <DropdownMenu className="dropdown-danger" right>
-                  <DropdownItem to="/" tag={Link}>
+                  <DropdownItem to="/farms" tag={NavLink}>
                     Miền Nam
                   </DropdownItem>
-                  <DropdownItem to="/" tag={Link}>
+                  <DropdownItem to="/farms" tag={NavLink}>
                     Miền Trung
                   </DropdownItem>
-                  <DropdownItem to="/" tag={Link}>
+                  <DropdownItem to="/farms" tag={NavLink}>
                     Miền Bắc
                   </DropdownItem>
                 </DropdownMenu>
