@@ -56,11 +56,11 @@ function ColorNavbar() {
       <Navbar className={classnames('fixed-top', navbarColor)} expand="lg" id="navbar-main">
         <Container>
           <div className="navbar-translate">
-            <NavbarBrand id="navbar-brand" to="/index" tag={Link}>
-              Vuon Dau
+            <NavbarBrand id="navbar-brand" to="/home" tag={Link}>
+              VuonDau
             </NavbarBrand>
             <UncontrolledTooltip placement="bottom" target="navbar-brand">
-              Vuondau.com
+              <img alt="..." src={require('assets/img/iconVuondau.png').default} width="100px" height="100px" />
             </UncontrolledTooltip>
             <button
               className="navbar-toggler"
