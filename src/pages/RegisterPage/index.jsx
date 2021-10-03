@@ -72,7 +72,7 @@ export default function RegisterPage() {
             </Row>
             <div className="demo-footer text-center">
               <h6>
-                © {new Date().getFullYear()}, made with <i className="fa fa-heart heart" /> by vuondau
+                © {new Date().getFullYear()}, from vuondau with <i className="fa fa-heart heart" />
               </h6>
             </div>
           </Container>

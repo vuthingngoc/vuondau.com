@@ -53,7 +53,7 @@ export default function LoginPage() {
             </Row>
             <div className="demo-footer text-center">
               <h6>
-                © {new Date().getFullYear()}, made with <i className="fa fa-heart heart" /> by vuondau
+                © {new Date().getFullYear()}, from vuonda with <i className="fa fa-heart heart" />
               </h6>
             </div>
           </Container>
