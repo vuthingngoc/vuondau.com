@@ -1,19 +1,6 @@
 import React from 'react';
-import Select from 'react-select';
-import {
-  Button,
-  Card,
-  FormGroup,
-  Container,
-  Row,
-  Col,
-  Carousel,
-  CarouselItem,
-  CarouselIndicators,
-  CardBody,
-  CardFooter,
-  CardTitle,
-} from 'reactstrap';
+import { ButtonGroup } from 'react-bootstrap';
+import { Button, Card, Container, Row, Col, Carousel, CarouselItem, CarouselIndicators, CardBody, CardFooter, CardTitle } from 'reactstrap';
 
 // carousel items
 const dataProduct = {
@@ -70,15 +57,7 @@ const Items = [
 ];
 
 export default function BodyProductDetail() {
-  // react-select states
-  const [weightSelect, setWeightSelect] = React.useState({
-    value: '1',
-    label: '1 kg ',
-  });
-  const [typeSelect, setTypeSelect] = React.useState({
-    value: '1',
-    label: 'To ',
-  });
+  const [weight, setWeight] = React.useState(1);
   // carousel states and functions
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [animating, setAnimating] = React.useState(false);
@@ -101,6 +80,16 @@ export default function BodyProductDetail() {
   const goToIndex = (newIndex) => {
     if (animating) return;
     setActiveIndex(newIndex);
+  };
+
+  const increateWeight = () => {
+    setWeight(weight + 1);
+  };
+
+  const decreaseWeight = () => {
+    if (weight > 1) {
+      setWeight(weight - 1);
+    }
   };
 
   document.documentElement.classList.remove('nav-open');
@@ -184,42 +173,25 @@ export default function BodyProductDetail() {
                 <hr />
                 <p>{dataProduct.description}</p>
                 <Row>
+                  <Col md="8" sm="8">
+                    <label>Select weight:</label>
+                  </Col>
+                </Row>
+                <Row>
                   <Col md="6" sm="6">
-                    <label>Select weight</label>
-                    <FormGroup>
-                      <Select
-                        className="react-select react-select-default"
-                        classNamePrefix="react-select"
-                        name="weightSelect"
-                        value={weightSelect}
-                        onChange={(value) => setWeightSelect(value)}
-                        options={[
-                          { value: '1', label: '1 kg ' },
-                          { value: '2', label: '2 kg' },
-                          { value: '3', label: '5 kg' },
-                          { value: '3', label: '10 kg' },
-                        ]}
-                        placeholder="WEIGHT"
-                      />
-                    </FormGroup>
+                    <h5>
+                      {weight} {' kg '}
+                    </h5>
                   </Col>
                   <Col md="6" sm="6">
-                    <label>Select type</label>
-                    <FormGroup>
-                      <Select
-                        className="react-select react-select-default"
-                        classNamePrefix="react-select"
-                        name="typeSelect"
-                        value={typeSelect}
-                        onChange={(value) => setTypeSelect(value)}
-                        options={[
-                          { value: '1', label: 'Cà Chua To ' },
-                          { value: '2', label: 'Cà Chua Bi' },
-                          { value: '3', label: 'Cà Chua Thân Gỗ' },
-                        ]}
-                        placeholder="SIZE"
-                      />
-                    </FormGroup>
+                    <ButtonGroup>
+                      <Button className="btn-border btn-round" onClick={decreaseWeight} color="default" size="sm">
+                        -
+                      </Button>
+                      <Button className="btn-border btn-round" onClick={increateWeight} color="default" size="sm">
+                        +
+                      </Button>
+                    </ButtonGroup>
                   </Col>
                 </Row>
                 <hr />
