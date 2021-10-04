@@ -20,8 +20,8 @@ function App() {
         <Route exact path="/" render={(props) => <Homepage {...props} />} />
         <Route exact path="/home" render={(props) => <Homepage {...props} />} />
         <Route path="/product/productdetail" render={(props) => <ProductDetail {...props} />} />
-        <Route path="/farms" render={(props) => <FarmsPage {...props} />} />
-        <Route path="/gardendetail" render={(props) => <GardenDetail {...props} />} />
+        <Route exact path="/farms" render={(props) => <FarmsPage {...props} />} />
+        <Route path="/farms/farmdetail" render={(props) => <GardenDetail {...props} />} />
         <Route exact path="/components" render={(props) => <Index {...props} />} />
         <Route exact path="/login" render={(props) => <LoginPage {...props} />} />
         <Route exact path="/register" render={(props) => <RegisterPage {...props} />} />
