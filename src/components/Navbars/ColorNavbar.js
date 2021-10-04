@@ -106,13 +106,13 @@ function ColorNavbar() {
                   Farms
                 </DropdownToggle>
                 <DropdownMenu className="dropdown-danger" right>
-                  <DropdownItem to="/" tag={Link}>
+                  <DropdownItem to="/farms" tag={NavLink}>
                     Miền Nam
                   </DropdownItem>
-                  <DropdownItem to="/" tag={Link}>
+                  <DropdownItem to="/farms" tag={NavLink}>
                     Miền Trung
                   </DropdownItem>
-                  <DropdownItem to="/" tag={Link}>
+                  <DropdownItem to="/farms" tag={NavLink}>
                     Miền Bắc
                   </DropdownItem>
                 </DropdownMenu>
@@ -143,7 +143,7 @@ function ColorNavbar() {
                 </Button>
               </Nav>
               <NavItem>
-                <Button className="btn-round" color="danger" href="/">
+                <Button className="btn-round" color="danger" href="/shoppingcart">
                   <i className="nc-icon nc-cart-simple" /> Your Cart
                 </Button>
               </NavItem>
