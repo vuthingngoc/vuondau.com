@@ -143,7 +143,7 @@ function ColorNavbar() {
                 </Button>
               </Nav>
               <NavItem>
-                <Button className="btn-round" color="danger" href="/">
+                <Button className="btn-round" color="danger" href="/shoppingcart">
                   <i className="nc-icon nc-cart-simple" /> Your Cart
                 </Button>
               </NavItem>

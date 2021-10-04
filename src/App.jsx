@@ -7,6 +7,7 @@ import Index from 'pages/Index';
 import ProductDetail from 'pages/ProductDetail';
 import LoginPage from 'pages/LoginPage/index';
 import RegisterPage from 'pages/RegisterPage';
+import ShoppingCartPage from 'pages/ShoppingCart';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route exact path="/components" render={(props) => <Index {...props} />} />
         <Route exact path="/login" render={(props) => <LoginPage {...props} />} />
         <Route exact path="/register" render={(props) => <RegisterPage {...props} />} />
+        <Route exact path="/shoppingcart" render={(props) => <ShoppingCartPage {...props} />} />
         <Redirect to="/home" />
       </Switch>
     </BrowserRouter>
