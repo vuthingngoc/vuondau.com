@@ -21,6 +21,36 @@ import {
 } from 'reactstrap';
 // core components
 
+const dataNavbar = [
+  {
+    title: 'Category',
+    child: [
+      { name: 'All Productions', src: '/production' },
+      { name: 'Vegetable', src: '/production/vegetable' },
+      { name: 'Fruit', src: '/production/fruit' },
+      { name: 'Meat', src: '/production/meat' },
+      { name: 'Fish', src: '/production/fish' },
+    ],
+  },
+  {
+    title: 'Havests',
+    child: [
+      { name: 'Spring', src: '/havests/spring' },
+      { name: 'Summer', src: '/havests/summer' },
+      { name: 'Fall', src: '/havests/fall' },
+      { name: 'Winter', src: '/havests/winter' },
+    ],
+  },
+  {
+    title: 'Farms',
+    child: [
+      { name: 'Miền Nam', src: '/farms' },
+      { name: 'Miền Trung', src: '/farms' },
+      { name: 'Miền Bắc', src: '/farms' },
+    ],
+  },
+];
+
 function ColorNavbar() {
   const [navbarColor, setNavbarColor] = React.useState('navbar-transparent');
   const [bodyClick, setBodyClick] = React.useState(false);
@@ -79,44 +109,24 @@ function ColorNavbar() {
           </div>
           <Collapse navbar isOpen={collapseOpen}>
             <Nav className="ml-auto" navbar>
-              <UncontrolledDropdown nav inNavbar>
-                <DropdownToggle className="mr-2" color="default" caret nav>
-                  Category
-                </DropdownToggle>
-                <DropdownMenu className="dropdown-danger" right>
-                  <DropdownItem to="/" tag={Link}>
-                    All Products
-                  </DropdownItem>
-                  <DropdownItem to="/" tag={Link}>
-                    Vegetable
-                  </DropdownItem>
-                  <DropdownItem to="/" tag={Link}>
-                    Fruit
-                  </DropdownItem>
-                  <DropdownItem to="/" tag={Link}>
-                    Meat
-                  </DropdownItem>
-                  <DropdownItem to="/" tag={Link}>
-                    Fish
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>
-              <UncontrolledDropdown nav inNavbar>
-                <DropdownToggle className="mr-2" color="default" caret nav>
-                  Farms
-                </DropdownToggle>
-                <DropdownMenu className="dropdown-danger" right>
-                  <DropdownItem to="/farms" tag={NavLink}>
-                    Miền Nam
-                  </DropdownItem>
-                  <DropdownItem to="/farms" tag={NavLink}>
-                    Miền Trung
-                  </DropdownItem>
-                  <DropdownItem to="/farms" tag={NavLink}>
-                    Miền Bắc
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>
+              {dataNavbar.map((ele) => {
+                return (
+                  <UncontrolledDropdown nav inNavbar>
+                    <DropdownToggle className="mr-2" color="default" caret nav>
+                      {ele.title}
+                    </DropdownToggle>
+                    <DropdownMenu className="dropdown-danger" right>
+                      {ele.child.map((child) => {
+                        return (
+                          <DropdownItem to={child.src} tag={NavLink}>
+                            {child.name}
+                          </DropdownItem>
+                        );
+                      })}
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+                );
+              })}
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle color="default" caret nav>
                   Account
