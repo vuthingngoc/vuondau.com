@@ -4,10 +4,12 @@ import { Button, Card, Container, Row, Col, Carousel, CarouselItem, CarouselIndi
 
 // carousel items
 const dataProduct = {
+  id: 1,
   productName: 'Cà chua',
   description: 'Hàng limited edition đến từ nông trại Đà Lạt.',
-  salePrice: '41,000 vnđ/kg',
-  originPrice: '50,000 vnđ/kg',
+  salePrice: 41000,
+  originPrice: 50000,
+  image: 'https://hoayeuthuong.com/hinh-hoa-tuoi/moingay/11894_ca-chua-kg.jpg',
 };
 const dataFarm = {
   farmName: 'Đà Lạc Farm',
@@ -92,6 +94,31 @@ export default function BodyProductDetail() {
     }
   };
 
+  const addToCartHandle = () => {
+    const item = dataProduct;
+    item['weight'] = weight;
+    let dataCart = JSON.parse(localStorage.getItem('CART'));
+    if (dataCart === null) {
+      const array = [item];
+      localStorage.setItem('CART', JSON.stringify(array));
+    } else {
+      let checkAvaiableItem = false;
+      let pos = -1;
+      dataCart.forEach((e, index) => {
+        if (e.id === item.id) {
+          checkAvaiableItem = true;
+          pos = index;
+        }
+      });
+      if (checkAvaiableItem) {
+        dataCart[pos] = item;
+      } else {
+        dataCart.push(item);
+      }
+      localStorage.setItem('CART', JSON.stringify(dataCart));
+    }
+  };
+
   document.documentElement.classList.remove('nav-open');
   React.useEffect(() => {
     document.body.classList.add('product-page');
@@ -165,9 +192,9 @@ export default function BodyProductDetail() {
               <Col md="5" sm="6">
                 <h2>{dataProduct.productName}</h2>
                 <h4 className="price">
-                  <strong>{dataProduct.salePrice}</strong>
+                  <strong>{`${dataProduct.salePrice} vnđ/kg`}</strong>
                   <s className="mr-1" style={{ marginLeft: '10px' }}>
-                    {dataProduct.originPrice}
+                    {`${dataProduct.originPrice} vnđ/kg`}
                   </s>
                 </h4>
                 <hr />
@@ -197,7 +224,7 @@ export default function BodyProductDetail() {
                 <hr />
                 <Row>
                   <Col className="offset-md-5" md="7" sm="8">
-                    <Button block className="btn-round" color="danger">
+                    <Button block className="btn-round" color="danger" onClick={addToCartHandle}>
                       Add to Cart  <i className="fa fa-chevron-right" />
                     </Button>
                   </Col>

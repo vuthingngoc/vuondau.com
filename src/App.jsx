@@ -10,7 +10,7 @@ import RegisterPage from 'pages/RegisterPage';
 import ShoppingCartPage from 'pages/ShoppingCart';
 
 import FarmsPage from 'pages/FarmsPage';
-import GardenDetail from 'pages/FarmsPage/component/GardenDetail';
+import GardenDetail from 'pages/FarmsPage/components/GardenDetail';
 
 
 function App() {
