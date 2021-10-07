@@ -42,35 +42,21 @@ function ImageUpload(props) {
   return (
     <div className="fileinput text-center">
       <input type="file" onChange={handleImageChange} ref={fileInput} />
-      <div className={"thumbnail" + (props.avatar ? " img-circle" : "")}>
-        <img src={imagePreviewUrl} alt="..." />
+      <div className={'thumbnail' + (props.avatar ? ' img-circle' : '')}>
+        <img src={imagePreviewUrl} alt="..." width="300px" height="300px" />
       </div>
       <div>
         {file === null ? (
-          <Button
-            className="btn-round"
-            color="default"
-            outline
-            onClick={handleClick}
-          >
-            {props.avatar ? "Add Photo" : "Select image"}
+          <Button className="btn-round" color="default" outline onClick={handleClick}>
+            {props.avatar ? 'Add Photo' : 'Select image'}
           </Button>
         ) : (
           <span>
-            <Button
-              className="btn-round"
-              outline
-              color="default"
-              onClick={handleClick}
-            >
+            <Button className="btn-round" outline color="default" onClick={handleClick}>
               Change
             </Button>
             {props.avatar ? <br /> : null}
-            <Button
-              color="danger"
-              className="btn-round btn-link"
-              onClick={handleRemove}
-            >
+            <Button color="danger" className="btn-round btn-link" onClick={handleRemove}>
               <i className="fa fa-times" />
               Remove
             </Button>
