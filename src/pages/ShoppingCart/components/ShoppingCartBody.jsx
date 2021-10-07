@@ -1,41 +1,62 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, ButtonGroup, Table, Container, Row, Col } from 'reactstrap';
 
-const data = [
-  {
-    productName: 'Cà chua không hạt',
-    image: 'https://hoayeuthuong.com/hinh-hoa-tuoi/moingay/11894_ca-chua-kg.jpg',
-    description: 'Hàng limited edition đến từ nông trại Đà Lạt.',
-    weight: 1,
-    salePrice: 41000,
-    src: '/product/productdetail/ca-chua',
-  },
-  {
-    productName: 'Dưa leo ruột vàng',
-    image: 'https://hoayeuthuong.com/hinh-hoa-tuoi/moingay/11896_dua-leo-lon-kg.jpg',
-    description: 'Sản phẩm đặc sản của Nông Trại Vĩnh Long. Dưa ngọt, nhiều nước và bảo quản được thời gian lâu trong tủ lạnh.',
-    weight: 2,
-    salePrice: 15000,
-    src: '/product/productdetail/ca-chua',
-  },
-  {
-    productName: 'Rau cải thìa',
-    image: 'https://hoayeuthuong.com/hinh-hoa-tuoi/moingay/11918_cai-thia-kg.jpg',
-    description: 'Sản phẩm đặc sản của Nông Trại Vĩnh Long. Dưa ngọt, nhiều nước và bảo quản được thời gian lâu trong tủ lạnh.',
-    weight: 1,
-    salePrice: 33000,
-    src: '/product/productdetail/ca-chua',
-  },
-];
 export default function ShoppingCartBody() {
+  const [data, setData] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
   const calTotal = () => {
     let total = 0;
     data.forEach((e) => {
       total += e.salePrice * e.weight;
     });
-    return total;
+    setTotalPrice(total);
+    return totalPrice;
   };
+
+  const updateData = (data) => {
+    setData(data);
+    if (localStorage) {
+      localStorage.setItem('CART', JSON.stringify(data));
+    }
+  };
+
+  const increateWeight = (id) => {
+    let tmpData = data;
+    tmpData.forEach((ele, i) => {
+      if (ele.id === id) {
+        tmpData[i].weight += 1;
+      }
+    });
+    updateData(tmpData);
+    calTotal();
+  };
+
+  const decreaseWeight = (id) => {
+    let tmpData = data;
+    tmpData.forEach((ele, i) => {
+      if (ele.id === id) {
+        if (ele.weight > 1) {
+          tmpData[i].weight -= 1;
+        } else if ((ele.weight = 1)) {
+          tmpData.splice(i, 1);
+        }
+      }
+    });
+    updateData(tmpData);
+    calTotal();
+  };
+
+  useEffect(() => {
+    const cartItem = JSON.parse(localStorage.getItem('CART'));
+    setData(cartItem);
+    let total = 0;
+    cartItem.forEach((e) => {
+      total += e.salePrice * e.weight;
+    });
+    setTotalPrice(total);
+  }, []);
+
   return (
     <>
       <Container>
@@ -79,10 +100,10 @@ export default function ShoppingCartBody() {
                         {ele.weight}
                         {' kg '}
                         <ButtonGroup>
-                          <Button className="btn-border btn-round" color="default" size="sm">
+                          <Button className="btn-border btn-round" onClick={() => decreaseWeight(ele.id)} color="default" size="sm">
                             -
                           </Button>
-                          <Button className="btn-border btn-round" color="default" size="sm">
+                          <Button className="btn-border btn-round" onClick={() => increateWeight(ele.id)} color="default" size="sm">
                             +
                           </Button>
                         </ButtonGroup>
@@ -99,7 +120,7 @@ export default function ShoppingCartBody() {
                   <td />
                   <td className="td-total">Total:</td>
                   <td className="td-total">
-                    {calTotal()}
+                    {totalPrice}
                     <small> vnđ</small>
                   </td>
                 </tr>
