@@ -8,10 +8,10 @@ import ProductDetail from 'pages/ProductDetail';
 import LoginPage from 'pages/LoginPage/index';
 import RegisterPage from 'pages/RegisterPage';
 import ShoppingCartPage from 'pages/ShoppingCart';
+import AddProductPage from 'pages/AddProductPage';
 
 import FarmsPage from 'pages/FarmsPage';
 import GardenDetail from 'pages/FarmsPage/components/GardenDetail';
-
 
 function App() {
   return (
@@ -26,6 +26,7 @@ function App() {
         <Route exact path="/login" render={(props) => <LoginPage {...props} />} />
         <Route exact path="/register" render={(props) => <RegisterPage {...props} />} />
         <Route exact path="/shoppingcart" render={(props) => <ShoppingCartPage {...props} />} />
+        <Route path="/addproduct" render={(props) => <AddProductPage {...props} />} />
         <Redirect to="/home" />
       </Switch>
     </BrowserRouter>
