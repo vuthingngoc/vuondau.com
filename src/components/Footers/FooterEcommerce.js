@@ -58,7 +58,7 @@ function FooterEcommerce() {
                 </ul>
                 <hr />
                 <div className="copyright">
-                  © {new Date().getFullYear()}, made with <i className="fa fa-heart heart" /> vuon dau
+                  © {new Date().getFullYear()}, from vuondau with <i className="fa fa-heart heart" />.
                 </div>
               </div>
             </Col>
