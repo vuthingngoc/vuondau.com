@@ -35,10 +35,10 @@ const dataNavbar = [
   {
     title: 'Havests',
     child: [
-      { name: 'Spring', src: '/havests/spring' },
-      { name: 'Summer', src: '/havests/summer' },
-      { name: 'Fall', src: '/havests/fall' },
-      { name: 'Winter', src: '/havests/winter' },
+      { name: 'Spring', src: '/havests#spring' },
+      { name: 'Summer', src: '/havests#summer' },
+      { name: 'Fall', src: '/havests#fall' },
+      { name: 'Winter', src: '/havests#winter' },
     ],
   },
   {
@@ -109,16 +109,16 @@ function ColorNavbar() {
           </div>
           <Collapse navbar isOpen={collapseOpen}>
             <Nav className="ml-auto" navbar>
-              {dataNavbar.map((ele) => {
+              {dataNavbar.map((ele, index) => {
                 return (
-                  <UncontrolledDropdown nav inNavbar>
+                  <UncontrolledDropdown nav inNavbar key={`UD-${index}`}>
                     <DropdownToggle className="mr-2" color="default" caret nav>
                       {ele.title}
                     </DropdownToggle>
                     <DropdownMenu className="dropdown-danger" right>
-                      {ele.child.map((child) => {
+                      {ele.child.map((child, index) => {
                         return (
-                          <DropdownItem to={child.src} tag={NavLink}>
+                          <DropdownItem to={child.src} tag={Link} key={`DI-${index}`}>
                             {child.name}
                           </DropdownItem>
                         );

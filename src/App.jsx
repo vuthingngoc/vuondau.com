@@ -13,6 +13,7 @@ import AddProductPage from 'pages/AddProductPage';
 import FarmsPage from 'pages/FarmsPage';
 import GardenDetail from 'pages/FarmsPage/components/GardenDetail';
 import HavestPage from 'pages/HavestPage';
+import HavestDetailPage from 'pages/HavestDetailPage';
 
 function App() {
   return (
@@ -28,7 +29,8 @@ function App() {
         <Route exact path="/register" render={(props) => <RegisterPage {...props} />} />
         <Route exact path="/shoppingcart" render={(props) => <ShoppingCartPage {...props} />} />
         <Route path="/addproduct" render={(props) => <AddProductPage {...props} />} />
-        <Route path="/havests" render={(props) => <HavestPage {...props} />} />
+        <Route exact path="/havests" render={(props) => <HavestPage {...props} />} />
+        <Route path="/havests/havestdetail/" render={(props) => <HavestDetailPage {...props} />} />
         <Redirect to="/home" />
       </Switch>
     </BrowserRouter>

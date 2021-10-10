@@ -9,28 +9,28 @@ const dataHavest = [
     heart: 56,
     image: 'https://farmstay.com.vn/wp-content/uploads/2019/08/DL-trai-mat-2.jpg',
     description: 'Các loại rau củ của nông trại đà lạc mùa xuân',
-    src: '/havest/havestdetail/',
+    src: '/havests/havestdetail/',
   },
   {
     havestName: 'Nông Trại đà lạt vụ mùa hạ',
     ordered: 352,
     image: 'https://farmstay.com.vn/wp-content/uploads/2019/08/DL-trai-mat-4.jpg',
     description: 'Các loại rau củ của nông trại đà lạc mùa hạ',
-    src: '/havest/havestdetail/',
+    src: '/havests/havestdetail/',
   },
   {
     havestName: 'Nông Trại đà lạt vụ mùa thu',
     ordered: 123,
     image: 'https://farmstay.com.vn/wp-content/uploads/2019/08/DL-trai-mat-3.jpg',
     description: 'Các loại rau củ của nông trại đà lạc mùa đông',
-    src: '/havest/havestdetail/',
+    src: '/havests/havestdetail/',
   },
   {
     havestName: 'Nông Trại đà lạt vụ mùa đông',
     ordered: 431,
     image: 'https://farmstay.com.vn/wp-content/uploads/2019/08/DL-cau-dat-farm-3.jpg',
     description: 'Các loại rau củ của nông trại đà lạc mùa đông',
-    src: '/havest/havestdetail/',
+    src: '/havests/havestdetail/',
   },
 ];
 

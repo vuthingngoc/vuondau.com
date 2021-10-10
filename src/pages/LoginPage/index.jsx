@@ -30,12 +30,22 @@ export default function LoginPage() {
             <Row>
               <Col className="ml-auto mr-auto" lg="4" md="6" sm="6">
                 <Card className="card-register">
-                  <CardTitle className="text-center" tag="h3" style={{ marginBottom: '30px' }}>
+                  <CardTitle className="text-center" tag="h3" style={{ marginBottom: '20px' }}>
                     Login
                   </CardTitle>
                   <Form className="register-form">
                     <Input placeholder="Email" type="text" />
                     <Input placeholder="Password" type="password" />
+                    <div className="division">
+                      <div className="line l" />
+                      <span>or</span>
+                      <div className="line r" />
+                    </div>
+                    <div className="social">
+                      <Button className="btn-just-icon mr-1" color="google">
+                        <i className="fa fa-google" />
+                      </Button>
+                    </div>
                     <Button block className="btn-round" color="default">
                       Login
                     </Button>
