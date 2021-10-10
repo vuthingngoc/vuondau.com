@@ -1,6 +1,7 @@
 import React from 'react';
 import { ButtonGroup } from 'react-bootstrap';
 import { Button, Card, Container, Row, Col, Carousel, CarouselItem, CarouselIndicators, CardBody, CardFooter, CardTitle } from 'reactstrap';
+// import { getDataByPath } from 'services/data.service';
 
 // carousel items
 const dataProduct = {
@@ -10,6 +11,7 @@ const dataProduct = {
   salePrice: 41000,
   originPrice: 50000,
   image: 'https://hoayeuthuong.com/hinh-hoa-tuoi/moingay/11894_ca-chua-kg.jpg',
+  src: '/product/productdetail/ca-chua',
 };
 const dataFarm = {
   farmName: 'Đà Lạc Farm',
@@ -63,6 +65,12 @@ export default function BodyProductDetail() {
   // carousel states and functions
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [animating, setAnimating] = React.useState(false);
+
+  // async function testApi() {
+  //   const res = await getDataByPath('api/customer-types');
+  //   console.log(res);
+  // }
+
   const onExiting = () => {
     setAnimating(true);
   };
@@ -227,6 +235,9 @@ export default function BodyProductDetail() {
                     <Button block className="btn-round" color="danger" onClick={addToCartHandle}>
                       Add to Cart  <i className="fa fa-chevron-right" />
                     </Button>
+                    {/* <Button block className="btn-round" color="danger" onClick={() => testApi()}>
+                      Test Api  <i className="fa fa-chevron-right" />
+                    </Button> */}
                   </Col>
                 </Row>
               </Col>

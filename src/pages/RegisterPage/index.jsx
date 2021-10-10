@@ -34,10 +34,7 @@ export default function RegisterPage() {
                   <CardTitle className="text-center" tag="h3">
                     Register
                   </CardTitle>
-                  <div className="social">
-                    <Button className="btn-just-icon mr-1" color="facebook">
-                      <i className="fa fa-facebook" />
-                    </Button>
+                  {/* <div className="social">
                     <Button className="btn-just-icon mr-1" color="google" style={{ marginLeft: '20px' }}>
                       <i className="fa fa-google" />
                     </Button>
@@ -46,7 +43,7 @@ export default function RegisterPage() {
                     <div className="line l" />
                     <span>or</span>
                     <div className="line r" />
-                  </div>
+                  </div> */}
                   <Form className="register-form">
                     <Input placeholder="Email" type="text" />
                     <Input placeholder="Password" type="password" />
