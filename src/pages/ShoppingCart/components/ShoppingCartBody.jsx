@@ -76,7 +76,7 @@ export default function ShoppingCartBody() {
                 </tr>
               </thead>
               <tbody>
-                {data.map((ele) => {
+                {data?.map((ele) => {
                   return (
                     <tr>
                       <td>

@@ -19,6 +19,7 @@ import {
   Container,
   UncontrolledTooltip,
 } from 'reactstrap';
+import { useAuth } from 'contexts/AuthContext';
 // core components
 
 const dataNavbar = [
@@ -55,6 +56,8 @@ function ColorNavbar() {
   const [navbarColor, setNavbarColor] = React.useState('navbar-transparent');
   const [bodyClick, setBodyClick] = React.useState(false);
   const [collapseOpen, setCollapseOpen] = React.useState(false);
+  const { currentUser, logout } = useAuth();
+
   React.useEffect(() => {
     let headroom = new Headroom(document.getElementById('navbar-main'));
     // initialise
@@ -127,31 +130,45 @@ function ColorNavbar() {
                   </UncontrolledDropdown>
                 );
               })}
-              <UncontrolledDropdown nav inNavbar>
-                <DropdownToggle color="default" caret nav>
-                  Account
-                </DropdownToggle>
-                <DropdownMenu className="dropdown-danger" right>
-                  <DropdownItem to="/login" tag={NavLink}>
-                    <i className="nc-icon nc-circle-10" />
-                    Login
-                  </DropdownItem>
-                  <DropdownItem to="/register" tag={NavLink}>
-                    <i className="nc-icon nc-badge" />
-                    register
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>
-              <Nav className="ml-auto" navbar>
-                <Button className="btn-info" color="link" href="/" onClick={(e) => e.preventDefault()}>
-                  News
-                </Button>
-              </Nav>
-              <Nav className="ml-auto" navbar>
-                <Button className="btn-info" color="link" href="/" onClick={(e) => e.preventDefault()}>
-                  Contact
-                </Button>
-              </Nav>
+              {currentUser !== null ? (
+                <UncontrolledDropdown nav inNavbar>
+                  <DropdownToggle color="default" caret nav>
+                    {currentUser.email}
+                  </DropdownToggle>
+                  <DropdownMenu className="dropdown-danger" right>
+                    <DropdownItem to="/profile" tag={NavLink}>
+                      <i className="nc-icon nc-circle-10" />
+                      Profile
+                    </DropdownItem>
+                    <DropdownItem
+                      to="/login"
+                      tag={NavLink}
+                      onClick={async (e) => {
+                        logout();
+                      }}
+                    >
+                      <i className="nc-icon nc-button-power" />
+                      Logout
+                    </DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+              ) : (
+                <UncontrolledDropdown nav inNavbar>
+                  <DropdownToggle color="default" caret nav>
+                    Account
+                  </DropdownToggle>
+                  <DropdownMenu className="dropdown-danger" right>
+                    <DropdownItem to="/login" tag={NavLink}>
+                      <i className="nc-icon nc-circle-10" />
+                      Login
+                    </DropdownItem>
+                    <DropdownItem to="/register" tag={NavLink}>
+                      <i className="nc-icon nc-badge" />
+                      Register
+                    </DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+              )}
               <NavItem>
                 <Button className="btn-round" color="danger" href="/shoppingcart">
                   <i className="nc-icon nc-cart-simple" /> Your Cart
