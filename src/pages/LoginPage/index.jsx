@@ -1,9 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ColorNavbar from 'components/Navbars/ColorNavbar';
 
-import { Button, Card, CardTitle, Form, Input, Container, Row, Col } from 'reactstrap';
+import { Button, Card, CardTitle, Form, Input, Container, Row, Col, CardImg } from 'reactstrap';
+import { useAuth } from 'contexts/AuthContext';
+import { useHistory } from 'react-router';
 
 export default function LoginPage() {
+  const history = useHistory();
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { login } = useAuth();
+
   document.documentElement.classList.remove('nav-open');
   React.useEffect(() => {
     document.body.classList.add('register-page');
@@ -30,12 +40,47 @@ export default function LoginPage() {
             <Row>
               <Col className="ml-auto mr-auto" lg="4" md="6" sm="6">
                 <Card className="card-register">
+                  <CardImg top tag="div">
+                    <img alt="..." className="img" src={require('assets/img/iconVuondau.png').default} />
+                  </CardImg>
                   <CardTitle className="text-center" tag="h3" style={{ marginBottom: '20px' }}>
                     Login
                   </CardTitle>
-                  <Form className="register-form">
-                    <Input placeholder="Email" type="text" />
-                    <Input placeholder="Password" type="password" />
+                  <Form
+                    className="register-form"
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      setIsSubmitting(true);
+                      login(email, password)
+                        .then((response) => {
+                          console.log(response);
+                          history.push('/home');
+                        })
+                        .catch((error) => {
+                          console.log(error.message);
+                          setIsSubmitting(false);
+                        })
+                        .finally(() => setIsSubmitting(false));
+                    }}
+                  >
+                    <Input
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      placeholder="Email"
+                      required
+                    />
+                    <Input
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      name="password"
+                      placeholder="Password"
+                      type="password"
+                      autoComplete="password"
+                      required
+                    />
                     <div className="division">
                       <div className="line l" />
                       <span>or</span>
@@ -46,7 +91,7 @@ export default function LoginPage() {
                         <i className="fa fa-google" />
                       </Button>
                     </div>
-                    <Button block className="btn-round" color="default">
+                    <Button disabled={isSubmitting} type="submit" block className="btn-round" color="default">
                       Login
                     </Button>
                   </Form>
