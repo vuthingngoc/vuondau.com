@@ -7,33 +7,32 @@ import ListFarm from './ListFarmItem';
 
 const dataFarms = [
     {
+        id: 1,
         farmName: 'Nông Trại đà lạt vụ mùa xuân',
         address: 'Thành Phố Hồ Chí Minh',
-        heart: 56,
         image: 'https://farmstay.com.vn/wp-content/uploads/2019/08/DL-trai-mat-2.jpg',
         description: 'Các loại rau củ của nông trại đà lạc mùa xuân',
-        src: '/havests/havestdetail/',
     },
     {
+        id: 2,
         farmName: 'Nông Trại đà lạt vụ mùa hạ',
         ordered: 352,
         image: 'https://farmstay.com.vn/wp-content/uploads/2019/08/DL-trai-mat-4.jpg',
         description: 'Các loại rau củ của nông trại đà lạc mùa hạ',
-        src: '/havests/havestdetail/',
     },
     {
+        id: 3,
         farmName: 'Nông Trại đà lạt vụ mùa thu',
         ordered: 123,
         image: 'https://farmstay.com.vn/wp-content/uploads/2019/08/DL-trai-mat-3.jpg',
         description: 'Các loại rau củ của nông trại đà lạc mùa đông',
-        src: '/havests/havestdetail/',
     },
     {
+        id: 4,
         farmName: 'Nông Trại đà lạt vụ mùa đông',
         ordered: 431,
         image: 'https://farmstay.com.vn/wp-content/uploads/2019/08/DL-cau-dat-farm-3.jpg',
         description: 'Các loại rau củ của nông trại đà lạc mùa đông',
-        src: '/havests/havestdetail/',
     },
 ];
 
@@ -134,10 +133,13 @@ const getShimmerElements = () => {
 
 
 export default function FarmBody() {
+    let flag = false;
     React.useEffect(() => {
-        loadData();
+        if (!flag) {
+            loadData();
+            flag = true;
+        }
     });
-
 
     const [isDataloaded, setIsDataloaded] = React.useState(false);
 
@@ -169,7 +171,7 @@ export default function FarmBody() {
                         </Col>
                         <Col xs="9">
                             <Shimmer width="100%" isDataLoaded={isDataloaded} customElementsGroup={getShimmerElements()}>
-                                <ListFarm 
+                                <ListFarm
                                     items={dataFarms}
                                 />
                             </Shimmer>

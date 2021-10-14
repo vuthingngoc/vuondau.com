@@ -11,12 +11,14 @@ import ShoppingCartPage from 'pages/ShoppingCart';
 import AddProductPage from 'pages/AddProductPage';
 
 import FarmsPage from 'pages/FarmsPage';
-import GardenDetail from 'pages/FarmsPage/components/GardenDetail';
+import FarmDetail from 'pages/FarmDetailPage';
 import HavestPage from 'pages/HavestPage';
 import HavestDetailPage from 'pages/HavestDetailPage';
 import AuthContextProvider from 'contexts/AuthContext';
+import { initializeIcons } from '@fluentui/font-icons-mdl2';
 
 function App() {
+  initializeIcons();
   return (
     <AuthContextProvider>
       <BrowserRouter>
@@ -25,7 +27,7 @@ function App() {
           <Route exact path="/home" render={(props) => <Homepage {...props} />} />
           <Route path="/product/productdetail" render={(props) => <ProductDetail {...props} />} />
           <Route exact path="/farms" render={(props) => <FarmsPage {...props} />} />
-          <Route path="/farms/farmdetail" render={(props) => <GardenDetail {...props} />} />
+          <Route path="/farms/farmdetail/:id" render={(props) => <FarmDetail {...props} />} />
           <Route exact path="/components" render={(props) => <Index {...props} />} />
           <Route exact path="/login" render={(props) => <LoginPage {...props} />} />
           <Route exact path="/register" render={(props) => <RegisterPage {...props} />} />

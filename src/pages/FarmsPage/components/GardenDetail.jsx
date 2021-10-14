@@ -29,7 +29,7 @@ const carouselItems = [
   },
 ];
 
-export default function GardenDetail() {
+export default function GardenDetail(props) {
   // react-select states
   const [colorSelect, setColorSelect] = React.useState({
     value: '1',
