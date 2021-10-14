@@ -6,11 +6,12 @@ export default function ListFarm(props) {
     let items = props.items;
     let elems = [];
     for (let item of items) {
+      let elemUrl = `/farms/farmdetail/${item.id}`
       elems.push(
-        <Row>
+        <Row key={item.id.toString()}>
           <Col xs="3">
             <Card className="card-image">
-              <a href="/farms/farmdetail">
+              <a href={elemUrl}>
                 <img alt="..." src={item.image} />
               </a>
             </Card>

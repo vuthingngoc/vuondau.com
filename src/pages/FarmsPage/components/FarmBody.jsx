@@ -51,134 +51,161 @@ const dataLocation = [
     },
 ];
 
-const getShimmerElements = () => {
-    return (
-        <>
-            <div style={{ display: 'flex' }}>
-                <ShimmerElementsGroup
-                    width={'25%'}
-                    shimmerElements={[
-                        { type: ElemType.gap, width: '5%', height: 200 },
-                        { type: ElemType.line, width: '90%', height: 180 },
-                        { type: ElemType.gap, width: '5%', height: 200 },
-                    ]}
-                />
-                <ShimmerElementsGroup
-                    width={'100%'}
-                    flexWrap
-                    shimmerElements={[
-                        { type: ElemType.line, width: '98%', height: 25 },
-                        { type: ElemType.gap, width: '2%', height: 50 },
-                        { type: ElemType.line, width: '98%', height: 25 },
-                        { type: ElemType.gap, width: '2%', height: 50 },
-                        { type: ElemType.line, width: '98%', height: 25 },
-                        { type: ElemType.gap, width: '2%', height: 50 },
-                        { type: ElemType.line, width: '98%', height: 25 },
-                        { type: ElemType.gap, width: '2%', height: 50 },
-                    ]}
-                />
-            </div>
-            <div style={{ display: 'flex' }}>
-                <ShimmerElementsGroup
-                    width={'25%'}
-                    shimmerElements={[
-                        { type: ElemType.gap, width: '5%', height: 200 },
-                        { type: ElemType.line, width: '90%', height: 180 },
-                        { type: ElemType.gap, width: '5%', height: 200 },
-                    ]}
-                />
-                <ShimmerElementsGroup
-                    width={'100%'}
-                    flexWrap
-                    shimmerElements={[
-                        { type: ElemType.line, width: '98%', height: 25 },
-                        { type: ElemType.gap, width: '2%', height: 50 },
-                        { type: ElemType.line, width: '98%', height: 25 },
-                        { type: ElemType.gap, width: '2%', height: 50 },
-                        { type: ElemType.line, width: '98%', height: 25 },
-                        { type: ElemType.gap, width: '2%', height: 50 },
-                        { type: ElemType.line, width: '98%', height: 25 },
-                        { type: ElemType.gap, width: '2%', height: 50 },
-                    ]}
-                />
-            </div>
-            <div style={{ display: 'flex' }}>
-                <ShimmerElementsGroup
-                    width={'25%'}
-                    shimmerElements={[
-                        { type: ElemType.gap, width: '5%', height: 200 },
-                        { type: ElemType.line, width: '90%', height: 180 },
-                        { type: ElemType.gap, width: '5%', height: 200 },
-                    ]}
-                />
-                <ShimmerElementsGroup
-                    width={'100%'}
-                    flexWrap
-                    shimmerElements={[
-                        { type: ElemType.line, width: '98%', height: 25 },
-                        { type: ElemType.gap, width: '2%', height: 50 },
-                        { type: ElemType.line, width: '98%', height: 25 },
-                        { type: ElemType.gap, width: '2%', height: 50 },
-                        { type: ElemType.line, width: '98%', height: 25 },
-                        { type: ElemType.gap, width: '2%', height: 50 },
-                        { type: ElemType.line, width: '98%', height: 25 },
-                        { type: ElemType.gap, width: '2%', height: 50 },
-                    ]}
-                />
-            </div>
-        </>
-    )
-}
-
-
-
-export default function FarmBody() {
-    let flag = false;
-    React.useEffect(() => {
-        if (!flag) {
-            loadData();
-            flag = true;
+export default class FarmDetailBody extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isDataloaded: false,
+            data: []
         }
-    });
+    }
 
-    const [isDataloaded, setIsDataloaded] = React.useState(false);
+    componentDidMount() {
+        this.loadData();
+    }
 
-    const loadData = () => {
-        setTimeout(function () {
-            setIsDataloaded(true);
+    render() {
+        return (
+            <>
+                <div className="section section-gray">
+                    <Container>
+                        <Row>
+                            <Col sm="3">
+                                <Dropdown
+                                    placeholder="Select your location"
+                                    options={dataLocation}
+                                    style={{ width: '70%' }}
+                                    onChange={(event, value) => {
+                                        this.onDropDownChanged(value);
+                                    }}
+                                />
+                            </Col>
+                            <Col xs="9">
+                                <Shimmer width="100%" isDataLoaded={this.state.isDataloaded} customElementsGroup={this.getShimmerElements()}>
+                                    <ListFarm
+                                        items={this.state.data}
+                                    />
+                                </Shimmer>
+                            </Col>
+                        </Row>
+                    </Container>
+                </div>
+            </>
+        )
+    }
+
+    getShimmerElements() {
+        return (
+            <>
+                <div style={{ display: 'flex' }}>
+                    <ShimmerElementsGroup
+                        width={'25%'}
+                        shimmerElements={[
+                            { type: ElemType.gap, width: '5%', height: 200 },
+                            { type: ElemType.line, width: '90%', height: 180 },
+                            { type: ElemType.gap, width: '5%', height: 200 },
+                        ]}
+                    />
+                    <ShimmerElementsGroup
+                        width={'100%'}
+                        flexWrap
+                        shimmerElements={[
+                            { type: ElemType.line, width: '98%', height: 25 },
+                            { type: ElemType.gap, width: '2%', height: 50 },
+                            { type: ElemType.line, width: '98%', height: 25 },
+                            { type: ElemType.gap, width: '2%', height: 50 },
+                            { type: ElemType.line, width: '98%', height: 25 },
+                            { type: ElemType.gap, width: '2%', height: 50 },
+                            { type: ElemType.line, width: '98%', height: 25 },
+                            { type: ElemType.gap, width: '2%', height: 50 },
+                        ]}
+                    />
+                </div>
+                <div style={{ display: 'flex' }}>
+                    <ShimmerElementsGroup
+                        width={'25%'}
+                        shimmerElements={[
+                            { type: ElemType.gap, width: '5%', height: 200 },
+                            { type: ElemType.line, width: '90%', height: 180 },
+                            { type: ElemType.gap, width: '5%', height: 200 },
+                        ]}
+                    />
+                    <ShimmerElementsGroup
+                        width={'100%'}
+                        flexWrap
+                        shimmerElements={[
+                            { type: ElemType.line, width: '98%', height: 25 },
+                            { type: ElemType.gap, width: '2%', height: 50 },
+                            { type: ElemType.line, width: '98%', height: 25 },
+                            { type: ElemType.gap, width: '2%', height: 50 },
+                            { type: ElemType.line, width: '98%', height: 25 },
+                            { type: ElemType.gap, width: '2%', height: 50 },
+                            { type: ElemType.line, width: '98%', height: 25 },
+                            { type: ElemType.gap, width: '2%', height: 50 },
+                        ]}
+                    />
+                </div>
+                <div style={{ display: 'flex' }}>
+                    <ShimmerElementsGroup
+                        width={'25%'}
+                        shimmerElements={[
+                            { type: ElemType.gap, width: '5%', height: 200 },
+                            { type: ElemType.line, width: '90%', height: 180 },
+                            { type: ElemType.gap, width: '5%', height: 200 },
+                        ]}
+                    />
+                    <ShimmerElementsGroup
+                        width={'100%'}
+                        flexWrap
+                        shimmerElements={[
+                            { type: ElemType.line, width: '98%', height: 25 },
+                            { type: ElemType.gap, width: '2%', height: 50 },
+                            { type: ElemType.line, width: '98%', height: 25 },
+                            { type: ElemType.gap, width: '2%', height: 50 },
+                            { type: ElemType.line, width: '98%', height: 25 },
+                            { type: ElemType.gap, width: '2%', height: 50 },
+                            { type: ElemType.line, width: '98%', height: 25 },
+                            { type: ElemType.gap, width: '2%', height: 50 },
+                        ]}
+                    />
+                </div>
+            </>
+        )
+    }
+
+    loadData() {
+        setTimeout(() => {
+            this.setState({ 
+                isDataloaded: true,
+                data: dataFarms
+            });
         }, 3000)
     }
-
-    const onDropDownChanged = (newValue) => {
-        setIsDataloaded(false);
-        loadData();
-    }
-
-    return (
-        <>
-            <div className="section section-gray">
-                <Container>
-                    <Row>
-                        <Col sm="3">
-                            <Dropdown
-                                placeholder="Select your location"
-                                options={dataLocation}
-                                style={{ width: '70%' }}
-                                onChange={(event, value) => {
-                                    onDropDownChanged(value);
-                                }}
-                            />
-                        </Col>
-                        <Col xs="9">
-                            <Shimmer width="100%" isDataLoaded={isDataloaded} customElementsGroup={getShimmerElements()}>
-                                <ListFarm
-                                    items={dataFarms}
-                                />
-                            </Shimmer>
-                        </Col>
-                    </Row>
-                </Container>
-            </div>
-        </>
-    );
 }
+
+// export default function FarmBody() {
+//     let flag = false;
+//     React.useEffect(() => {
+//         if (!flag) {
+//             loadData();
+//             flag = true;
+//         }
+//     });
+
+//     const [isDataloaded, setIsDataloaded] = React.useState(false);
+
+//     const loadData = () => {
+//         setTimeout(function () {
+//             setIsDataloaded(true);
+//         }, 3000)
+//     }
+
+//     const onDropDownChanged = (newValue) => {
+//         setIsDataloaded(false);
+//         loadData();
+//     }
+
+//     return (
+//         
+//     );
+// }
