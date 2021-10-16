@@ -12,7 +12,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { login } = useAuth();
+  const { login, signInWithGoogle } = useAuth();
 
   document.documentElement.classList.remove('nav-open');
   React.useEffect(() => {
@@ -87,7 +87,18 @@ export default function LoginPage() {
                       <div className="line r" />
                     </div>
                     <div className="social">
-                      <Button className="btn-just-icon mr-1" color="google">
+                      <Button
+                        className="btn-just-icon mr-1"
+                        onClick={() =>
+                          signInWithGoogle()
+                            .then((user) => {
+                              console.log(user);
+                              history.push('/home');
+                            })
+                            .catch((error) => console.log(error))
+                        }
+                        color="google"
+                      >
                         <i className="fa fa-google" />
                       </Button>
                     </div>

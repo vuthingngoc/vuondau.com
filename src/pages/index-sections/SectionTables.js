@@ -14,8 +14,6 @@ import {
   UncontrolledTooltip,
 } from "reactstrap";
 
-// core components
-
 function SectionTables() {
   return (
     <>
