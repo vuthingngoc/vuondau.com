@@ -133,12 +133,12 @@ const getShimmerElements = () => {
 
 
 export default function FarmBody() {
-    let flag = false;
+    let flag = true;
     React.useEffect(() => {
-        if (!flag) {
-            loadData();
-            flag = true;
-        }
+      if (!flag) {
+        loadData();
+        // flag = true;
+      }
     });
 
     const [isDataloaded, setIsDataloaded] = React.useState(false);

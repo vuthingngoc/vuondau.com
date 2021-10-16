@@ -16,6 +16,8 @@ import HavestPage from 'pages/HavestPage';
 import HavestDetailPage from 'pages/HavestDetailPage';
 import AuthContextProvider from 'contexts/AuthContext';
 import { initializeIcons } from '@fluentui/font-icons-mdl2';
+import ListAccountPage from 'pages/ListAccountPage';
+import EditAccountPage from 'pages/EditAccountPage';
 
 function App() {
   initializeIcons();
@@ -35,6 +37,8 @@ function App() {
           <Route path="/addproduct" render={(props) => <AddProductPage {...props} />} />
           <Route exact path="/havests" render={(props) => <HavestPage {...props} />} />
           <Route path="/havests/havestdetail/" render={(props) => <HavestDetailPage {...props} />} />
+          <Route exact path="/admin/manageaccount" render={(props) => <ListAccountPage {...props} />} />
+          <Route path="/admin/manageaccount/:id/edit" render={(props) => <EditAccountPage {...props} />} />
           <Redirect to="/home" />
         </Switch>
       </BrowserRouter>
