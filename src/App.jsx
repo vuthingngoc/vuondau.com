@@ -41,6 +41,7 @@ function App() {
           <Route path="/havests/havestdetail/" render={(props) => <HavestDetailPage {...props} />} />
           <Route exact path="/admin/manageaccount" render={(props) => <ListAccountPage {...props} />} />
           <Route path="/admin/manageaccount/:id/edit" render={(props) => <EditAccountPage {...props} />} />
+          <Route path="/admin/manageaccount/:id/view" render={(props) => <EditAccountPage {...props} />} />
           <Route exact path="/farmManagement" render={(props) => <FarmManagerPage {...props} />} />
           <Redirect to="/home" />
         </Switch>
