@@ -8,6 +8,8 @@ import 'react-notifications/lib/notifications.css';
 import { getDataByPath } from 'services/data.service';
 import { updateDataAccount } from 'services/data.service';
 import { deleteDataAccount } from 'services/data.service';
+import { useHistory } from 'react-router';
+import { NotificationManager } from 'react-notifications';
 
 export default function EditAccountBody(props) {
   const [data, setData] = useState(null);
@@ -18,6 +20,7 @@ export default function EditAccountBody(props) {
   const [phone, setPhone] = useState('');
   const [gender, setGender] = useState(0);
   const [status, setStatus] = useState(0);
+  const history = useHistory();
 
   document.documentElement.classList.remove('nav-open');
   React.useEffect(() => {
@@ -81,6 +84,9 @@ export default function EditAccountBody(props) {
       const res = await updateDataAccount(`api/v1/customers/${props.match.params.id}`, updateData);
       if (res.status === 200) {
         setData(res.data);
+        NotificationManager.success('Update Success', 'Your data has been update success', 3000);
+      } else {
+        NotificationManager.warning('Update Failed', 'Something wrongs when updating', 3000);
       }
     }
   }
@@ -89,9 +95,12 @@ export default function EditAccountBody(props) {
     if (data !== null) {
       const res = await deleteDataAccount(`api/v1/customers/${props.match.params.id}`, props.match.params.id);
       console.log(res);
-      if (res.status === 200) {
+      if (res.status === 204) {
         setData(null);
-        console.log(2);
+        NotificationManager.success('Deactive Success', 'Your data has been deactive success', 3000);
+        history.push('/admin/manageaccount');
+      } else {
+        NotificationManager.warning('Deactive Failed', 'Something wrongs when deactive', 3000);
       }
     }
   }
@@ -252,10 +261,10 @@ export default function EditAccountBody(props) {
                     className="btn-round"
                     color="danger"
                     onClick={(e) => {
-                      if (window.confirm('Are you sure you wish to delete this account?')) deleteData();
+                      if (window.confirm('Are you sure you wish to deactive this account?')) deleteData();
                     }}
                   >
-                    Delete
+                    Deactive
                   </Button>
                 </Col>
                 <Col md="4" sm="4">

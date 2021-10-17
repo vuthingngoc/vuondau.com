@@ -27,10 +27,8 @@ const dataNavbar = [
     title: 'Category',
     child: [
       { name: 'All Productions', src: '/production' },
-      { name: 'Vegetable', src: '/production/vegetable' },
-      { name: 'Fruit', src: '/production/fruit' },
-      { name: 'Meat', src: '/production/meat' },
-      { name: 'Fish', src: '/production/fish' },
+      { name: 'Vegetable', src: '/production#vegetable' },
+      { name: 'Fruit', src: '/production#fruit' },
     ],
   },
   {
