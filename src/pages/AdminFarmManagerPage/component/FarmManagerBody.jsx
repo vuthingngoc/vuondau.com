@@ -20,7 +20,7 @@ export default class FarmManagerBody extends React.Component {
         let url = "api/v1/farms";
         let get_data = getItems(url);
         Promise.all([get_data]).then(values => {
-            if (values[0]?.status == 200) {
+            if (values[0]?.status === 200) {
                 this.setState({
                     data: values[0].data,
                 })
@@ -45,7 +45,7 @@ export default class FarmManagerBody extends React.Component {
                         }
                     ],
                 }
-                if (item.status == 1) {
+                if (item.status === 1) {
                     _menuProps.items.push({
                         key: 'deactivate',
                         text: 'Deactivate',
@@ -75,7 +75,7 @@ export default class FarmManagerBody extends React.Component {
                 );
             case "status":
                 return (
-                    item.status == 1 ? "Acitve" : "Deactive"
+                    item.status === 1 ? "Acitve" : "Deactive"
                 );
             default: return (item[column.fieldName]);
         }
