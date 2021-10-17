@@ -5,20 +5,7 @@ import classnames from 'classnames';
 // JavaScript plugin that hides or shows a component based on your scroll
 import Headroom from 'headroom.js';
 // reactstrap components
-import {
-  Button,
-  Collapse,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
-  NavbarBrand,
-  Navbar,
-  NavItem,
-  Nav,
-  Container,
-  UncontrolledTooltip,
-} from 'reactstrap';
+import { Button, Collapse, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledDropdown, Navbar, NavItem, Nav, Container } from 'reactstrap';
 import { useAuth } from 'contexts/AuthContext';
 // core components
 

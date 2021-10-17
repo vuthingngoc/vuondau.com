@@ -149,11 +149,11 @@ export default class FarmDetailBody extends React.Component {
     let url = "api/v1/farms";
     let get_items = getItems(url);
     Promise.all([get_items]).then(values => {
-      if(values[0]?.status == 200) {
+      if (values[0]?.status === 200) {
         this.setState({
           data: values[0].data,
-          isDataloaded: true
-        })
+          isDataloaded: true,
+        });
       }
     })
     // setTimeout(() => {

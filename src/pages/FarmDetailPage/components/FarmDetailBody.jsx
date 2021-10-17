@@ -1,4 +1,4 @@
-import { Button, Card, FormGroup, Container, Row, Col, Carousel, CarouselItem, CarouselIndicators } from 'reactstrap';
+import { Card, FormGroup, Container, Row, Col, Carousel, CarouselItem, CarouselIndicators } from 'reactstrap';
 import React from 'react';
 import Select from 'react-select';
 import { ultilities } from 'utils/services.ultils';
@@ -16,7 +16,7 @@ export default class FarmDetailBody extends React.Component {
       data: [],
       activeIndex: 0,
       animating: false,
-      _util: new ultilities()
+      _util: new ultilities(),
     };
   }
 
@@ -25,20 +25,22 @@ export default class FarmDetailBody extends React.Component {
   }
 
   loadData() {
-    let url = "api/v1/farms"
+    let url = 'api/v1/farms';
     let id = this.props?.match?.params?.id;
     if (!this.state._util.isNullOrUndefined(id)) {
       let get_item = getItem(url, id);
-      Promise.all([get_item]).then(values => {
-        if (values[0]?.status == 200) {
-          this.setState({
-            data: values[0].data,
-            isDataloaded: true
-          })
-        }
-      }).catch(err => {
-        console.log(err);
-      })
+      Promise.all([get_item])
+        .then((values) => {
+          if (values[0]?.status === 200) {
+            this.setState({
+              data: values[0].data,
+              isDataloaded: true,
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   }
 
@@ -86,11 +88,33 @@ export default class FarmDetailBody extends React.Component {
               <Col md="7" sm="6">
                 <div className="ml-auto mr-auto" id="carousel">
                   <Card className="page-carousel">
-                    <Carousel activeIndex={this.state.activeIndex} next={() => { this.next() }} previous={() => { this.previous() }}>
-                      <CarouselIndicators items={carouselItems} activeIndex={this.state.activeIndex} onClickHandler={() => { this.goToIndex() }} />
+                    <Carousel
+                      activeIndex={this.state.activeIndex}
+                      next={() => {
+                        this.next();
+                      }}
+                      previous={() => {
+                        this.previous();
+                      }}
+                    >
+                      <CarouselIndicators
+                        items={carouselItems}
+                        activeIndex={this.state.activeIndex}
+                        onClickHandler={() => {
+                          this.goToIndex();
+                        }}
+                      />
                       {carouselItems.map((item) => {
                         return (
-                          <CarouselItem onExiting={() => { this.onExiting() }} onExited={() => { this.onExited() }} key={item.src}>
+                          <CarouselItem
+                            onExiting={() => {
+                              this.onExiting();
+                            }}
+                            onExited={() => {
+                              this.onExited();
+                            }}
+                            key={item.src}
+                          >
                             <img src={item.src} alt={item.altText} />
                             {/* <CarouselCaption captionText={item.caption} captionHeader="" /> */}
                           </CarouselItem>
@@ -124,24 +148,11 @@ export default class FarmDetailBody extends React.Component {
                 {/* end carousel */}
               </Col>
               <Col md="5" sm="6" style={{ color: '#000000' }}>
-                <h2>
-                  {
-                    !this.state._util.isNullOrUndefined(this.state.data) ?
-                      this.state.data.name : ""
-                  }
-                </h2>
+                <h2>{!this.state._util.isNullOrUndefined(this.state.data) ? this.state.data.name : ''}</h2>
                 <hr />
-                <p>
-                  {
-                    !this.state._util.isNullOrUndefined(this.state.data) ?
-                      `Địa chỉ: ${this.state.data.address}` : "Địa chỉ: "
-                  }
-                </p>
+                <p>{!this.state._util.isNullOrUndefined(this.state.data) ? `Địa chỉ: ${this.state.data.address}` : 'Địa chỉ: '}</p>
                 <p style={{ minHeight: 100 }}>
-                  {
-                    !this.state._util.isNullOrUndefined(this.state.data) ?
-                    `Mô tả: ${this.state.data.description}` : "Mô tả: "
-                  }
+                  {!this.state._util.isNullOrUndefined(this.state.data) ? `Mô tả: ${this.state.data.description}` : 'Mô tả: '}
                 </p>
                 <hr />
                 <p>

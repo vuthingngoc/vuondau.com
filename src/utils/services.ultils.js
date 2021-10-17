@@ -11,11 +11,10 @@ export default function getOptions(accessToken) {
 }
 
 export class ultilities {
-  constructor() { }
+  // constructor() { }
 
   isNullOrUndefined(value) {
-    if (value === undefined || value === null || value === NaN) return true;
+    if (value === undefined || value === null) return true;
     return false;
   }
-
 }
