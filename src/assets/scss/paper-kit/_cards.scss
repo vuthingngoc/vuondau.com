@@ -81,6 +81,22 @@
         }
     }
 
+    &.card-plain-custom{
+        background-color: transparent;
+        box-shadow: none;
+        border: 1px solid #e1e1e1;
+
+
+        .card-body{
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        img{
+            border-radius: $border-radius-extreme;
+        }
+    }
+
     .card-link{
         color: $white-color;
     }

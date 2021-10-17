@@ -1,26 +1,9 @@
 import React from 'react';
 
 import { Container, Row } from 'reactstrap';
-import { Shimmer, ShimmerElementsGroup, ShimmerElementType as ElemType, Dropdown } from 'office-ui-fabric-react';
 import { Col } from 'react-bootstrap';
 import ListFarm from './ListFarmItem';
 import { getItems } from 'services/data.service';
-
-
-const dataLocation = [
-  {
-    key: 'nam',
-    text: 'Miền Nam',
-  },
-  {
-    key: 'trung',
-    text: 'Miền Trung',
-  },
-  {
-    key: 'bac',
-    text: 'Miền Bắc',
-  },
-];
 
 export default class FarmDetailBody extends React.Component {
   constructor(props) {
@@ -40,106 +23,58 @@ export default class FarmDetailBody extends React.Component {
       <>
         <div className="section section-gray">
           <Container>
-            <Row>
-              <Col sm="3">
-                <Dropdown
-                  placeholder="Select your location"
-                  options={dataLocation}
-                  style={{ width: '70%' }}
-                  onChange={(event, value) => {
-                    this.onDropDownChanged(value);
-                  }}
-                  styles={{
-                    root: { borderRadius: 4, color: "red" },
-                  }}
-                />
+            <Row className="section-row">
+              <Col md="9">
+                <h4 className="section-title" style={{ fontWeight: 'bold' }}>
+                  Miền Bắc
+                </h4>
               </Col>
-              <Col xs="9">
-                <Shimmer width="100%" isDataLoaded={this.state.isDataloaded} customElementsGroup={this.getShimmerElements()}>
-                  <ListFarm items={this.state.data} />
-                </Shimmer>
+              <Col md="3" className="see-more">
+                <span>
+                  <a href="/farms/mien-bac" className="mr-1 btn btn-link">
+                    Xem thêm &gt;&gt;
+                  </a>
+                </span>
               </Col>
             </Row>
+            <Row>
+              <ListFarm items={this.state.data} />
+            </Row>
+            <Row className="section-row">
+              <Col md="9">
+                <h4 className="section-title" style={{ fontWeight: 'bold' }}>
+                  Miền Trung
+                </h4>
+              </Col>
+              <Col md="3" className="see-more">
+                <span>
+                  <a href="/farms/mien-trung" className="mr-1 btn btn-link">
+                    Xem thêm &gt;&gt;
+                  </a>
+                </span>
+              </Col>
+            </Row>
+            <Row>
+              <ListFarm items={this.state.data} />
+            </Row>
+            <Row className="section-row">
+              <Col md="9">
+                <h4 className="section-title" style={{ fontWeight: 'bold' }}>
+                  Miền Nam
+                </h4>
+              </Col>
+              <Col md="3" className="see-more">
+                <span>
+                  <a href="/farms/mien-nam" className="mr-1 btn btn-link">
+                    Xem thêm &gt;&gt;
+                  </a>
+                </span>
+              </Col>
+            </Row>
+            <Row>
+              <ListFarm items={this.state.data} />
+            </Row>
           </Container>
-        </div>
-      </>
-    );
-  }
-
-  getShimmerElements() {
-    return (
-      <>
-        <div style={{ display: 'flex' }}>
-          <ShimmerElementsGroup
-            width={'25%'}
-            shimmerElements={[
-              { type: ElemType.gap, width: '5%', height: 200 },
-              { type: ElemType.line, width: '90%', height: 180 },
-              { type: ElemType.gap, width: '5%', height: 200 },
-            ]}
-          />
-          <ShimmerElementsGroup
-            width={'100%'}
-            flexWrap
-            shimmerElements={[
-              { type: ElemType.line, width: '98%', height: 25 },
-              { type: ElemType.gap, width: '2%', height: 50 },
-              { type: ElemType.line, width: '98%', height: 25 },
-              { type: ElemType.gap, width: '2%', height: 50 },
-              { type: ElemType.line, width: '98%', height: 25 },
-              { type: ElemType.gap, width: '2%', height: 50 },
-              { type: ElemType.line, width: '98%', height: 25 },
-              { type: ElemType.gap, width: '2%', height: 50 },
-            ]}
-          />
-        </div>
-        <div style={{ display: 'flex' }}>
-          <ShimmerElementsGroup
-            width={'25%'}
-            shimmerElements={[
-              { type: ElemType.gap, width: '5%', height: 200 },
-              { type: ElemType.line, width: '90%', height: 180 },
-              { type: ElemType.gap, width: '5%', height: 200 },
-            ]}
-          />
-          <ShimmerElementsGroup
-            width={'100%'}
-            flexWrap
-            shimmerElements={[
-              { type: ElemType.line, width: '98%', height: 25 },
-              { type: ElemType.gap, width: '2%', height: 50 },
-              { type: ElemType.line, width: '98%', height: 25 },
-              { type: ElemType.gap, width: '2%', height: 50 },
-              { type: ElemType.line, width: '98%', height: 25 },
-              { type: ElemType.gap, width: '2%', height: 50 },
-              { type: ElemType.line, width: '98%', height: 25 },
-              { type: ElemType.gap, width: '2%', height: 50 },
-            ]}
-          />
-        </div>
-        <div style={{ display: 'flex' }}>
-          <ShimmerElementsGroup
-            width={'25%'}
-            shimmerElements={[
-              { type: ElemType.gap, width: '5%', height: 200 },
-              { type: ElemType.line, width: '90%', height: 180 },
-              { type: ElemType.gap, width: '5%', height: 200 },
-            ]}
-          />
-          <ShimmerElementsGroup
-            width={'100%'}
-            flexWrap
-            shimmerElements={[
-              { type: ElemType.line, width: '98%', height: 25 },
-              { type: ElemType.gap, width: '2%', height: 50 },
-              { type: ElemType.line, width: '98%', height: 25 },
-              { type: ElemType.gap, width: '2%', height: 50 },
-              { type: ElemType.line, width: '98%', height: 25 },
-              { type: ElemType.gap, width: '2%', height: 50 },
-              { type: ElemType.line, width: '98%', height: 25 },
-              { type: ElemType.gap, width: '2%', height: 50 },
-            ]}
-          />
         </div>
       </>
     );
@@ -150,18 +85,19 @@ export default class FarmDetailBody extends React.Component {
     let get_items = getItems(url);
     Promise.all([get_items]).then(values => {
       if (values[0]?.status === 200) {
+        let _data = []
+        if(values[0].data.length > 3) {
+          _data.push(values[0].data[0]);
+          _data.push(values[0].data[1]);
+          _data.push(values[0].data[2]);
+        } else {
+          _data = values[0].data;
+        }
         this.setState({
-          data: values[0].data,
-          isDataloaded: true,
+          data: _data,
         });
       }
     })
-    // setTimeout(() => {
-    //   this.setState({
-    //     isDataloaded: true,
-    //     data: dataFarms,
-    //   });
-    // }, 3000);
   }
 }
 

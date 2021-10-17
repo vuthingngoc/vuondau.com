@@ -168,7 +168,7 @@ export default function BodyProduction() {
                 {dataProduct.map((ele) => {
                   return (
                     <Col md="4">
-                      <Card className="card-product card-plain">
+                      <Card className="card-product card-plain-custom">
                         <div className="card-image">
                           <a href={ele.src}>
                             <img alt="..." src={ele.image} />
@@ -216,7 +216,7 @@ export default function BodyProduction() {
                 {dataHavest.map((ele) => {
                   return (
                     <Col md="4">
-                      <Card className="card-product card-plain">
+                      <Card className="card-product card-plain-custom">
                         <div className="card-image">
                           <a href={ele.src}>
                             <img alt="..." src={ele.image} />
@@ -260,7 +260,7 @@ export default function BodyProduction() {
                 {dataProduct.map((ele) => {
                   return (
                     <Col md="4">
-                      <Card className="card-product card-plain">
+                      <Card className="card-product card-plain-custom">
                         <div className="card-image">
                           <a href={ele.src}>
                             <img alt="..." src={ele.image} />
@@ -308,7 +308,7 @@ export default function BodyProduction() {
                 {dataFruit.map((ele) => {
                   return (
                     <Col md="4">
-                      <Card className="card-product card-plain">
+                      <Card className="card-product card-plain-custom">
                         <div className="card-image">
                           <a href={ele.src}>
                             <img alt="..." src={ele.image} />

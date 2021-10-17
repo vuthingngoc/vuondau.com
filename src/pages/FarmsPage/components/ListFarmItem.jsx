@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, CardBody, Col, Card, CardTitle, Row } from 'reactstrap';
+import { Container, CardBody, Col, Card, CardTitle, Row, Button } from 'reactstrap';
 
 export default function ListFarm(props) {
   const renderDataItem = () => {
@@ -7,22 +7,22 @@ export default function ListFarm(props) {
     let elems = [];
     let imageErrorSource = require('assets/img/sections/farms/VuonRau.jpg').default;
     elems = items.map((ele) => {
+      let elemUrl = `/farms/farmdetail/${ele.id}`
       return (
         <Col md="4">
-          <Card className="card-product card-plain">
+          <Card className="card-product card-plain-custom">
             <div className="card-image">
-              <a href={ele.src}>
                 <img alt="..." src={ele.image ? ele.image : imageErrorSource} />
-              </a>
               <CardBody>
-                <div className="card-description">
+                <div className="card-description" style={{ textAlign: 'center' }}>
                   <CardTitle tag="h5">
                     <a href={ele.src} class="mr-1 btn btn-link">
                       {ele.name}
                     </a>
                   </CardTitle>
-                  <p className="card-description">{ele.description}</p>
-                  <p className="card-description">{ele.address}</p>
+                  <Button className="btn-round" color="default" outline href={elemUrl}>
+                    Thăm vườn
+                  </Button>
                 </div>
               </CardBody>
             </div>

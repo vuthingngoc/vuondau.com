@@ -16,6 +16,7 @@ import HavestPage from 'pages/HavestPage';
 import HavestDetailPage from 'pages/HavestDetailPage';
 import AuthContextProvider from 'contexts/AuthContext';
 import FarmManagerPage from 'pages/AdminFarmManagerPage';
+import FarmByRegion from 'pages/FarmsPage/components/FarmByRegion'
 
 import { initializeIcons } from '@fluentui/font-icons-mdl2';
 import ListAccountPage from 'pages/ListAccountPage';
@@ -33,6 +34,9 @@ function App() {
           <Route exact path="/home" render={(props) => <Homepage {...props} />} />
           <Route path="/product/productdetail" render={(props) => <ProductDetail {...props} />} />
           <Route exact path="/farms" render={(props) => <FarmsPage {...props} />} />
+          <Route path="/farms/mien-bac" render={(props) => <FarmByRegion {...props} />} />
+          <Route path="/farms/mien-trung" render={(props) => <FarmByRegion {...props} />} />
+          <Route path="/farms/mien-nam" render={(props) => <FarmByRegion {...props} />} />
           <Route path="/farms/farmdetail/:id" render={(props) => <FarmDetail {...props} />} />
           <Route exact path="/components" render={(props) => <Index {...props} />} />
           <Route exact path="/login" render={(props) => <LoginPage {...props} />} />
