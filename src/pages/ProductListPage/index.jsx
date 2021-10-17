@@ -1,16 +1,15 @@
 import FooterBlack from 'components/Footers/FooterBlack';
 import FarmPageHeader from 'components/Headers/FarmPageHeader';
-// import ProfilePageHeader from 'components/Headers/ProfilePageHeader';
 import ColorNavbar from 'components/Navbars/ColorNavbarCustomize';
 import React from 'react';
-import HavestBody from './components/HavestBody';
+import ProductBody from './components/ProductBody';
 
-export default function HavestPage() {
+export default function ProductPage() {
   return (
     <>
       <ColorNavbar />
       <FarmPageHeader />
-      <HavestBody />
+      <ProductBody />
       <FooterBlack />
     </>
   );

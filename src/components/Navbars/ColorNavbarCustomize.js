@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import { useHistory } from 'react-router';
 // nodejs library that concatenates strings
 import classnames from 'classnames';
 // JavaScript plugin that hides or shows a component based on your scroll
@@ -14,10 +15,8 @@ const dataNavbar = [
     title: 'Category',
     child: [
       { name: 'All Productions', src: '/production' },
-      { name: 'Vegetable', src: '/production/vegetable' },
-      { name: 'Fruit', src: '/production/fruit' },
-      { name: 'Meat', src: '/production/meat' },
-      { name: 'Fish', src: '/production/fish' },
+      { name: 'Vegetable', src: '/production#vegetable' },
+      { name: 'Fruit', src: '/production#fruit' },
     ],
   },
   {
@@ -45,14 +44,15 @@ function ColorNavbar() {
   const [collapseOpen, setCollapseOpen] = React.useState(false);
   const { currentUser, logout } = useAuth();
 
+  const history = useHistory();
   React.useEffect(() => {
     let headroom = new Headroom(document.getElementById('navbar-main'));
     // initialise
     headroom.init();
     const updateNavbarColor = () => {
-      if (document.documentElement.scrollTop > 499 || document.body.scrollTop > 499) {
+      if (document.documentElement.scrollTop > 50 || document.body.scrollTop > 50) {
         setNavbarColor('');
-      } else if (document.documentElement.scrollTop < 500 || document.body.scrollTop < 500) {
+      } else if (document.documentElement.scrollTop < 50 || document.body.scrollTop < 50) {
         setNavbarColor('navbar-transparent');
       }
     };
@@ -76,14 +76,14 @@ function ColorNavbar() {
       <Navbar className={classnames('fixed-top', navbarColor)} expand="lg" id="navbar-main">
         <Container>
           <div>
-            <img alt="..." src={require('assets/img/logoVuonDau.png').default} width="110px" height="50px" />
+            <img alt="..." src={require('assets/img/logoVuonDau.png').default} width="110px" height="50px" onClick={() => history.push('/home')} />
             <div
               className="text-center"
               style={{
                 fontFamily: '"Montserrat", "Helvetica", Arial, sans-serif',
                 fontWeight: 300,
                 WebkitFontSmoothing: 'antialiased',
-                color: "white"
+                color: 'white',
               }}
             >
               Enjoy Fresh Product From Our Farm
