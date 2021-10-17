@@ -22,7 +22,7 @@ export default function FarmsPage(props) {
     <>
       <ColorNavbar />
       <FarmPageHeader />
-      <FarmBody {...props}/>
+      <FarmBody {...props} />
       <FooterBlack />
     </>
   );
