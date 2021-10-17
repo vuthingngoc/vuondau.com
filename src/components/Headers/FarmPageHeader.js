@@ -14,12 +14,12 @@ function FarmPageHeader() {
   });
   return (
     <>
-      <div className="page-header page-header-custom"
+      <div
+        className="page-header page-header-custom"
         style={{
-          backgroundImage: 'url(' + require('assets/img/sections/FarmsPage2.jpg').default + ')',
+          backgroundImage: 'url(' + require('assets/img/sections/PageHeader3.jpg').default + ')',
         }}
       >
-        
         <div className="filter" />
       </div>
     </>

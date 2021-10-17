@@ -61,9 +61,9 @@ function ColorNavbar() {
     // initialise
     headroom.init();
     const updateNavbarColor = () => {
-      if (document.documentElement.scrollTop > 499 || document.body.scrollTop > 499) {
+      if (document.documentElement.scrollTop > 300 || document.body.scrollTop > 300) {
         setNavbarColor('');
-      } else if (document.documentElement.scrollTop < 500 || document.body.scrollTop < 500) {
+      } else if (document.documentElement.scrollTop < 300 || document.body.scrollTop < 300) {
         setNavbarColor('navbar-transparent');
       }
     };

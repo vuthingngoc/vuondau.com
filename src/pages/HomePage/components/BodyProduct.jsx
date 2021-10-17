@@ -1,6 +1,13 @@
 import React from 'react';
 import { Card, Col, Container, Row } from 'react-bootstrap';
 import { CardBody, CardTitle } from 'reactstrap';
+import styled from 'styled-components';
+
+const ZoomImage = styled.img`
+  :hover {
+    transform: scale(1.2);
+  }
+`;
 
 const dataProduct = [
   {
@@ -125,7 +132,7 @@ export default function BodyProduction() {
                 <Card className="card-product card-plain">
                   <div className="card-image">
                     <a href={ele.src}>
-                      <img alt="..." src={ele.image} />
+                      <ZoomImage alt="..." src={ele.image} />
                     </a>
                     <CardTitle tag="h6">
                       <h6>
@@ -157,7 +164,7 @@ export default function BodyProduction() {
                 </Col>
                 <Col md="3">
                   <h6 style={{ marginTop: '20px' }}>
-                    <a href="/product" className="mr-1 btn btn-link">
+                    <a href="/production" className="mr-1 btn btn-link">
                       More information &gt;&gt;
                     </a>
                   </h6>
@@ -171,7 +178,7 @@ export default function BodyProduction() {
                       <Card className="card-product card-plain">
                         <div className="card-image">
                           <a href={ele.src}>
-                            <img alt="..." src={ele.image} />
+                            <ZoomImage alt="..." src={ele.image} />
                           </a>
                           <CardBody>
                             <div className="card-description">
@@ -219,7 +226,7 @@ export default function BodyProduction() {
                       <Card className="card-product card-plain">
                         <div className="card-image">
                           <a href={ele.src}>
-                            <img alt="..." src={ele.image} />
+                            <ZoomImage alt="..." src={ele.image} />
                           </a>
                           <CardBody>
                             <div className="card-description">
@@ -249,7 +256,7 @@ export default function BodyProduction() {
                 </Col>
                 <Col md="3">
                   <h6 style={{ marginTop: '20px' }}>
-                    <a href="/product" className="mr-1 btn btn-link">
+                    <a href="/production#vegetable" className="mr-1 btn btn-link">
                       More information &gt;&gt;
                     </a>
                   </h6>
@@ -263,7 +270,7 @@ export default function BodyProduction() {
                       <Card className="card-product card-plain">
                         <div className="card-image">
                           <a href={ele.src}>
-                            <img alt="..." src={ele.image} />
+                            <ZoomImage alt="..." src={ele.image} />
                           </a>
                           <CardBody>
                             <div className="card-description">
@@ -297,7 +304,7 @@ export default function BodyProduction() {
                 </Col>
                 <Col md="3">
                   <h6 style={{ marginTop: '20px' }}>
-                    <a href="/product" className="mr-1 btn btn-link">
+                    <a href="/production#fruit" className="mr-1 btn btn-link">
                       More information &gt;&gt;
                     </a>
                   </h6>
@@ -311,7 +318,7 @@ export default function BodyProduction() {
                       <Card className="card-product card-plain">
                         <div className="card-image">
                           <a href={ele.src}>
-                            <img alt="..." src={ele.image} />
+                            <ZoomImage alt="..." src={ele.image} />
                           </a>
                           <CardBody>
                             <div className="card-description">

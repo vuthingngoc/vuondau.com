@@ -22,6 +22,7 @@ import ListAccountPage from 'pages/ListAccountPage';
 import EditAccountPage from 'pages/EditAccountPage';
 import { NotificationContainer } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
+import ProductPage from 'pages/ProductListPage';
 
 function App() {
   initializeIcons();
@@ -41,6 +42,7 @@ function App() {
           <Route path="/addproduct" render={(props) => <AddProductPage {...props} />} />
           <Route exact path="/havests" render={(props) => <HavestPage {...props} />} />
           <Route path="/havests/havestdetail/" render={(props) => <HavestDetailPage {...props} />} />
+          <Route exact path="/production" render={(props) => <ProductPage {...props} />} />
           <Route exact path="/admin/manageaccount" render={(props) => <ListAccountPage {...props} />} />
           <Route path="/admin/manageaccount/:id/edit" render={(props) => <EditAccountPage {...props} />} />
           <Route path="/admin/manageaccount/:id/view" render={(props) => <EditAccountPage {...props} />} />
