@@ -22,14 +22,23 @@ export default class FarmManagerBody extends React.Component {
     Promise.all([get_data])
       .then((values) => {
         if (values[0]?.status === 200) {
+          let _data = this.onUpdateDataSource(values[0].data)
           this.setState({
-            data: values[0].data,
+            data: _data,
           });
         }
       })
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  onUpdateDataSource(data) {
+    for(let item of data) {
+      item._farm_type = item.farm_type.name
+      item._farmer = `${item.farmer.first_name} ${item.farmer.last_name}`
+    }
+    return data;
   }
 
   _onRenderItemColumn(item, index, column) {
@@ -109,7 +118,7 @@ const columns = [
     key: 'id',
     name: 'Id',
     fieldName: 'id',
-    minWidth: 200,
+    minWidth: 100,
   },
   {
     key: 'name',
@@ -124,22 +133,22 @@ const columns = [
     minWidth: 20,
   },
   {
-    key: 'farm_type',
+    key: '_farm_type',
     name: 'Farm Type',
-    fieldName: 'farm_type',
+    fieldName: '_farm_type',
     minWidth: 100,
   },
   {
-    key: 'farmer',
+    key: '_farmer',
     name: 'Farmer',
-    fieldName: 'farmer',
+    fieldName: '_farmer',
     minWidth: 100,
   },
   {
     key: 'description',
     name: 'Description',
     fieldName: 'description',
-    minWidth: 100,
+    minWidth: 200,
   },
   {
     key: 'address',
@@ -163,7 +172,7 @@ const columns = [
     key: 'status',
     name: 'Status',
     fieldName: 'status',
-    minWidth: 50,
+    minWidth: 60,
   },
 ];
 
