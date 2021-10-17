@@ -1,88 +1,57 @@
 import React from 'react';
+// import { Link } from 'react-router-dom';
 
-import { Badge, Button, Card, Media, Container, Row, Col, CardBody, CardTitle } from 'reactstrap';
+import { Badge, Button, Card, Media, Container, Row, Col, CardTitle } from 'reactstrap';
 
 const dataHavest = {
-  havestName: 'Nông Trại Đà Lạt vụ mùa xuân',
+  havestName: 'Vụ cà chua Đà Lạt Mùa đông',
   ordered: 200,
   heart: 56,
-  image: 'https://farmstay.com.vn/wp-content/uploads/2019/08/DL-trai-mat-2.jpg',
+  image:
+    'https://images.unsplash.com/photo-1516253593875-bd7ba052fbc5?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80',
   imageAlt: 'imageAlt',
   imageTitle: 'Photo by Farmer',
-  description: 'Các loại rau củ của nông trại đà lạc mùa xuân',
+  description: 'Cà chua đà lạt vụ mùa đông',
   src: '/havests/havestdetail/',
   status: 1,
   orderDay: 'OCTOBER 10, 2021',
+  havestDay: 'DECEMBER 15, 2021',
 };
 
 const dataSimularHavest = [
   {
-    havestName: 'Nông Trại đà lạt vụ mùa hạ',
+    havestName: 'Vụ rau cải thảo đà lạt Mùa Đông',
     ordered: 352,
-    image: 'https://farmstay.com.vn/wp-content/uploads/2019/08/DL-trai-mat-4.jpg',
-    description: 'Các loại rau củ của nông trại đà lạc mùa hạ',
+    image:
+      'https://images.unsplash.com/photo-1486328228599-85db4443971f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
+    description: 'Rau cải thảo đà lạt vụ mùa đông',
     src: '/havests/havestdetail/',
   },
   {
-    havestName: 'Nông Trại đà lạt vụ mùa thu',
+    havestName: 'Vụ dâu Đà Lạt Mùa Đông',
     ordered: 123,
-    image: 'https://farmstay.com.vn/wp-content/uploads/2019/08/DL-trai-mat-3.jpg',
-    description: 'Các loại rau củ của nông trại đà lạc mùa đông',
+    image:
+      'https://images.unsplash.com/photo-1605056545110-c2ef2253aa8c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1120&q=80',
+    description: 'Dâu Đà Lạt mùa đông giá cực rẻ, ngọt ngon',
     src: '/havests/havestdetail/',
   },
   {
-    havestName: 'Nông Trại đà lạt vụ mùa đông',
+    havestName: 'Dưa leo Đà Lạc vụ Mùa Đông',
     ordered: 431,
-    image: 'https://farmstay.com.vn/wp-content/uploads/2019/08/DL-cau-dat-farm-3.jpg',
-    description: 'Các loại rau củ của nông trại đà lạc mùa đông',
+    image:
+      'https://images.unsplash.com/photo-1627738670355-45970f19bcd9?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80',
+    description: 'Dưa leo Đà Lạt mùa đông',
     src: '/havests/havestdetail/',
   },
 ];
 
-const dataProduct = [
-  {
-    productName: 'Cà chua không hạt',
-    image: 'https://hoayeuthuong.com/hinh-hoa-tuoi/moingay/11894_ca-chua-kg.jpg',
-    description: 'Hàng limited edition đến từ nông trại Đà Lạt.',
-    salePrice: '41,000 vnđ/kg',
-    src: '/product/productdetail/ca-chua',
-  },
-  {
-    productName: 'Dưa leo ruột vàng',
-    image: 'https://hoayeuthuong.com/hinh-hoa-tuoi/moingay/11896_dua-leo-lon-kg.jpg',
-    description: 'Sản phẩm đặc sản của Nông Trại Vĩnh Long. Dưa ngọt, nhiều nước và bảo quản được thời gian lâu trong tủ lạnh.',
-    salePrice: '15,000 vnđ/kg',
-    src: '/product/productdetail/ca-chua',
-  },
-  {
-    productName: 'Rau cải thìa',
-    image: 'https://hoayeuthuong.com/hinh-hoa-tuoi/moingay/11918_cai-thia-kg.jpg',
-    description: 'Sản phẩm đặc sản của Nông Trại Vĩnh Long. Dưa ngọt, nhiều nước và bảo quản được thời gian lâu trong tủ lạnh.',
-    salePrice: '33,000 vnđ/kg',
-    src: '/product/productdetail/ca-chua',
-  },
-  {
-    productName: 'Cà chua không hạt',
-    image: 'https://hoayeuthuong.com/hinh-hoa-tuoi/moingay/11894_ca-chua-kg.jpg',
-    description: 'Hàng limited edition đến từ nông trại Đà Lạt.',
-    salePrice: '41,000 vnđ/kg',
-    src: '/product/productdetail/ca-chua',
-  },
-  {
-    productName: 'Dưa leo ruột vàng',
-    image: 'https://hoayeuthuong.com/hinh-hoa-tuoi/moingay/11896_dua-leo-lon-kg.jpg',
-    description: 'Sản phẩm đặc sản của Nông Trại Vĩnh Long. Dưa ngọt, nhiều nước và bảo quản được thời gian lâu trong tủ lạnh.',
-    salePrice: '15,000 vnđ/kg',
-    src: '/product/productdetail/ca-chua',
-  },
-  {
-    productName: 'Rau cải thìa',
-    image: 'https://hoayeuthuong.com/hinh-hoa-tuoi/moingay/11918_cai-thia-kg.jpg',
-    description: 'Sản phẩm đặc sản của Nông Trại Vĩnh Long. Dưa ngọt, nhiều nước và bảo quản được thời gian lâu trong tủ lạnh.',
-    salePrice: '33,000 vnđ/kg',
-    src: '/product/productdetail/ca-chua',
-  },
-];
+const dataProduct = {
+  productName: 'Cà chua không hạt',
+  image: 'https://hoayeuthuong.com/hinh-hoa-tuoi/moingay/11894_ca-chua-kg.jpg',
+  description: 'Hàng limited edition đến từ nông trại Đà Lạt.',
+  salePrice: '41,000 vnđ/kg',
+  src: '/product/productdetail/ca-chua',
+};
 
 const dataFarm = {
   farmName: 'Nông Trại Thảo Điền',
@@ -118,15 +87,14 @@ export default function HavestDetailBody() {
                       <h3 className="title">{dataHavest.havestName}</h3>
                     </a>
                     <h6 className="title-uppercase">Order start day: {dataHavest.orderDay} </h6>
+                    <h6 className="title-uppercase">Expect havest day: {dataHavest.havestDay} </h6>
                   </div>
                 </Col>
                 <Col className="ml-auto mr-auto" md="8">
-                  <a href="javascrip: void(0);">
-                    <Card data-radius="none">
-                      <img alt={dataHavest.imageAlt} className="img-rounded img-responsive" src={dataHavest.image} />
-                    </Card>
-                    <p className="image-thumb text-center">{dataHavest.imageTitle}</p>
-                  </a>
+                  <Card data-radius="none">
+                    <img alt={dataHavest.imageAlt} className="img-rounded img-responsive" src={dataHavest.image} />
+                  </Card>
+                  <p className="image-thumb text-center">{dataHavest.imageTitle}</p>
                   <div className="article-content">
                     <h4>Description</h4>
                     <p>{dataHavest.description}</p>
@@ -134,32 +102,30 @@ export default function HavestDetailBody() {
                   <h3 className="section-title">Havest's Products</h3>
                   <br />
                   <Row>
-                    {dataProduct.map((ele) => {
-                      return (
-                        <Col md="4">
-                          <Card className="card-product card-plain">
-                            <div className="card-image">
-                              <a href={ele.src}>
-                                <img alt="..." src={ele.image} />
-                              </a>
-                              <CardBody>
-                                <div className="card-description">
-                                  <CardTitle tag="h5">
-                                    <a href={ele.src} class="mr-1 btn btn-link">
-                                      {ele.productName}
-                                    </a>
-                                  </CardTitle>
-                                  <p className="card-description">{ele.description}</p>
-                                </div>
-                                <div className="price">
-                                  <h6 className="text-default">{ele.salePrice}</h6>
-                                </div>
-                              </CardBody>
-                            </div>
-                          </Card>
-                        </Col>
-                      );
-                    })}
+                    <Col md="6">
+                      <Card className="card-product card-plain">
+                        <div className="card-image">
+                          <a href={dataProduct.src}>
+                            <img alt="..." src={dataProduct.image} />
+                          </a>
+                        </div>
+                      </Card>
+                    </Col>
+                    <Col md="6">
+                      <h3>{dataProduct.productName}</h3>
+                      <p className="card-description">{dataProduct.description}</p>
+                      <div className="price">
+                        <h6 className="text-default">{dataProduct.salePrice}</h6>
+                      </div>
+                      <Row>
+                        <Button className="btn-round" color="info" href={dataProduct.src}>
+                          View Product
+                        </Button>
+                        <h6 style={{ textAlign: 'right', marginLeft: '100px', marginTop: '10px' }}>
+                          Đã đặt <i className="fa fa-handshake-o" /> {dataHavest.ordered}
+                        </h6>
+                      </Row>
+                    </Col>
                   </Row>
                   <hr />
                   <Container>

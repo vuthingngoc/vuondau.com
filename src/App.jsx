@@ -20,6 +20,8 @@ import FarmManagerPage from 'pages/AdminFarmManagerPage';
 import { initializeIcons } from '@fluentui/font-icons-mdl2';
 import ListAccountPage from 'pages/ListAccountPage';
 import EditAccountPage from 'pages/EditAccountPage';
+import { NotificationContainer } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 
 function App() {
   initializeIcons();
@@ -46,6 +48,7 @@ function App() {
           <Redirect to="/home" />
         </Switch>
       </BrowserRouter>
+      <NotificationContainer />
     </AuthContextProvider>
   );
 }
