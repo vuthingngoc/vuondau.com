@@ -9,3 +9,13 @@ export default function getOptions(accessToken) {
   const options = { headers };
   return options;
 }
+
+export class ultilities {
+  constructor() { }
+
+  isNullOrUndefined(value) {
+    if (value === undefined || value === null || value === NaN) return true;
+    return false;
+  }
+
+}

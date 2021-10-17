@@ -4,37 +4,8 @@ import { Container, Row } from 'reactstrap';
 import { Shimmer, ShimmerElementsGroup, ShimmerElementType as ElemType, Dropdown } from 'office-ui-fabric-react';
 import { Col } from 'react-bootstrap';
 import ListFarm from './ListFarmItem';
+import { getItems } from 'services/data.service';
 
-const dataFarms = [
-  {
-    id: 1,
-    farmName: 'Nông Trại đà lạt vụ mùa xuân',
-    address: 'Thành Phố Hồ Chí Minh',
-    image: 'https://farmstay.com.vn/wp-content/uploads/2019/08/DL-trai-mat-2.jpg',
-    description: 'Các loại rau củ của nông trại đà lạc mùa xuân',
-  },
-  {
-    id: 2,
-    farmName: 'Nông Trại đà lạt vụ mùa hạ',
-    ordered: 352,
-    image: 'https://farmstay.com.vn/wp-content/uploads/2019/08/DL-trai-mat-4.jpg',
-    description: 'Các loại rau củ của nông trại đà lạc mùa hạ',
-  },
-  {
-    id: 3,
-    farmName: 'Nông Trại đà lạt vụ mùa thu',
-    ordered: 123,
-    image: 'https://farmstay.com.vn/wp-content/uploads/2019/08/DL-trai-mat-3.jpg',
-    description: 'Các loại rau củ của nông trại đà lạc mùa đông',
-  },
-  {
-    id: 4,
-    farmName: 'Nông Trại đà lạt vụ mùa đông',
-    ordered: 431,
-    image: 'https://farmstay.com.vn/wp-content/uploads/2019/08/DL-cau-dat-farm-3.jpg',
-    description: 'Các loại rau củ của nông trại đà lạc mùa đông',
-  },
-];
 
 const dataLocation = [
   {
@@ -77,6 +48,9 @@ export default class FarmDetailBody extends React.Component {
                   style={{ width: '70%' }}
                   onChange={(event, value) => {
                     this.onDropDownChanged(value);
+                  }}
+                  styles={{
+                    root: { borderRadius: 4, color: "red" },
                   }}
                 />
               </Col>
@@ -172,38 +146,23 @@ export default class FarmDetailBody extends React.Component {
   }
 
   loadData() {
-    setTimeout(() => {
-      this.setState({
-        isDataloaded: true,
-        data: dataFarms,
-      });
-    }, 3000);
+    let url = "api/v1/farms";
+    let get_items = getItems(url);
+    Promise.all([get_items]).then(values => {
+      if(values[0]?.status == 200) {
+        this.setState({
+          data: values[0].data,
+          isDataloaded: true
+        })
+      }
+    })
+    // setTimeout(() => {
+    //   this.setState({
+    //     isDataloaded: true,
+    //     data: dataFarms,
+    //   });
+    // }, 3000);
   }
 }
 
-// export default function FarmBody() {
-//     let flag = false;
-//     React.useEffect(() => {
-//         if (!flag) {
-//             loadData();
-//             flag = true;
-//         }
-//     });
 
-//     const [isDataloaded, setIsDataloaded] = React.useState(false);
-
-//     const loadData = () => {
-//         setTimeout(function () {
-//             setIsDataloaded(true);
-//         }, 3000)
-//     }
-
-//     const onDropDownChanged = (newValue) => {
-//         setIsDataloaded(false);
-//         loadData();
-//     }
-
-//     return (
-//
-//     );
-// }

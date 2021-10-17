@@ -1,5 +1,5 @@
 import React from 'react';
-import ColorNavbar from 'components/Navbars/ColorNavbar';
+import ColorNavbar from 'components/Navbars/ColorNavbarCustomize';
 import FooterBlack from 'components/Footers/FooterBlack';
 import FarmPageHeader from 'components/Headers/FarmPageHeader';
 import FarmBody from './components/FarmBody';

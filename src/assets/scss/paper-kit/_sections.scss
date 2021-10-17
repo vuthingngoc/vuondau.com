@@ -13,6 +13,24 @@
 .section-gray {
     background-color: #EEEEEE;
 }
+.section-gray-custom{
+    background-color: #EEEEEE;
+    min-height: calc(100vh - 85px);
+    overflow: auto;
+}
+.ms-Viewport {
+    width: 100%;
+}
+.commandbar {
+    width: 100%;
+    margin-bottom: 25px;
+}
+.search-box{
+    height: 80%;
+    margin-top: 2%;
+    background-color: #E6E6E6;
+    width: 200px;
+}
 .section-nude {
     background-color: $bg-nude;
 }

@@ -1,6 +1,8 @@
 import { Button, Card, FormGroup, Container, Row, Col, Carousel, CarouselItem, CarouselIndicators } from 'reactstrap';
 import React from 'react';
 import Select from 'react-select';
+import { ultilities } from 'utils/services.ultils';
+import { getItem } from 'services/data.service';
 
 export default class FarmDetailBody extends React.Component {
   constructor(props) {
@@ -11,8 +13,10 @@ export default class FarmDetailBody extends React.Component {
         value: '1',
         label: 'Cà chua',
       },
+      data: [],
       activeIndex: 0,
       animating: false,
+      _util: new ultilities()
     };
   }
 
@@ -21,7 +25,21 @@ export default class FarmDetailBody extends React.Component {
   }
 
   loadData() {
-    //to do
+    let url = "api/v1/farms"
+    let id = this.props?.match?.params?.id;
+    if (!this.state._util.isNullOrUndefined(id)) {
+      let get_item = getItem(url, id);
+      Promise.all([get_item]).then(values => {
+        if (values[0]?.status == 200) {
+          this.setState({
+            data: values[0].data,
+            isDataloaded: true
+          })
+        }
+      }).catch(err => {
+        console.log(err);
+      })
+    }
   }
 
   goToIndex(newIndex) {
@@ -68,56 +86,62 @@ export default class FarmDetailBody extends React.Component {
               <Col md="7" sm="6">
                 <div className="ml-auto mr-auto" id="carousel">
                   <Card className="page-carousel">
-                    <Carousel activeIndex={this.state.activeIndex} next={this.next} previous={this.previous}>
-                      <CarouselIndicators items={carouselItems} activeIndex={this.state.activeIndex} onClickHandler={this.goToIndex} />
+                    <Carousel activeIndex={this.state.activeIndex} next={() => { this.next() }} previous={() => { this.previous() }}>
+                      <CarouselIndicators items={carouselItems} activeIndex={this.state.activeIndex} onClickHandler={() => { this.goToIndex() }} />
                       {carouselItems.map((item) => {
                         return (
-                          <CarouselItem onExiting={this.onExiting} onExited={this.onExited} key={item.src}>
+                          <CarouselItem onExiting={() => { this.onExiting() }} onExited={() => { this.onExited() }} key={item.src}>
                             <img src={item.src} alt={item.altText} />
                             {/* <CarouselCaption captionText={item.caption} captionHeader="" /> */}
                           </CarouselItem>
                         );
                       })}
-                      <a
+                      <span
                         className="left carousel-control carousel-control-prev"
                         data-slide="prev"
-                        href="#pablo"
                         onClick={(e) => {
-                          e.preventDefault();
                           this.previous();
                         }}
                         role="button"
                       >
                         <span className="fa fa-angle-left" />
                         <span className="sr-only">Previous</span>
-                      </a>
-                      <a
+                      </span>
+                      <span
                         className="right carousel-control carousel-control-next"
                         data-slide="next"
-                        href="#pablo"
                         onClick={(e) => {
-                          e.preventDefault();
                           this.next();
                         }}
                         role="button"
                       >
                         <span className="fa fa-angle-right" />
                         <span className="sr-only">Next</span>
-                      </a>
+                      </span>
                     </Carousel>
                   </Card>
                 </div>
                 {/* end carousel */}
               </Col>
               <Col md="5" sm="6" style={{ color: '#000000' }}>
-                <h2>Nông Trại Thảo Điền</h2>
-                {/* <h4 className="price">
-                                            <strong>€ 2,900.00</strong>
-                                        </h4> */}
+                <h2>
+                  {
+                    !this.state._util.isNullOrUndefined(this.state.data) ?
+                      this.state.data.name : ""
+                  }
+                </h2>
                 <hr />
                 <p>
-                  Nông trại Thảo Điền hiện có một vườn rau canh tác theo kỹ thuật hữu cơ rộng 5.000m2 tại huyện ..., Tỉnh .... Tất cả sản phẩm rau hữu
-                  cơ đều do Farmers Market tự trồng và kiểm soát chất lượng theo tiêu chuẩn canh tác hữu cơ tại nông trại này. .
+                  {
+                    !this.state._util.isNullOrUndefined(this.state.data) ?
+                      `Địa chỉ: ${this.state.data.address}` : "Địa chỉ: "
+                  }
+                </p>
+                <p style={{ minHeight: 100 }}>
+                  {
+                    !this.state._util.isNullOrUndefined(this.state.data) ?
+                    `Mô tả: ${this.state.data.description}` : "Mô tả: "
+                  }
                 </p>
                 <hr />
                 <p>
@@ -149,13 +173,13 @@ export default class FarmDetailBody extends React.Component {
                   </Col>
                 </Row>
                 <hr />
-                <Row>
+                {/* <Row>
                   <Col className="offset-md-5" md="7" sm="8">
                     <Button block className="btn-round" color="danger">
                       Add to Cart <i className="fa fa-chevron-right" />
                     </Button>
                   </Col>
-                </Row>
+                </Row> */}
                 <br />
               </Col>
             </Row>
