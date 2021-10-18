@@ -1,13 +1,13 @@
 import React from 'react';
 
 import { Card, CardHeader, CardBody, CardTitle, Collapse, Label, FormGroup, Input, Container, Row, Col, Button } from 'reactstrap';
-import styled from 'styled-components';
+// import styled from 'styled-components';
 
-const ZoomImage = styled.img`
-  :hover {
-    transform: scale(1.2);
-  }
-`;
+// const ZoomImage = styled.img`
+//   :hover {
+//     transform: scale(1.2);
+//   }
+// `;
 
 const dataProduct = [
   {
@@ -129,10 +129,10 @@ export default function ProductBody() {
                   {dataProduct.map((ele) => {
                     return (
                       <Col md="4">
-                        <Card className="card-product card-plain">
+                        <Card className="card-product card-plain-custom">
                           <div className="card-image">
                             <a href={ele.src}>
-                              <ZoomImage alt="..." src={ele.image} />
+                              <img alt="..." src={ele.image} />
                             </a>
                             <CardBody>
                               <div className="card-description">

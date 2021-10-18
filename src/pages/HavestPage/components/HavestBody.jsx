@@ -201,7 +201,7 @@ export default function HavestBody() {
                   {dataHavest.map((ele) => {
                     return (
                       <Col md="4">
-                        <Card className="card-product card-plain">
+                        <Card className="card-product card-plain-custom">
                           <div className="card-image">
                             <a href={ele.src}>
                               <img alt="..." src={ele.image} />
@@ -213,7 +213,9 @@ export default function HavestBody() {
                                     {ele.havestName}
                                   </a>
                                 </CardTitle>
-                                <p className="card-description">{ele.description}</p>
+                                <p className="card-description" style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
+                                  {ele.description}
+                                </p>
                               </div>
                               <h6 style={{ textAlign: 'right' }}>
                                 Đã đặt <i className="fa fa-handshake-o" /> {ele.ordered}
