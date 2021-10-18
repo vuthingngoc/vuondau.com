@@ -1,10 +1,9 @@
 import React from 'react';
-import ColorNavbar from 'components/Navbars/ColorNavbarCustomize';
-import FooterBlack from 'components/Footers/FooterBlack';
-import FarmPageHeader from 'components/Headers/FarmPageHeader';
-import FarmBody from './components/FarmBody';
+import FarmManagerBody from './component/FarmManagerBody';
+import DangerNavbar from 'components/Navbars/DangerNavbar';
+import FooterBlack from 'components/Footers/FooterBlack'
 
-export default function FarmsPage(props) {
+export default function FarmManagerPage(props) {
   document.documentElement.classList.remove('nav-open');
   React.useEffect(() => {
     document.body.classList.add('register-page');
@@ -20,9 +19,8 @@ export default function FarmsPage(props) {
 
   return (
     <>
-      <ColorNavbar />
-      <FarmPageHeader />
-      <FarmBody {...props} />
+      <DangerNavbar />
+      <FarmManagerBody {...props}/>
       <FooterBlack />
     </>
   );

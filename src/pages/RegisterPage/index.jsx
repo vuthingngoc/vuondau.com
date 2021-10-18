@@ -1,10 +1,22 @@
 import ColorNavbar from 'components/Navbars/ColorNavbar';
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Button, Card, CardTitle, Form, Input, Container, Row, Col } from 'reactstrap';
+import { Button, Card, CardTitle, Form, Input, Container, Row, Col, CardImg } from 'reactstrap';
+
+import { useAuth } from 'contexts/AuthContext';
+import { useHistory } from 'react-router';
 
 export default function RegisterPage() {
+  const history = useHistory();
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { register } = useAuth();
+
   document.documentElement.classList.remove('nav-open');
   React.useEffect(() => {
     document.body.classList.add('register-page');
@@ -31,34 +43,56 @@ export default function RegisterPage() {
             <Row>
               <Col className="ml-auto mr-auto" lg="4" md="6" sm="6">
                 <Card className="card-register">
-                  <CardTitle className="text-center" tag="h3">
+                  <CardImg top tag="div">
+                    <img alt="..." className="img" src={require('assets/img/iconVuondau.png').default} />
+                  </CardImg>
+                  <CardTitle className="text-center" tag="h3" style={{ marginBottom: '30px' }}>
                     Register
                   </CardTitle>
-                  <div className="social">
-                    <Button className="btn-just-icon mr-1" color="facebook">
-                      <i className="fa fa-facebook" />
-                    </Button>
-                    <Button className="btn-just-icon mr-1" color="google" style={{ marginLeft: '20px' }}>
-                      <i className="fa fa-google" />
-                    </Button>
-                  </div>
-                  <div className="division">
-                    <div className="line l" />
-                    <span>or</span>
-                    <div className="line r" />
-                  </div>
-                  <Form className="register-form">
-                    <Input placeholder="Email" type="text" />
-                    <Input placeholder="Password" type="password" />
-                    <Input placeholder="Confirm Password" type="password" />
-                    <Button
-                      block
-                      className="btn-round"
-                      color="default"
-                      onClick={(e) => {
-                        e.preventDefault();
-                      }}
-                    >
+                  <Form
+                    className="register-form"
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      setIsSubmitting(true);
+                      register(email, password)
+                        .then((response) => {
+                          console.log(response);
+                          history.push('/home');
+                        })
+                        .catch((error) => {
+                          console.log(error.message);
+                          setIsSubmitting(false);
+                        })
+                        .finally(() => setIsSubmitting(false));
+                    }}
+                  >
+                    <Input
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      placeholder="Email"
+                      required
+                    />
+                    <Input
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      name="password"
+                      autoComplete="password"
+                      placeholder="Password"
+                      type="password"
+                      required
+                    />
+                    <Input
+                      value={passwordConfirm}
+                      onChange={(e) => setPasswordConfirm(e.target.value)}
+                      name="confirmPassword"
+                      placeholder="Confirm Password"
+                      type="password"
+                      required
+                    />
+                    <Button disabled={isSubmitting} block className="btn-round" color="default">
                       Register
                     </Button>
                   </Form>

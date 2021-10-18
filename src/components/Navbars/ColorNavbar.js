@@ -19,6 +19,7 @@ import {
   Container,
   UncontrolledTooltip,
 } from 'reactstrap';
+import { useAuth } from 'contexts/AuthContext';
 // core components
 
 const dataNavbar = [
@@ -26,19 +27,17 @@ const dataNavbar = [
     title: 'Category',
     child: [
       { name: 'All Productions', src: '/production' },
-      { name: 'Vegetable', src: '/production/vegetable' },
-      { name: 'Fruit', src: '/production/fruit' },
-      { name: 'Meat', src: '/production/meat' },
-      { name: 'Fish', src: '/production/fish' },
+      { name: 'Vegetable', src: '/production#vegetable' },
+      { name: 'Fruit', src: '/production#fruit' },
     ],
   },
   {
     title: 'Havests',
     child: [
-      { name: 'Spring', src: '/havests/spring' },
-      { name: 'Summer', src: '/havests/summer' },
-      { name: 'Fall', src: '/havests/fall' },
-      { name: 'Winter', src: '/havests/winter' },
+      { name: 'Spring', src: '/havests#spring' },
+      { name: 'Summer', src: '/havests#summer' },
+      { name: 'Fall', src: '/havests#fall' },
+      { name: 'Winter', src: '/havests#winter' },
     ],
   },
   {
@@ -55,14 +54,16 @@ function ColorNavbar() {
   const [navbarColor, setNavbarColor] = React.useState('navbar-transparent');
   const [bodyClick, setBodyClick] = React.useState(false);
   const [collapseOpen, setCollapseOpen] = React.useState(false);
+  const { currentUser, logout } = useAuth();
+
   React.useEffect(() => {
     let headroom = new Headroom(document.getElementById('navbar-main'));
     // initialise
     headroom.init();
     const updateNavbarColor = () => {
-      if (document.documentElement.scrollTop > 499 || document.body.scrollTop > 499) {
+      if (document.documentElement.scrollTop > 300 || document.body.scrollTop > 300) {
         setNavbarColor('');
-      } else if (document.documentElement.scrollTop < 500 || document.body.scrollTop < 500) {
+      } else if (document.documentElement.scrollTop < 300 || document.body.scrollTop < 300) {
         setNavbarColor('navbar-transparent');
       }
     };
@@ -109,16 +110,16 @@ function ColorNavbar() {
           </div>
           <Collapse navbar isOpen={collapseOpen}>
             <Nav className="ml-auto" navbar>
-              {dataNavbar.map((ele) => {
+              {dataNavbar.map((ele, index) => {
                 return (
-                  <UncontrolledDropdown nav inNavbar>
+                  <UncontrolledDropdown nav inNavbar key={`UD-${index}`}>
                     <DropdownToggle className="mr-2" color="default" caret nav>
                       {ele.title}
                     </DropdownToggle>
                     <DropdownMenu className="dropdown-danger" right>
-                      {ele.child.map((child) => {
+                      {ele.child.map((child, index) => {
                         return (
-                          <DropdownItem to={child.src} tag={NavLink}>
+                          <DropdownItem to={child.src} tag={Link} key={`DI-${index}`}>
                             {child.name}
                           </DropdownItem>
                         );
@@ -127,31 +128,45 @@ function ColorNavbar() {
                   </UncontrolledDropdown>
                 );
               })}
-              <UncontrolledDropdown nav inNavbar>
-                <DropdownToggle color="default" caret nav>
-                  Account
-                </DropdownToggle>
-                <DropdownMenu className="dropdown-danger" right>
-                  <DropdownItem to="/login" tag={NavLink}>
-                    <i className="nc-icon nc-circle-10" />
-                    Login
-                  </DropdownItem>
-                  <DropdownItem to="/register" tag={NavLink}>
-                    <i className="nc-icon nc-badge" />
-                    register
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>
-              <Nav className="ml-auto" navbar>
-                <Button className="btn-info" color="link" href="/" onClick={(e) => e.preventDefault()}>
-                  News
-                </Button>
-              </Nav>
-              <Nav className="ml-auto" navbar>
-                <Button className="btn-info" color="link" href="/" onClick={(e) => e.preventDefault()}>
-                  Contact
-                </Button>
-              </Nav>
+              {currentUser !== null ? (
+                <UncontrolledDropdown nav inNavbar>
+                  <DropdownToggle color="default" caret nav>
+                    {currentUser.email}
+                  </DropdownToggle>
+                  <DropdownMenu className="dropdown-danger" right>
+                    <DropdownItem to="/profile" tag={NavLink}>
+                      <i className="nc-icon nc-circle-10" />
+                      Profile
+                    </DropdownItem>
+                    <DropdownItem
+                      to="/login"
+                      tag={NavLink}
+                      onClick={async (e) => {
+                        logout();
+                      }}
+                    >
+                      <i className="nc-icon nc-button-power" />
+                      Logout
+                    </DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+              ) : (
+                <UncontrolledDropdown nav inNavbar>
+                  <DropdownToggle color="default" caret nav>
+                    Account
+                  </DropdownToggle>
+                  <DropdownMenu className="dropdown-danger" right>
+                    <DropdownItem to="/login" tag={NavLink}>
+                      <i className="nc-icon nc-circle-10" />
+                      Login
+                    </DropdownItem>
+                    <DropdownItem to="/register" tag={NavLink}>
+                      <i className="nc-icon nc-badge" />
+                      Register
+                    </DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+              )}
               <NavItem>
                 <Button className="btn-round" color="danger" href="/shoppingcart">
                   <i className="nc-icon nc-cart-simple" /> Your Cart

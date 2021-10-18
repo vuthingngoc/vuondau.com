@@ -1,33 +1,22 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import { useHistory } from 'react-router';
+// nodejs library that concatenates strings
+import classnames from 'classnames';
 // JavaScript plugin that hides or shows a component based on your scroll
 import Headroom from 'headroom.js';
 // reactstrap components
-import {
-  Button,
-  Collapse,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
-  NavbarBrand,
-  Navbar,
-  NavItem,
-  Nav,
-  Container,
-  UncontrolledTooltip,
-} from 'reactstrap';
+import { Button, Collapse, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledDropdown, Navbar, NavItem, Nav, Container } from 'reactstrap';
 import { useAuth } from 'contexts/AuthContext';
+// core components
 
 const dataNavbar = [
   {
     title: 'Category',
     child: [
       { name: 'All Productions', src: '/production' },
-      { name: 'Vegetable', src: '/production/vegetable' },
-      { name: 'Fruit', src: '/production/fruit' },
-      { name: 'Meat', src: '/production/meat' },
-      { name: 'Fish', src: '/production/fish' },
+      { name: 'Vegetable', src: '/production#vegetable' },
+      { name: 'Fruit', src: '/production#fruit' },
     ],
   },
   {
@@ -49,14 +38,28 @@ const dataNavbar = [
   },
 ];
 
-function WhiteNavbar() {
+function ColorNavbar() {
+  const [navbarColor, setNavbarColor] = React.useState('navbar-transparent');
   const [bodyClick, setBodyClick] = React.useState(false);
   const [collapseOpen, setCollapseOpen] = React.useState(false);
   const { currentUser, logout } = useAuth();
+
+  const history = useHistory();
   React.useEffect(() => {
     let headroom = new Headroom(document.getElementById('navbar-main'));
     // initialise
     headroom.init();
+    const updateNavbarColor = () => {
+      if (document.documentElement.scrollTop > 50 || document.body.scrollTop > 50) {
+        setNavbarColor('');
+      } else if (document.documentElement.scrollTop < 50 || document.body.scrollTop < 50) {
+        setNavbarColor('navbar-transparent');
+      }
+    };
+    window.addEventListener('scroll', updateNavbarColor);
+    return function cleanup() {
+      window.removeEventListener('scroll', updateNavbarColor);
+    };
   });
   return (
     <>
@@ -70,42 +73,34 @@ function WhiteNavbar() {
           }}
         />
       ) : null}
-      <Navbar className="fixed-top" expand="lg" id="navbar-main" color="danger">
+      <Navbar className={classnames('fixed-top', navbarColor)} expand="lg" id="navbar-main">
         <Container>
-          <div className="navbar-translate">
-            <NavbarBrand id="navbar-brand" to="/home" tag={Link}>
-              VuonDau
-            </NavbarBrand>
-            <UncontrolledTooltip placement="bottom" target="navbar-brand">
-              <img alt="..." src={require('assets/img/iconVuondau.png').default} width="100px" height="100px" />
-            </UncontrolledTooltip>
-            <button
-              className="navbar-toggler"
-              id="navigation"
-              type="button"
-              onClick={() => {
-                document.documentElement.classList.toggle('nav-open');
-                setBodyClick(true);
-                setCollapseOpen(true);
+          <div>
+            <img alt="..." src={require('assets/img/logoVuonDau.png').default} width="110px" height="50px" onClick={() => history.push('/home')} />
+            <div
+              className="text-center"
+              style={{
+                fontFamily: '"Montserrat", "Helvetica", Arial, sans-serif',
+                fontWeight: 300,
+                WebkitFontSmoothing: 'antialiased',
+                color: 'white',
               }}
             >
-              <span className="navbar-toggler-bar bar1" />
-              <span className="navbar-toggler-bar bar2" />
-              <span className="navbar-toggler-bar bar3" />
-            </button>
+              Enjoy Fresh Product From Our Farm
+            </div>
           </div>
           <Collapse navbar isOpen={collapseOpen}>
             <Nav className="ml-auto" navbar>
-              {dataNavbar.map((ele) => {
+              {dataNavbar.map((ele, index) => {
                 return (
-                  <UncontrolledDropdown nav inNavbar>
+                  <UncontrolledDropdown nav inNavbar key={`UD-${index}`}>
                     <DropdownToggle className="mr-2" color="default" caret nav>
                       {ele.title}
                     </DropdownToggle>
                     <DropdownMenu className="dropdown-danger" right>
-                      {ele.child.map((child) => {
+                      {ele.child.map((child, index) => {
                         return (
-                          <DropdownItem to={child.src} tag={NavLink}>
+                          <DropdownItem to={child.src} tag={Link} key={`DI-${index}`}>
                             {child.name}
                           </DropdownItem>
                         );
@@ -166,4 +161,4 @@ function WhiteNavbar() {
   );
 }
 
-export default WhiteNavbar;
+export default ColorNavbar;

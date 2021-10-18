@@ -9,6 +9,11 @@
 .section-gray{
     background-color: #EEEEEE;
 }
+.section-gray-custom{
+    background-color: #EEEEEE;
+    min-height: calc(100vh - 85px);
+    overflow: auto;
+}
 .section-nude{
     background-color: $bg-nude;
 }
