@@ -73,13 +73,14 @@ export default function EditAccountBody(props) {
     if (data !== null) {
       const birth_day = birtDayConvertToUpdate(birthDay);
       const updateData = {
-        customer_type: data.customer_type,
+        customer_type: data.customer_type_navigation.id,
         first_name: firstName,
         last_name: lastName,
         password: data.password,
         phone: phone,
         birth_day: birth_day,
         gender: gender,
+        status: status,
       };
       const res = await updateDataAccount(`api/v1/customers/${props.match.params.id}`, updateData);
       if (res.status === 200) {
