@@ -1,13 +1,8 @@
 import React from 'react';
-import { Card, Col, Container, Row } from 'react-bootstrap';
-import { CardBody, CardTitle } from 'reactstrap';
-import styled from 'styled-components';
+// import { Card, Col, Container, Row } from 'react-bootstrap';
+import { CardBody, CardTitle, Card, Col, Container, Row } from 'reactstrap';
+// import styled from 'styled-components';
 
-const ZoomImage = styled.img`
-  :hover {
-    transform: scale(1.2);
-  }
-`;
 
 const dataProduct = [
   {
@@ -132,7 +127,7 @@ export default function BodyProduction() {
                 <Card className="card-product card-plain">
                   <div className="card-image">
                     <a href={ele.src}>
-                      <ZoomImage alt="..." src={ele.image} />
+                      <img alt="..." src={ele.image} />
                     </a>
                     <CardTitle tag="h6">
                       <h6>
@@ -178,7 +173,7 @@ export default function BodyProduction() {
                       <Card className="card-product card-plain-custom">
                         <div className="card-image">
                           <a href={ele.src}>
-                            <ZoomImage alt="..." src={ele.image} />
+                            <img alt="..." src={ele.image} />
                           </a>
                           <CardBody>
                             <div className="card-description">
@@ -226,7 +221,7 @@ export default function BodyProduction() {
                       <Card className="card-product card-plain-custom">
                         <div className="card-image">
                           <a href={ele.src}>
-                            <ZoomImage alt="..." src={ele.image} />
+                            <img alt="..." src={ele.image} />
                           </a>
                           <CardBody>
                             <div className="card-description">
@@ -235,7 +230,7 @@ export default function BodyProduction() {
                                   {ele.havestName}
                                 </a>
                               </CardTitle>
-                              <p className="card-description">{ele.description}</p>
+                              <p className="card-description" style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>{ele.description}</p>
                             </div>
                             <h6 style={{ textAlign: 'right' }}>
                               Đã đặt <i className="fa fa-handshake-o" /> {ele.ordered}
@@ -270,7 +265,7 @@ export default function BodyProduction() {
                       <Card className="card-product card-plain-custom">
                         <div className="card-image">
                           <a href={ele.src}>
-                            <ZoomImage alt="..." src={ele.image} />
+                            <img alt="..." src={ele.image} />
                           </a>
                           <CardBody>
                             <div className="card-description">
@@ -318,7 +313,7 @@ export default function BodyProduction() {
                       <Card className="card-product card-plain-custom">
                         <div className="card-image">
                           <a href={ele.src}>
-                            <ZoomImage alt="..." src={ele.image} />
+                            <img alt="..." src={ele.image} />
                           </a>
                           <CardBody>
                             <div className="card-description">
