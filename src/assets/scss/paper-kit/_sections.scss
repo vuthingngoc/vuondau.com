@@ -13,18 +13,95 @@
 .section-gray {
   background-color: #eeeeee;
   .section-row {
-      border-bottom: 1px solid #333;
-      margin-bottom: 15px;
-      align-items: baseline;
-      .see-more {
-          text-align: right;
-      }
+    border-bottom: 1px solid #333;
+    margin-bottom: 15px;
+    align-items: baseline;
+    .see-more {
+      text-align: right;
+    }
   }
 }
 .section-gray-custom {
   background-color: #eeeeee;
   min-height: calc(100vh - 85px);
   overflow: auto;
+  .app-body-container {
+    margin-top: 30px;
+    margin: 24px;
+  }
+  .app-block-container {
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 24px;
+    .app-appBlockLink {
+      text-decoration: none;
+      border-radius: 12px;
+      width: calc(25% - 10px);
+      background: blue;
+      height: 120px;
+      padding: 18px;
+      padding-left: 0;
+      -webkit-filter: drop-shadow(0 2px 2px #666);
+      filter: drop-shadow(0 2px 2px #666);
+      &:hover {
+        -webkit-filter: none;
+        filter: none;
+      }
+      .app-appStatusDetail {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .app-appStatusText {
+          flex-grow: 1;
+          font-weight: 400;
+          text-align: center;
+          color: white;
+          font-size: 24px;
+        }
+        .app-appStatusImg {
+          font-size: 48px;
+          color: white;
+        }
+      }
+    }
+  }
+  .detail-list {
+    .ms-DetailsList-headerWrapper {
+      .ms-DetailsHeader {
+        padding: 0;
+        border: 0;
+        .ms-DetailsHeader-cell {
+          border: 1px solid #eee;
+        }
+      }
+    }
+    .ms-DetailsList-contentWrapper {
+      .ms-DetailsRow {
+        border: 0;
+      }
+      .ms-DetailsRow-cell {
+        border: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .app-grid-main-column {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          width: 100%;
+          .app-column-text {
+            flex-grow: 1;
+            margin-right: 8px;
+          }
+          i {
+            color: #605E5C;
+          }
+        }
+      }
+    }
+  }
 }
 .ms-Viewport {
   width: 100%;
@@ -38,6 +115,10 @@
   margin-top: 2%;
   background-color: #e6e6e6;
   width: 200px;
+  border: 1px solid #eee;
+  &.is-active {
+    border: 1px solid #eee;
+  }
 }
 .section-nude {
   background-color: $bg-nude;

@@ -24,6 +24,7 @@ export default class FarmManagerBody extends React.Component {
         if (values[0]?.status === 200) {
           let _data = this.onUpdateDataSource(values[0].data)
           this.setState({
+            isDataloaded: true,
             data: _data,
           });
         }
@@ -34,7 +35,7 @@ export default class FarmManagerBody extends React.Component {
   }
 
   onUpdateDataSource(data) {
-    for(let item of data) {
+    for (let item of data) {
       item._farm_type = item.farm_type.name
       item._farmer = `${item.farmer.first_name} ${item.farmer.last_name}`
     }
@@ -44,12 +45,13 @@ export default class FarmManagerBody extends React.Component {
   _onRenderItemColumn(item, index, column) {
     //define UI hiển của từng cột mong muốn
     switch (column.fieldName) {
-      case 'more_actions':
+      case 'no': return(<>{index}</>)
+      case 'name':
         let _menuProps = {
           items: [
             {
               key: 'edit',
-              text: 'Edit',
+              text: 'Chỉnh sửa',
               onClick: () => {
                 //do something
               },
@@ -59,7 +61,7 @@ export default class FarmManagerBody extends React.Component {
         if (item.status === 1) {
           _menuProps.items.push({
             key: 'deactivate',
-            text: 'Deactivate',
+            text: 'Vô hiệu hóa',
             onClick: () => {
               //do something
             },
@@ -67,7 +69,7 @@ export default class FarmManagerBody extends React.Component {
         } else {
           _menuProps.items.push({
             key: 'activate',
-            text: 'Activate',
+            text: 'Kích hoạt',
             onClick: () => {
               //do something
             },
@@ -75,8 +77,9 @@ export default class FarmManagerBody extends React.Component {
         }
 
         return (
-          <div>
-            <IconButton iconProps={{ iconName: 'More' }} title="More actions" menuProps={_menuProps} />
+          <div className="app-grid-main-column">
+            <div className="app-column-text" style={{ width: '85%' }} >{item['name']}</div>
+            <IconButton style={{ width: '10%' }} iconProps={{ iconName: 'More' }} menuIconProps={{iconName: ""}} title="More actions" menuProps={_menuProps} />
           </div>
         );
       case 'status':
@@ -115,73 +118,56 @@ export default class FarmManagerBody extends React.Component {
 
 const columns = [
   {
-    key: 'id',
-    name: 'Id',
-    fieldName: 'id',
-    minWidth: 100,
+    key: 'no',
+    name: 'Stt',
+    fieldName: 'no',
+    minWidth: 40,
+    maxWidth: 40,
   },
   {
     key: 'name',
-    name: 'Name',
+    name: 'Tên nông trại',
     fieldName: 'name',
     minWidth: 200,
   },
   {
-    key: 'more_actions',
-    name: '',
-    fieldName: 'more_actions',
-    minWidth: 20,
-  },
-  {
     key: '_farm_type',
-    name: 'Farm Type',
+    name: 'Loại nông trại',
     fieldName: '_farm_type',
     minWidth: 100,
   },
   {
     key: '_farmer',
-    name: 'Farmer',
+    name: 'Chủ nông trại',
     fieldName: '_farmer',
     minWidth: 100,
   },
   {
     key: 'description',
-    name: 'Description',
+    name: 'Mô tả',
     fieldName: 'description',
     minWidth: 200,
   },
   {
     key: 'address',
-    name: 'Address',
+    name: 'Địa chỉ',
     fieldName: 'address',
     minWidth: 100,
   },
-  // {
-  //     key: 'date_of_create',
-  //     name: 'Created date',
-  //     fieldName: 'date_of_create',
-  //     minWidth: 80,
-  // },
-  // {
-  //     key: 'date_update',
-  //     name: 'Last modified',
-  //     fieldName: 'date_update',
-  //     minWidth: 80,
-  // },
   {
     key: 'status',
-    name: 'Status',
+    name: 'Trạng thái',
     fieldName: 'status',
-    minWidth: 60,
+    minWidth: 100,
   },
 ];
 
 const commandBarItems = [
   {
     key: 'create',
-    text: 'Create',
+    text: 'Tạo mới',
     iconProps: { iconName: 'Add' },
-    onClick: () => {},
+    onClick: () => { },
   },
 ];
 
