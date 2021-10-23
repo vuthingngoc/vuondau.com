@@ -3,12 +3,10 @@ import React from 'react';
 import { CardBody, CardTitle, Card, Col, Container, Row } from 'reactstrap';
 // import styled from 'styled-components';
 
-
 const dataProduct = [
   {
     productName: 'Cà chua',
     image: 'https://bonmuaminimart.vn/upload/product/ca-chua-beef-4652_500x500.jpg',
-    description: 'Hàng limited edition đến từ nông trại Đà Lạt.',
     originPrice: '50,000 vnđ/kg',
     salePrice: '41,000 vnđ/kg',
     src: '/product/productdetail/ca-chua',
@@ -16,7 +14,6 @@ const dataProduct = [
   {
     productName: 'Dưa leo',
     image: 'https://bonmuaminimart.vn/upload/product/dua-leo-9895_500x500.jpg',
-    description: 'Sản phẩm đặc sản của Nông Trại Vĩnh Long. Dưa ngọt, nhiều nước và bảo quản được thời gian lâu trong tủ lạnh.',
     originPrice: '20,000 vnđ',
     salePrice: '15,000 vnđ/kg',
     src: '/product/productdetail/ca-chua',
@@ -24,7 +21,6 @@ const dataProduct = [
   {
     productName: 'Rau cải thìa',
     image: 'https://bonmuaminimart.vn/upload/product/cai-thia-8501_500x500.jpg',
-    description: 'Sản phẩm đặc sản của Nông Trại Vĩnh Long. Dưa ngọt, nhiều nước và bảo quản được thời gian lâu trong tủ lạnh.',
     originPrice: '41,800 vnđ',
     salePrice: '33,000 vnđ/kg',
     src: '/product/productdetail/ca-chua',
@@ -35,21 +31,18 @@ const dataFruit = [
   {
     productName: 'Dưa hấu rằn',
     image: 'https://bonmuaminimart.vn/upload/product/dua-hau-5860_500x500.jpg',
-    description: 'Sản phẩm đặc sản của Nông Trại Vĩnh Long. Dưa ngọt, nhiều nước và bảo quản được thời gian lâu trong tủ lạnh.',
     salePrice: '36,000 vnđ/kg',
     src: '/product/productdetail/ca-chua',
   },
   {
     productName: 'Ổi lê',
     image: 'https://bonmuaminimart.vn/upload/product/oi-le-9781_500x500.jpg',
-    description: 'Ổi Ổi Ổi',
     salePrice: '20,000 vnđ/kg',
     src: '/product/productdetail/ca-chua',
   },
   {
     productName: 'Chuối sứ',
     image: 'https://bonmuaminimart.vn/upload/product/chuoi-su-3291_500x500.jpg',
-    description: 'Chuối chuối chuối',
     salePrice: '30,000 vnđ/kg',
     src: '/product/productdetail/ca-chua',
   },
@@ -62,7 +55,7 @@ const dataHavest = [
     image:
       'https://images.unsplash.com/photo-1516253593875-bd7ba052fbc5?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80',
     description: 'Cà chua đà lạt vụ mùa xuân',
-    src: '/havests/havestdetail/',
+    src: '/havests/havestdetail/ca-chua-da-lat',
   },
   {
     havestName: 'Vụ rau cải thảo đà lạt Mùa Đông',
@@ -70,7 +63,7 @@ const dataHavest = [
     image:
       'https://images.unsplash.com/photo-1486328228599-85db4443971f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
     description: 'Rau cải thảo đà lạt vụ mùa đông',
-    src: '/havests/havestdetail/',
+    src: '/havests/havestdetail/ca-chua-da-lat',
   },
   {
     havestName: 'Vụ dâu Đà Lạt Mùa Đông',
@@ -78,7 +71,7 @@ const dataHavest = [
     image:
       'https://images.unsplash.com/photo-1605056545110-c2ef2253aa8c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1120&q=80',
     description: 'Dâu Đà Lạt mùa đông giá cực rẻ, ngọt ngon',
-    src: '/havests/havestdetail/',
+    src: '/havests/havestdetail/ca-chua-da-lat',
   },
 ];
 
@@ -110,6 +103,7 @@ export default function BodyProduction() {
               float: 'left',
               top: '100px',
               maxHeight: '80vh',
+              borderStyle: 'groove',
             }}
           >
             <Row>
@@ -122,36 +116,38 @@ export default function BodyProduction() {
                 <i className="fa fa-list" style={{ marginTop: '20px' }} />
               </Col>
             </Row>
-            {dataNew?.map((ele) => {
-              return (
-                <Card className="card-product card-plain">
-                  <div className="card-image">
-                    <a href={ele.src}>
-                      <img alt="..." src={ele.image} />
-                    </a>
-                    <CardTitle tag="h6">
-                      <h6>
-                        <a href={ele.src} style={{ fontWeight: 'bold' }}>
-                          {ele.title}
-                        </a>
-                      </h6>
-                    </CardTitle>
-                    <CardBody>
-                      <div className="card-description">
-                        <p className="card-description">
-                          <i className="fa fa-calendar" /> {ele.createDate}
-                        </p>
-                      </div>
-                    </CardBody>
-                  </div>
-                </Card>
-              );
-            })}
+            <Col md="12">
+              {dataNew?.map((ele) => {
+                return (
+                  <Card className="card-product card-plain">
+                    <div className="card-image">
+                      <a href={ele.src}>
+                        <img alt="..." src={ele.image} />
+                      </a>
+                      <CardTitle tag="h6">
+                        <h6>
+                          <a href={ele.src} style={{ fontWeight: 'bold' }}>
+                            {ele.title}
+                          </a>
+                        </h6>
+                      </CardTitle>
+                      <CardBody>
+                        <div className="card-description">
+                          <p className="card-description">
+                            <i className="fa fa-calendar" /> {ele.createDate}
+                          </p>
+                        </div>
+                      </CardBody>
+                    </div>
+                  </Card>
+                );
+              })}
+            </Col>
           </Container>
           {/* Center Sticky*/}
           <Container style={{ width: '70%', float: 'center' }}>
-            <Col md="11">
-              <Row>
+            <Col md="12">
+              <Row style={{ borderBottom: '3px groove' }}>
                 <Col md="9">
                   <h4 className="section-title" style={{ fontWeight: 'bold' }}>
                     Best Deal Today
@@ -182,9 +178,6 @@ export default function BodyProduction() {
                                   {ele.productName}
                                 </a>
                               </CardTitle>
-                              <p className="card-description" style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
-                                {ele.description}
-                              </p>
                             </div>
                             <div className="price">
                               <s className="mr-1">{ele.originPrice}</s>
@@ -199,7 +192,7 @@ export default function BodyProduction() {
                   );
                 })}
               </Row>
-              <Row>
+              <Row style={{ borderBottom: '3px groove' }}>
                 <Col md="9">
                   <h4 className="section-title" style={{ fontWeight: 'bold' }}>
                     Top Havest Ordered
@@ -230,7 +223,9 @@ export default function BodyProduction() {
                                   {ele.havestName}
                                 </a>
                               </CardTitle>
-                              <p className="card-description" style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>{ele.description}</p>
+                              <p className="card-description" style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
+                                {ele.description}
+                              </p>
                             </div>
                             <h6 style={{ textAlign: 'right' }}>
                               Đã đặt <i className="fa fa-handshake-o" /> {ele.ordered}
@@ -243,7 +238,7 @@ export default function BodyProduction() {
                 })}
               </Row>
 
-              <Row>
+              <Row style={{ borderBottom: '3px groove' }}>
                 <Col md="9">
                   <h4 className="section-title" style={{ fontWeight: 'bold' }}>
                     Vegetable
@@ -274,9 +269,6 @@ export default function BodyProduction() {
                                   {ele.productName}
                                 </a>
                               </CardTitle>
-                              <p className="card-description" style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
-                                {ele.description}
-                              </p>
                             </div>
                             <div className="price">
                               <span className="text-danger" style={{ fontWeight: 'bold' }}>
@@ -291,7 +283,7 @@ export default function BodyProduction() {
                 })}
               </Row>
 
-              <Row>
+              <Row style={{ borderBottom: '3px groove' }}>
                 <Col md="9">
                   <h4 className="section-title" style={{ fontWeight: 'bold' }}>
                     Fruits
@@ -322,9 +314,6 @@ export default function BodyProduction() {
                                   {ele.productName}
                                 </a>
                               </CardTitle>
-                              <p className="card-description" style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
-                                {ele.description}
-                              </p>
                             </div>
                             <div className="price">
                               <span className="text-danger" style={{ fontWeight: 'bold' }}>

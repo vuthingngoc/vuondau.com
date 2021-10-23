@@ -32,53 +32,53 @@ export default function HomePageBody() {
     }
 
     return (
-        <div className="section section-gray-custom">
-            <div className="app-block-container">
-                <a href="/#" class="app-appBlockLink">
-                    <div className="app-appStatusDetail" >
-                        <div className="app-appStatusText">Quản lý Người dùng</div>
-                        <div className="app-appStatusImg">
-                            <Icon iconName="Contact" style={{ marginTop: '8px' }} />
-                        </div>
-                    </div>
-                </a>
-                <a href="/admin/farmManagement" class="app-appBlockLink" style={{ backgroundColor: '#FFB53E' }}>
-                    <div className="app-appStatusDetail" >
-                        <div className="app-appStatusText">Quản lý Nông trại</div>
-                        <div className="app-appStatusImg">
-                            <Icon iconName="Home" style={{ marginTop: '8px' }} />
-                        </div>
-                    </div>
-                </a>
-                <a href="/#" class="app-appBlockLink" style={{ backgroundColor: '#088A4B' }}>
-                    <div className="app-appStatusDetail" >
-                        <div className="app-appStatusText">Quản lý Sản phẩm</div>
-                        <div className="app-appStatusImg">
-                            <Icon iconName="AllApps" style={{ marginTop: '8px' }} />
-                        </div>
-                    </div>
-                </a>
-                <a href="/#" class="app-appBlockLink" style={{ backgroundColor: '#DC392D' }}>
-                    <div className="app-appStatusDetail" >
-                        <div className="app-appStatusText">Quản lý Hóa đơn</div>
-                        <div className="app-appStatusImg">
-                            <Icon iconName="TrackersMirrored" style={{ marginTop: '8px' }} />
-                        </div>
-                    </div>
-                </a>
+      <div className="section section-gray-custom">
+        <div className="app-block-container">
+          <a href="/admin/manageaccount" class="app-appBlockLink">
+            <div className="app-appStatusDetail">
+              <div className="app-appStatusText">Quản lý Người dùng</div>
+              <div className="app-appStatusImg">
+                <Icon iconName="Contact" style={{ marginTop: '8px' }} />
+              </div>
             </div>
-            <br />
-            <div style={{ margin: '24px' }}>
-                <h3 className="app-title">Thông báo:</h3>
-                <br />
-                <DetailsList
-                    className="detail-list"
-                    items={dummyData}
-                    columns={columns}
-                    selectionMode={SelectionMode.none}
-                    onRenderItemColumn={_onRenderItemColumn}
-                ></DetailsList>
+          </a>
+          <a href="/admin/farmManagement" class="app-appBlockLink" style={{ backgroundColor: '#FFB53E' }}>
+            <div className="app-appStatusDetail">
+              <div className="app-appStatusText">Quản lý Nông trại</div>
+              <div className="app-appStatusImg">
+                <Icon iconName="Home" style={{ marginTop: '8px' }} />
+              </div>
             </div>
+          </a>
+          <a href="/#" class="app-appBlockLink" style={{ backgroundColor: '#088A4B' }}>
+            <div className="app-appStatusDetail">
+              <div className="app-appStatusText">Quản lý Sản phẩm</div>
+              <div className="app-appStatusImg">
+                <Icon iconName="AllApps" style={{ marginTop: '8px' }} />
+              </div>
+            </div>
+          </a>
+          <a href="/#" class="app-appBlockLink" style={{ backgroundColor: '#DC392D' }}>
+            <div className="app-appStatusDetail">
+              <div className="app-appStatusText">Quản lý Hóa đơn</div>
+              <div className="app-appStatusImg">
+                <Icon iconName="TrackersMirrored" style={{ marginTop: '8px' }} />
+              </div>
+            </div>
+          </a>
         </div>
-    )
+        <br />
+        <div style={{ margin: '24px' }}>
+          <h3 className="app-title">Thông báo:</h3>
+          <br />
+          <DetailsList
+            className="detail-list"
+            items={dummyData}
+            columns={columns}
+            selectionMode={SelectionMode.none}
+            onRenderItemColumn={_onRenderItemColumn}
+          ></DetailsList>
+        </div>
+      </div>
+    );
 }

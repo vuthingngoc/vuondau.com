@@ -45,8 +45,8 @@ function App() {
           <Route exact path="/register" render={(props) => <RegisterPage {...props} />} />
           <Route exact path="/shoppingcart" render={(props) => <ShoppingCartPage {...props} />} />
           <Route path="/addproduct" render={(props) => <AddProductPage {...props} />} />
-          <Route exact path="/havests" render={(props) => <HavestPage {...props} />} />
-          <Route path="/havests/havestdetail/" render={(props) => <HavestDetailPage {...props} />} />
+          <Route exact path="/havests/:id" render={(props) => <HavestPage {...props} />} />
+          <Route path="/havests/havestdetail/:id" render={(props) => <HavestDetailPage {...props} />} />
           <Route exact path="/production" render={(props) => <ProductPage {...props} />} />
           <Route exact path="/admin/manageaccount" render={(props) => <ListAccountPage {...props} />} />
           <Route path="/admin/manageaccount/:id/edit" render={(props) => <EditAccountPage {...props} />} />

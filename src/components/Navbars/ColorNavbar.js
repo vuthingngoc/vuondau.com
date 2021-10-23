@@ -34,10 +34,10 @@ const dataNavbar = [
   {
     title: 'Havests',
     child: [
-      { name: 'Spring', src: '/havests#spring' },
-      { name: 'Summer', src: '/havests#summer' },
-      { name: 'Fall', src: '/havests#fall' },
-      { name: 'Winter', src: '/havests#winter' },
+      { name: 'Spring', src: '/havests/spring' },
+      { name: 'Summer', src: '/havests/summer' },
+      { name: 'Fall', src: '/havests/fall' },
+      { name: 'Winter', src: '/havests/winter' },
     ],
   },
   {

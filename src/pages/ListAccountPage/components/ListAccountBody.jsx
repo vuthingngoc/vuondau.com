@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { NotificationManager } from 'react-notifications';
 import { UncontrolledTooltip, Button, Container, Row, Col, Table } from 'reactstrap';
+import { deleteDataAccount } from 'services/data.service';
 
 import { getDataByPath } from 'services/data.service';
 
@@ -9,6 +11,18 @@ export default function ListAccountbody() {
     const res = await getDataByPath('api/v1/customers');
     if (res?.status === 200) {
       setData(res.data);
+    }
+  }
+
+  async function deleteData(id) {
+    if (data !== null) {
+      const res = await deleteDataAccount(`api/v1/customers/${id}`, id);
+      if (res.status === 204) {
+        await loadData();
+        NotificationManager.success('Deactive Success', 'Your data has been deactive success', 3000);
+      } else {
+        NotificationManager.warning('Deactive Failed', 'Something wrongs when deactive', 3000);
+      }
     }
   }
 
@@ -77,11 +91,22 @@ export default function ListAccountbody() {
                             <UncontrolledTooltip delay={0} placement="top" target="tooltip278266693">
                               Edit Profile
                             </UncontrolledTooltip>
-                            <Button className="btn-link" color="danger" data-toggle="tooltip" id="tooltip16493734" size="sm" type="button">
+                            <Button
+                              className="btn-link"
+                              color="danger"
+                              data-toggle="tooltip"
+                              id="tooltip16493734"
+                              size="sm"
+                              type="button"
+                              onClick={() => {
+                                if (ele.status === 0) window.alert('This Account has been Unavaible');
+                                else if (window.confirm('Are you sure you wish to deactive this account?')) deleteData(ele.id);
+                              }}
+                            >
                               <i className="fa fa-times" />
                             </Button>
                             <UncontrolledTooltip delay={0} placement="top" target="tooltip16493734">
-                              Remove
+                              Delete
                             </UncontrolledTooltip>
                           </td>
                         </tr>
