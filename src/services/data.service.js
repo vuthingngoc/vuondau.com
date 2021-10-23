@@ -96,5 +96,18 @@ export function updateItem(url, id, data) {
   });
 }
 
+export function convertImageToBase64(file) {
+  return new Promise(resolve => {
+      let reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+          if (reader.result !== null) {
+              resolve(reader.result);
+          }
+
+      }
+  })
+}
+
 //#endregion
 

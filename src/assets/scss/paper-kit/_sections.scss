@@ -10,6 +10,11 @@
 .section-with-space {
   padding: 60px 0;
 }
+
+.app-image-fit-contain {
+  object-fit: contain;
+}
+
 .section-gray {
   background-color: #eeeeee;
   .section-row {
@@ -25,17 +30,21 @@
   background-color: #eeeeee;
   min-height: calc(100vh - 85px);
   overflow: auto;
+  .commandbar {
+    width: 100%;
+    margin-bottom: 25px;
+  }
   .app-body-container {
     margin-top: 30px;
     margin: 24px;
   }
   .app-block-container {
-    cursor: pointer;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     margin: 24px;
     .app-appBlockLink {
+      cursor: pointer;
       text-decoration: none;
       border-radius: 12px;
       width: calc(25% - 10px);
@@ -96,7 +105,143 @@
             margin-right: 8px;
           }
           i {
-            color: #605E5C;
+            color: #605e5c;
+          }
+        }
+      }
+    }
+  }
+  .app-content {
+    background-color: #ffffff;
+    border-radius: 12px;
+    width: 100%;
+    .commandbar {
+      margin-top: 10px;
+      margin-bottom: 0;
+      .cancelButton {
+        background-color: #f1f1f1;
+        margin-right: 10px;
+        border-radius: 5px;
+        i {
+          color: #605e5c;
+        }
+      }
+      .saveButton {
+        background-color: #f7765f;
+        border-radius: 5px;
+        i {
+          color: #605e5c;
+        }
+      }
+      .editButton {
+        background-color: #f7765f;
+        border-radius: 5px;
+        i {
+          color: #605e5c;
+        }
+      }
+    }
+    .app-farmdetail-container {
+      .app-farm-name {
+        text-align: center;
+        font-size: xx-large;
+        font-weight: 400;
+        font-family: 'FontAwesome';
+        .ms-TextField {
+          width: 40%;
+          margin-left: 30%;
+          .ms-TextField-fieldGroup {
+            border: 0;
+            border-bottom: 1px solid;
+          }
+          input {
+            text-align: center;
+            font-size: xx-large;
+            font-weight: 400;
+            font-family: 'FontAwesome';
+          }
+        }
+      }
+      .app-detail-left {
+        width: 65%;
+        border: 1px solid #eee;
+        border-radius: 7px;
+        .app-field-wrap {
+          display: flex;
+          margin-left: 10px;
+          margin-bottom: 15px;
+          .app-field-label {
+            flex-basis: 20%;
+            white-space: nowrap;
+            font-size: 16px;
+            font-weight: 400;
+          }
+          .app-field-control {
+            flex-basis: 60%;
+            white-space: nowrap;
+            font-size: 16px;
+            font-weight: 400;
+            .ms-TextField-field {
+              height: 100px;
+            }
+          }
+          .app-field-control-listImage {
+            .app-item-img {
+              display: flex;
+              flex-direction: row;
+              justify-content: space-between;
+              margin: 10px;
+              margin-bottom: 20px;
+              img {
+                border: 1px solid #eee;
+                border-radius: 7px;
+                width: calc(100% - 10px);
+              }
+              .app-footer-btn {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                margin: 5px;
+                margin-left: 25px;
+                margin-right: 30px;
+              }
+            }
+          }
+        }
+      }
+      .app-detail-right {
+        width: 33%;
+        border: 1px solid #eee;
+        border-radius: 7px;
+        .app-field-wrap {
+          display: flex;
+          margin-left: 10px;
+          margin-bottom: 15px;
+          .app-field-label-avatar {
+            flex-basis: 50%;
+            white-space: nowrap;
+            font-size: 16px;
+            font-weight: 400;
+            margin-bottom: 10px;
+          }
+          .app-field-control-avatar {
+            img {
+              display: block;
+              max-width: 300px;
+            }
+          }
+          .app-field-label {
+            flex-basis: 20%;
+            white-space: nowrap;
+            font-size: 16px;
+            font-weight: 400;
+          }
+          .app-field-control {
+            flex-basis: 60%;
+            white-space: nowrap;
+            font-size: 16px;
+            font-weight: 400;
+            margin-left: 10px;
           }
         }
       }
@@ -105,10 +250,6 @@
 }
 .ms-Viewport {
   width: 100%;
-}
-.commandbar {
-  width: 100%;
-  margin-bottom: 25px;
 }
 .search-box {
   height: 80%;

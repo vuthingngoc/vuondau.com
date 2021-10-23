@@ -52,9 +52,7 @@ export default class FarmManagerBody extends React.Component {
             {
               key: 'edit',
               text: 'Chỉnh sửa',
-              onClick: () => {
-                //do something
-              },
+              href: `/admin/farmManagement/${item.id}`,
             },
           ],
         };
@@ -79,7 +77,7 @@ export default class FarmManagerBody extends React.Component {
         return (
           <div className="app-grid-main-column">
             <div className="app-column-text" style={{ width: '85%' }} >{item['name']}</div>
-            <IconButton style={{ width: '10%' }} iconProps={{ iconName: 'More' }} menuIconProps={{iconName: ""}} title="More actions" menuProps={_menuProps} />
+            <IconButton style={{ width: '10%' }} menuIconProps={{iconName: "More"}} title="More actions" menuProps={_menuProps} />
           </div>
         );
       case 'status':

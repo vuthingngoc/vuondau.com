@@ -25,6 +25,7 @@ import { NotificationContainer } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import ProductPage from 'pages/ProductListPage';
 import HomePage from 'pages/AdminHomePage/homePage';
+import FarmManagerDetail from 'pages/AdminFarmManagerDetail/farmDetail'
 
 function App() {
   initializeIcons();
@@ -53,6 +54,7 @@ function App() {
           <Route path="/admin/manageaccount/:id/view" render={(props) => <EditAccountPage {...props} />} />
           <Route exact path="/admin/farmManagement" render={(props) => <FarmManagerPage {...props} />} />
           <Route exact path="/admin/home" render={(props) => <HomePage {...props} />} />
+          <Route exact path="/admin/farmManagement/:id" render={(props) => <FarmManagerDetail {...props} />} />
           <Redirect to="/home" />
         </Switch>
       </BrowserRouter>
