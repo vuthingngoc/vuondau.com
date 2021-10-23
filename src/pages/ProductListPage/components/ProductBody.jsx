@@ -75,7 +75,9 @@ export default function ProductBody() {
     <>
       <div className="section section-gray">
         <Container>
-          <h3 className="section-title">Products List</h3>
+          <h3 className="section-title" style={{ fontWeight: 'bold' }}>
+            Products List
+          </h3>
           <Row>
             <Col md="3">
               <Card className="card-refine">
@@ -89,8 +91,9 @@ export default function ProductBody() {
                           e.preventDefault();
                           setCategory(!category);
                         }}
+                        style={{ fontWeight: 'bold' }}
                       >
-                        Category <i className="nc-icon nc-minimal-down" />
+                        Category
                       </a>
                     </h5>
                   </CardHeader>
@@ -99,13 +102,13 @@ export default function ProductBody() {
                       {dataCategory.map((ele, index) => {
                         return (
                           <FormGroup check>
-                            <Label check>
+                            <Label check style={{ fontWeight: 'bolder' }}>
                               <Input
                                 checked={ele.checked}
                                 defaultValue=""
                                 type="checkbox"
-                                onClick={() => {
-                                  dataCategory[index].checked = !dataCategory[index].checked;
+                                onClick={(e) => {
+                                  dataCategory[index].checked = e.checked;
                                   setCategory(!category);
                                 }}
                               />

@@ -95,7 +95,6 @@ export default function EditAccountBody(props) {
   async function deleteData() {
     if (data !== null) {
       const res = await deleteDataAccount(`api/v1/customers/${props.match.params.id}`, props.match.params.id);
-      console.log(res);
       if (res.status === 204) {
         setData(null);
         NotificationManager.success('Deactive Success', 'Your data has been deactive success', 3000);

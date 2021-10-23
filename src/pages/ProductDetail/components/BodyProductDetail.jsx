@@ -14,10 +14,10 @@ const dataProduct = {
   src: '/product/productdetail/ca-chua',
 };
 const dataFarm = {
-  farmName: 'Đà Lạc Farm',
+  farmName: 'Đà Lạt Farm',
   description:
-    'Tọa lạc tại Đà Lạc, Đà Lạc Farm chuyên cung cấp các rau củ đà lạt chất lượng cao. Các sản phẩm chủ yếu là rau và các loại trái cây đà lạc',
-  src: 'farm/farmdetail/dalacfarm',
+    'Tọa lạc tại Đà Lạt, Đà Lạt Farm chuyên cung cấp các rau củ đà lạt chất lượng cao. Các sản phẩm chủ yếu là rau và các loại trái cây đà lạt',
+  src: 'farm/farmdetail/dalatfarm',
 };
 const dataComment = [
   {
@@ -134,11 +134,15 @@ export default function BodyProductDetail() {
             <Container>
               <Row className="title-row">
                 <Col md="4">
-                  <h2 className="shop">Product Detail</h2>
+                  <h2 className="shop" style={{ fontWeight: 'bolder' }}>
+                    Product Detail
+                  </h2>
                 </Col>
                 <Col className="ml-auto" md="4">
                   <div className="pull-right">
-                    <span className="text-muted">Product Status</span>
+                    <span className="text-muted" style={{ fontWeight: 'bolder' }}>
+                      Product Status
+                    </span>
                     <Button color="link">
                       <i className="fa fa-check" />
                       Items Avaiable
@@ -191,7 +195,7 @@ export default function BodyProductDetail() {
                   {/* end carousel */}
                 </Col>
                 <Col md="5" sm="6">
-                  <h2>{dataProduct.productName}</h2>
+                  <h2 style={{ fontWeight: 'bolder' }}>{dataProduct.productName}</h2>
                   <h4 className="price">
                     <strong>{`${dataProduct.salePrice} vnđ/kg`}</strong>
                     <s className="mr-1" style={{ marginLeft: '10px' }}>

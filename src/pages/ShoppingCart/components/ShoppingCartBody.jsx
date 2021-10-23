@@ -62,7 +62,9 @@ export default function ShoppingCartBody() {
       <Container>
         <Row>
           <Col md="12">
-            <h4 className="title">Your Cart Table</h4>
+            <h4 className="title" style={{ fontWeight: 'bold' }}>
+              Your Cart Table
+            </h4>
           </Col>
           <Col className="ml-auto mr-auto" md="12">
             <Table className="table-shopping" responsive>
@@ -70,9 +72,15 @@ export default function ShoppingCartBody() {
                 <tr>
                   <th className="text-center" />
                   <th />
-                  <th className="text-right">Price</th>
-                  <th className="text-right">Weight</th>
-                  <th className="text-right">Total</th>
+                  <th className="text-right" style={{ fontWeight: 'bold' }}>
+                    Price
+                  </th>
+                  <th className="text-right" style={{ fontWeight: 'bold' }}>
+                    Weight
+                  </th>
+                  <th className="text-right" style={{ fontWeight: 'bold' }}>
+                    Total
+                  </th>
                 </tr>
               </thead>
               <tbody>
