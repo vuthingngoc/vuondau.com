@@ -126,9 +126,12 @@ function WhiteNavbar() {
                     </DropdownItem>
                     <DropdownItem
                       to="/login"
-                      tag={NavLink}
+                      tag={Link}
                       onClick={async (e) => {
                         logout();
+                        if (localStorage) {
+                          localStorage.clear('accessToken');
+                        }
                       }}
                     >
                       <i className="nc-icon nc-button-power" />

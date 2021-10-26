@@ -10,9 +10,7 @@ import { convertImageToBase64 } from 'services/data.service';
 
 function ImageUpload(props) {
   const [file, setFile] = React.useState(null);
-  const [imagePreviewUrl, setImagePreviewUrl] = React.useState(
-    props.avatar ? defaultAvatar : defaultImage
-  );
+  const [setImagePreviewUrl] = React.useState(props.avatar ? defaultAvatar : defaultImage);
   const [imgBase64, setImgBase64] = React.useState('')
   const fileInput = React.useRef(null);
   const handleImageChange = (e) => {

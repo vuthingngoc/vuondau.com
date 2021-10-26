@@ -8,9 +8,12 @@ import { getDataByPath } from 'services/data.service';
 export default function ListAccountbody() {
   const [data, setData] = useState(null);
   async function loadData() {
-    const res = await getDataByPath('api/v1/customers');
-    if (res?.status === 200) {
-      setData(res.data);
+    if (localStorage) {
+      const accessToken = localStorage.getItem('accessToken');
+      const res = await getDataByPath('api/v1/customers', accessToken);
+      if (res?.status === 200) {
+        setData(res.data);
+      }
     }
   }
 

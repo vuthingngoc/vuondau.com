@@ -4,6 +4,9 @@ import ColorNavbar from 'components/Navbars/ColorNavbar';
 import { Button, Card, CardTitle, Form, Input, Container, Row, Col, CardImg } from 'reactstrap';
 import { useAuth } from 'contexts/AuthContext';
 import { useHistory } from 'react-router';
+import { loginByPath } from 'services/auth.service';
+import { NotificationManager } from 'react-notifications';
+import jwtDecode from 'jwt-decode';
 
 export default function LoginPage() {
   const history = useHistory();
@@ -25,6 +28,37 @@ export default function LoginPage() {
       document.body.classList.remove('full-screen');
     };
   });
+
+  async function loginWithAccessToken(accessToken) {
+    const res = await loginByPath('api/v1/login', accessToken);
+    if (res.status === 200) {
+      if (localStorage) {
+        localStorage.setItem('accessToken', res.data);
+        NotificationManager.success('Welcome', 'Login Success', 3000);
+        const role = jwtDecode(res.data).role;
+        if (role === 2) {
+          history.push('/admin/home');
+        } else {
+          history.push('/home');
+        }
+      }
+    } else {
+      NotificationManager.warning('Server is busy now! Pleasy try againt', 'Server Error', 3000);
+    }
+  }
+
+  const handleErrorLogin = (request) => {
+    switch (request) {
+      case 'Firebase: Error (auth/user-not-found).':
+        NotificationManager.warning("Email wasn't register", 'Login Error', 3000);
+        break;
+      case 'Firebase: Error (auth/wrong-password).':
+        NotificationManager.warning('Wrong Email or Password', 'Login Error', 3000);
+        break;
+      default:
+        NotificationManager.warning('Something Wrong', 'Login Error', 3000);
+    }
+  };
   return (
     <>
       <ColorNavbar />
@@ -53,11 +87,12 @@ export default function LoginPage() {
                       setIsSubmitting(true);
                       login(email, password)
                         .then((response) => {
-                          console.log(response);
-                          history.push('/home');
+                          setIsSubmitting(false);
+                          loginWithAccessToken(response.user.accessToken);
                         })
                         .catch((error) => {
-                          console.log(error.message);
+                          handleErrorLogin(error.message);
+                          setPassword('');
                           setIsSubmitting(false);
                         })
                         .finally(() => setIsSubmitting(false));
@@ -91,11 +126,15 @@ export default function LoginPage() {
                         className="btn-just-icon mr-1"
                         onClick={() =>
                           signInWithGoogle()
-                            .then((user) => {
-                              console.log(user);
-                              history.push('/home');
+                            .then((response) => {
+                              setIsSubmitting(false);
+                              loginWithAccessToken(response.user.accessToken);
                             })
-                            .catch((error) => console.log(error))
+                            .catch((error) => {
+                              handleErrorLogin(error.message);
+                              setPassword('');
+                              setIsSubmitting(false);
+                            })
                         }
                         color="google"
                       >
