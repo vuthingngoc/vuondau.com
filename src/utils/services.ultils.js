@@ -3,7 +3,7 @@ export default function getOptions(accessToken) {
 
   if (accessToken && accessToken !== '') {
     headers = {
-      accesstoken: ` ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
     };
   }
   const options = { headers };
