@@ -18,7 +18,7 @@ function ImageUpload(props) {
   const handleImageChange = (e) => {
     e.preventDefault();
     if (e.target.files[0]) {
-      let _convertImageToBase64 = convertImageToBase64(file);
+      let _convertImageToBase64 = convertImageToBase64(e.target.files[0]);
         Promise.all([_convertImageToBase64]).then(values => {
           setImgBase64(values[0]);
         })
