@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import { Button, Label, FormGroup, Input, InputGroup, Container, Row, Col, InputGroupAddon, InputGroupText } from 'reactstrap';
 import ReactDatetime from 'react-datetime';
+import Select from 'react-select';
 
 import ImageUpload from 'components/CustomUpload/ImageUpload.js';
 import 'react-notifications/lib/notifications.css';
@@ -13,6 +14,7 @@ import { NotificationManager } from 'react-notifications';
 
 export default function EditAccountBody(props) {
   const [data, setData] = useState(null);
+  const [customerTypeData, setCustomerTypeData] = useState([]);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [birthDay, setBirthDay] = useState('');
@@ -20,6 +22,7 @@ export default function EditAccountBody(props) {
   const [phone, setPhone] = useState('');
   const [gender, setGender] = useState(0);
   const [status, setStatus] = useState(0);
+  const [customerType, setCustomerType] = useState('');
   const history = useHistory();
 
   document.documentElement.classList.remove('nav-open');
@@ -56,6 +59,19 @@ export default function EditAccountBody(props) {
     }
   }
 
+  async function loadCustomerTypeData() {
+    const path = 'api/v1/customer-types';
+    const res = await getDataByPath(path);
+    if (res?.status === 200) {
+      const listType = [];
+      res.data.forEach((ele) => {
+        const optionType = { value: ele.id, label: ele.name };
+        listType.push(optionType);
+      });
+      setCustomerTypeData(listType);
+    }
+  }
+
   const loadToState = (data) => {
     if (data !== null) {
       setFirstName(data.first_name);
@@ -66,6 +82,7 @@ export default function EditAccountBody(props) {
       setPhone(data.phone);
       setGender(data.gender);
       setStatus(data.status);
+      setCustomerType({ value: data.customer_type_navigation.id, label: data.customer_type_navigation.name });
     }
   };
 
@@ -73,7 +90,7 @@ export default function EditAccountBody(props) {
     if (data !== null) {
       const birth_day = birtDayConvertToUpdate(birthDay);
       const updateData = {
-        customer_type: data.customer_type_navigation.id,
+        customer_type: customerType.value,
         first_name: firstName,
         last_name: lastName,
         password: data.password,
@@ -105,9 +122,22 @@ export default function EditAccountBody(props) {
     }
   }
 
+  const colourStyles = {
+    control: (styles) => ({ ...styles, backgroundColor: 'white' }),
+    option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+      return {
+        ...styles,
+        color: '#000000',
+        fontWeight: 'bold',
+        cursor: isDisabled ? 'not-allowed' : 'default',
+      };
+    },
+  };
+
   useEffect(() => {
     if (data === null) {
       loadData(props.match.params.id);
+      loadCustomerTypeData();
     }
   });
 
@@ -122,6 +152,19 @@ export default function EditAccountBody(props) {
                 <Col md="6" sm="6">
                   <h6>Account Image</h6>
                   <ImageUpload />
+                  <Col md="8" sm="8">
+                    <h6>Customer Type</h6>
+                    <FormGroup>
+                      <Select
+                        name="customerType"
+                        value={customerType}
+                        onChange={(value) => setCustomerType(value)}
+                        options={customerTypeData}
+                        placeholder="CHOOSE CUSTOMER TYPE"
+                        styles={colourStyles}
+                      />
+                    </FormGroup>
+                  </Col>
                 </Col>
                 <Col md="6" sm="6">
                   <FormGroup>
