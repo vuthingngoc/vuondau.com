@@ -1,6 +1,5 @@
-import { Card, FormGroup, Container, Row, Col, Carousel, CarouselItem, CarouselIndicators } from 'reactstrap';
+import { Container, Button } from 'reactstrap';
 import React from 'react';
-import Select from 'react-select';
 import { ultilities } from 'utils/services.ultils';
 import { getItem } from 'services/data.service';
 
@@ -79,121 +78,79 @@ export default class FarmDetailBody extends React.Component {
   render() {
     return (
       <>
-        <div className="section section-gray">
+        <div className="section section-gray-custom">
           <Container>
-            <Row className="title-row">
-              <br />
-            </Row>
-            <Row>
-              <Col md="7" sm="6">
-                <div className="ml-auto mr-auto" id="carousel">
-                  <Card className="page-carousel">
-                    <Carousel
-                      activeIndex={this.state.activeIndex}
-                      next={() => {
-                        this.next();
-                      }}
-                      previous={() => {
-                        this.previous();
-                      }}
-                    >
-                      <CarouselIndicators
-                        items={carouselItems}
-                        activeIndex={this.state.activeIndex}
-                        onClickHandler={() => {
-                          this.goToIndex();
-                        }}
-                      />
-                      {carouselItems.map((item) => {
-                        return (
-                          <CarouselItem
-                            onExiting={() => {
-                              this.onExiting();
-                            }}
-                            onExited={() => {
-                              this.onExited();
-                            }}
-                            key={item.src}
-                          >
-                            <img src={item.src} alt={item.altText} />
-                            {/* <CarouselCaption captionText={item.caption} captionHeader="" /> */}
-                          </CarouselItem>
-                        );
-                      })}
-                      <span
-                        className="left carousel-control carousel-control-prev"
-                        data-slide="prev"
-                        onClick={(e) => {
-                          this.previous();
-                        }}
-                        role="button"
-                      >
-                        <span className="fa fa-angle-left" />
-                        <span className="sr-only">Previous</span>
-                      </span>
-                      <span
-                        className="right carousel-control carousel-control-next"
-                        data-slide="next"
-                        onClick={(e) => {
-                          this.next();
-                        }}
-                        role="button"
-                      >
-                        <span className="fa fa-angle-right" />
-                        <span className="sr-only">Next</span>
-                      </span>
-                    </Carousel>
-                  </Card>
+            <div className="app-section-title">{this.state.data?.name}</div>
+            <div className="app-section-content">
+              <div className="app-content-left">
+                <div className="app-about-item">
+                  <div className="app-about-icon">
+                    <img src="//theme.hstatic.net/200000301734/1000687235/14/hab_left_icon_1.png?v=213" alt="" />
+                  </div>
+                  <div className="app-about-content">Hoàn toàn tự nhiên</div>
+                  <div className="app-about-description">Không sử dụng các loại giống biến đổi gen.</div>
                 </div>
-                {/* end carousel */}
-              </Col>
-              <Col md="5" sm="6" style={{ color: '#000000' }}>
-                <h2>{!this.state._util.isNullOrUndefined(this.state.data) ? this.state.data.name : ''}</h2>
-                <hr />
-                <p>{!this.state._util.isNullOrUndefined(this.state.data) ? `Địa chỉ: ${this.state.data.address}` : 'Địa chỉ: '}</p>
-                <p style={{ minHeight: 100 }}>
-                  {!this.state._util.isNullOrUndefined(this.state.data) ? `Mô tả: ${this.state.data.description}` : 'Mô tả: '}
-                </p>
-                <hr />
-                <p>
-                  Với mục tiêu mang thực phẩm sạch quay lại bữa ăn của người Việt, chúng tôi cam kết tự trồng tất cả các sản phẩm rau hữu cơ với 4
-                  tiêu chí: - Không thuốc bảo vệ thực vật - Không phân bón hóa học - Không thuốc kích thích tăng trưởng - Không chất bảo quản sau thu
-                  hoạch
-                </p>
-                <hr />
-                <span className="label label-default shipping">Những loại nông sản hiện đang bán trong mùa:</span>
-                <Row>
-                  <Col md="12" sm="5">
-                    <label>Chọn nông sản</label>
-                    <FormGroup>
-                      <Select
-                        className="react-select react-select-default"
-                        classNamePrefix="react-select"
-                        name="colorSelect"
-                        value={this.state.colorSelect}
-                        onChange={(value) => {
-                          this.setState({ colorSelect: value });
-                        }}
-                        options={[
-                          { value: '1', label: 'Cà chua ' },
-                          { value: '2', label: 'Rau cải' },
-                          { value: '3', label: 'Hành' },
-                        ]}
-                      />
-                    </FormGroup>
-                  </Col>
-                </Row>
-                <hr />
-                {/* <Row>
-                  <Col className="offset-md-5" md="7" sm="8">
-                    <Button block className="btn-round" color="danger">
-                      Add to Cart <i className="fa fa-chevron-right" />
-                    </Button>
-                  </Col>
-                </Row> */}
-                <br />
-              </Col>
-            </Row>
+                <div className="app-about-item">
+                  <div className="app-about-icon">
+                    <img src="//theme.hstatic.net/200000301734/1000687235/14/hab_left_icon_2.png?v=213" alt="" />
+                  </div>
+                  <div className="app-about-content">100% hữu cơ sạch</div>
+                  <div className="app-about-description">Không sử dụng bất cứ một loại thuốc trừ sâu, thuốc diệt cỏ và thuốc kích thích nào.</div>
+                </div>
+              </div>
+              <div className="app-content-middle">
+                <img className="app-image-fit-contain" src={carouselItems[0].src} alt={carouselItems[0].alt} />
+              </div>
+              <div className="app-content-right">
+                <div className="app-about-item">
+                  <div className="app-about-icon">
+                    <img src="//theme.hstatic.net/200000301734/1000687235/14/hab_right_icon_1.png?v=213" alt="" />
+                  </div>
+                  <div className="app-about-content">100% phân bón hữu cơ</div>
+                  <div className="app-about-description">Chỉ sử dụng duy nhất các loại phân bón 100% từ hữu cơ.</div>
+                </div>
+                <div className="app-about-item">
+                  <div className="app-about-icon">
+                    <img src="//theme.hstatic.net/200000301734/1000687235/14/hab_right_icon_2.png?v=213" alt="" />
+                  </div>
+                  <div className="app-about-content">Chất lượng tốt nhất</div>
+                  <div className="app-about-description">Luôn tươi ngon, an toàn, chất lượng.</div>
+                </div>
+              </div>
+            </div>
+            <div className="app-section-title">Vụ mùa hiện có</div>
+            <div className="app-section-content">
+              <div className="app-content-middle">
+                <img className="app-image-fit-contain" src={carouselItems[1].src} alt={carouselItems[1].alt} />
+              </div>
+              <div className="app-content-right" style={{ width: '35%' }}>
+                <div className="app-content-title">Vụ mùa thu</div>
+                <div className="app-content-body">
+                  <div className="app-content-wrap">Sản phẩm: chuối</div>
+                  <div className="app-content-wrap">Đã đặt: 125 người</div>
+                  <div className="app-content-wrap">Giá dự kiến: 18.000 vnđ / kg</div>
+                  <div className="app-content-wrap">Mô tả: Vườn chuối ở Đà Lạt</div>
+                  <Button className="btn-round" color="info">
+                    Xem chi tiết
+                  </Button>
+                </div>
+              </div>
+            </div>
+            <div className="app-section-title">Giới thiệu</div>
+            <div className="app-section-content">
+              <div className="app-content-middle">
+                <img className="app-image-fit-contain" src={carouselItems[2].src} alt={carouselItems[2].alt} />
+              </div>
+              <div className="app-content-right" style={{ width: '35%' }}>
+                <div className="app-content-title">{this.state.data?.name}</div>
+                <div className="app-content-body">
+                  <div className="app-content-wrap">Địa chỉ: {this.state.data?.address}</div>
+                  <div className="app-content-wrap">Mô tả: {this.state.data?.description}</div>
+                  <div className="app-content-wrap">Loại nông trại: {this.state.data?.farm_type?.name}</div>
+                  <div className="app-content-wrap">Chủ nông trại: {this.state.data?.farmer?.first_name} {this.state.data?.farmer?.last_name}</div>
+                </div>
+              </div>
+            </div>
           </Container>
         </div>
       </>
@@ -203,23 +160,15 @@ export default class FarmDetailBody extends React.Component {
 
 const carouselItems = [
   {
-    src: require('assets/img/sections/farms/MamNon.jpg').default,
-    altText: 'Somewhere',
-    caption: 'Somewhere',
+    src: "https://phanbonnhapkhau.com/wp-content/uploads/2017/06/untitled-design-2.png",
+    alt: '',
   },
   {
-    src: require('assets/img/sections/farms/VuonCaChua2.jpg').default,
-    altText: 'Somewhere else',
-    caption: 'Somewhere else',
+    src: 'https://images.baodantoc.vn/uploads/2020/Th%C3%A1ng_11/Ng%C3%A0y_25/MH/chuoi3%203.jpg',
+    alt: '',
   },
   {
-    src: require('assets/img/sections/farms/GieoHanh.jpg').default,
-    altText: 'Here it is',
-    caption: 'Here it is',
-  },
-  {
-    src: require('assets/img/sections/farms/ThuHoachRau.jpg').default,
-    altText: 'Here it is',
-    caption: 'Here it is',
+    src: 'https://st.nhipcaudautu.vn/staticFile/Subject/2016/07/08/490_kd_chuoitiphu_7054807-sonpham_81811444.jpg',
+    alt: '',
   },
 ];

@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 .section {
   padding: 70px 0;
   position: relative;
@@ -189,7 +190,6 @@
             .app-item-img {
               display: flex;
               flex-direction: row;
-              justify-content: space-between;
               margin: 10px;
               margin-bottom: 20px;
               img {
@@ -227,7 +227,7 @@
           .app-field-control-avatar {
             img {
               display: block;
-              max-width: 300px;
+              max-width: 340px;
             }
           }
           .app-field-label {
@@ -243,6 +243,75 @@
             font-weight: 400;
             margin-left: 10px;
           }
+        }
+      }
+    }
+  }
+  .app-section-title {
+    font-size: xxx-large;
+    font-family: 'Pacifico';
+    text-align: center;
+    margin-bottom: 50px;
+  }
+  .app-section-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin: 12px;
+    margin-bottom: 50px;
+    .app-content-left {
+      width: 25%;
+      text-align: center;
+      .app-about-item {
+        margin-bottom: 30px;
+        .app-about-icon {
+          position: relative;
+        }
+        .app-about-content {
+          font-size: 18px;
+          font-weight: 500;
+        }
+        .app-about-description {
+          font-size: 15px;
+          font-weight: 100;
+        }
+      }
+    }
+    .app-content-middle {
+      width: 47%;
+      img {
+        max-width: 100%;
+      }
+    }
+    .app-content-right {
+      width: 25%;
+      text-align: center;
+      .app-about-item {
+        margin-bottom: 30px;
+        .app-about-icon {
+          position: relative;
+        }
+        .app-about-content {
+          font-size: 18px;
+          font-weight: 500;
+        }
+        .app-about-description {
+          font-size: 15px;
+          font-weight: 100;
+        }
+      }
+      .app-content-title {
+        font-size: 24px;
+        font-weight: 400;
+        margin-top: 15px;
+        margin-bottom: 10px;
+      }
+      .app-content-body {
+        text-align: left;
+        font-size: 20px;
+        margin-left: 15px;
+        .app-content-wrap {
+          margin-bottom: 10px;
         }
       }
     }

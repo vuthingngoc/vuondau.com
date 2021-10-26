@@ -15,6 +15,7 @@ export default class FarmManagerDetailBody extends React.Component {
             data: null,
             farmTypeOption: [],
             areasOptions: [],
+            farmPictures: [],
             _util: new ultilities(),
         };
         moment.locale('vi')
@@ -30,15 +31,20 @@ export default class FarmManagerDetailBody extends React.Component {
         if (!this.state._util.isNullOrUndefined(id)) {
             let get_item = getItem(url, id);
             let get_farm_type = getItems('api/v1/farm-types');
+            let get_farm_picture = getItems('api/v1/farm-pictures');
             let get_area = getItems('api/v1/areas');
-            Promise.all([get_item, get_farm_type, get_area])
+            Promise.all([get_item, get_farm_type, get_area, get_farm_picture])
                 .then((values) => {
                     let _data = [];
                     let _farmType = [];
                     let _areas = []
+                    let _farmPictures = [];
 
                     if (values[0]?.status === 200) {
                         _data = values[0].data
+                        if (values[3]?.status === 200) {
+                            _farmPictures = this.getImageByFarmId(values[3].data, values[0].data.id)
+                        }
                     }
                     if (values[1]?.status === 200) {
                         _farmType = this.convertOption(values[1].data)
@@ -46,10 +52,12 @@ export default class FarmManagerDetailBody extends React.Component {
                     if (values[2]?.status === 200) {
                         _areas = this.convertOption(values[2].data)
                     }
+
                     this.setState({
                         data: { ..._data },
                         farmTypeOption: _farmType,
                         areasOptions: _areas,
+                        farmPictures: _farmPictures,
                         isDataloaded: true,
                     });
                 })
@@ -61,7 +69,7 @@ export default class FarmManagerDetailBody extends React.Component {
 
     convertOption(data) {
         let options = [];
-        if(data?.length > 0) {
+        if (data?.length > 0) {
             for (let item of data) {
                 options.push({
                     key: item.id,
@@ -70,6 +78,13 @@ export default class FarmManagerDetailBody extends React.Component {
             }
         }
         return options;
+    }
+
+    getImageByFarmId(images, farmId) {
+        let result = images.filter(value => {
+            return value.farm.id === farmId;
+        });
+        return result;
     }
 
     onUpdateDataSource(data) {
@@ -89,34 +104,35 @@ export default class FarmManagerDetailBody extends React.Component {
         let file = args.target.files[0];
         let _convertImageToBase64 = convertImageToBase64(file);
         Promise.all([_convertImageToBase64]).then(values => {
-            let _data = this.state.data;
-            _data.farm_pictures[0].src = values[0];
+            let images = this.state.farmPictures;
+            images[0].src = values[0];
             this.setState({
-                data: _data
+                farmPictures: images
             })
         })
     }
 
     onRenderListImg(res, row) {
         //default res = [], row = 1;
-        let imgs = this.state.data.farm_pictures;
+        let imgs = this.state.farmPictures;
         let elem = [];
         if (imgs?.length > 1) {
-            let count_row = imgs.length / 3;
+            let count_row = imgs.length / 3 + 1;
             if (row > count_row) {
                 return res;
             }
             let startIndex = (row - 1) * 3;
-            for (let i = 0; i < 3; i++) {
+            for (let i = 1; i < 4; i++) {
                 if (imgs[startIndex + i]) {
                     elem.push(
-                        <div style={{ display: 'block' }}>
-                            <Image className="app-image-fit-contain " src={imgs[0].src} />
+                        <div style={{ display: 'block', maxWidth: 215 }}>
+                            <Image className="app-image-fit-contain " src={imgs[startIndex + i].src} />
                             {
                                 !this.state.displayMode &&
                                 <div className="app-footer-btn">
-                                    <DefaultButton iconProps={{ iconName: 'Delete' }} onClick={() => { }} />
-                                    <DefaultButton iconProps={{ iconName: 'Edit' }} onClick={() => { }} />
+                                    <input id="inputChangeAlbum" type="file" accept=".png, .jpeg, .jpg, .bmp, .tiff" onChange={($event) => { this.onChangeAlbum($event) }} style={{ display: 'none' }} />
+                                    <DefaultButton iconProps={{ iconName: 'Delete' }} onClick={() => { this.onDeleteImage(imgs[startIndex + i]) }} />
+                                    <DefaultButton iconProps={{ iconName: 'Edit' }} onClick={() => { this.onChangeImage(imgs[startIndex + i]) }} />
                                 </div>
                             }
                         </div>
@@ -128,6 +144,36 @@ export default class FarmManagerDetailBody extends React.Component {
         }
 
         return res;
+    }
+
+    onDeleteImage(image) {
+        console.log(image);
+    }
+
+    onChangeImage(image) {
+        console.log(image);
+    }
+
+    onBtnUploadAlbum() {
+        let elem = document.getElementById("inputUploadAlbum");
+        elem.click();
+    }
+
+    onUploadAlbum(args) {
+        let file = args.target.files[0];
+        let _convertImageToBase64 = convertImageToBase64(file);
+        Promise.all([_convertImageToBase64]).then(values => {
+            let images = this.state.farmPictures;
+            images.push({
+                id: null,
+                farmId: this.props?.match?.params?.id,
+                src: values[0],
+                atl: "..."
+            })
+            this.setState({
+                farmPictures: images
+            })
+        })
     }
 
     render() {
@@ -281,7 +327,16 @@ export default class FarmManagerDetailBody extends React.Component {
                                                 </div>
                                             </div>
                                             <div className="app-field-wrap" style={{ display: 'block' }}>
-                                                <div className="app-field-label" >Album ảnh:</div>
+                                                <div style={{ display: 'flex' }}>
+                                                    <div className="app-field-label" >Album ảnh:</div>
+                                                    <input id="inputUploadAlbum" type="file" accept=".png, .jpeg, .jpg, .bmp, .tiff" onChange={($event) => { this.onUploadAlbum($event) }} style={{ display: 'none' }} />
+                                                    <div className="app-field-control" >{
+                                                        !this.state.displayMode &&
+                                                        <DefaultButton className="app-btn-uploadImange" text="Tải ảnh" onClick={() => {
+                                                            this.onBtnUploadAlbum();
+                                                        }} />
+                                                    }</div>
+                                                </div>
                                                 <div className="app-field-control-listImage" >
                                                     {
                                                         this.state.data &&
@@ -296,15 +351,16 @@ export default class FarmManagerDetailBody extends React.Component {
                                                 <div className="app-field-label-avatar" >Ảnh mẫu nông trại:</div>
                                                 <div className="app-field-control-avatar" >
                                                     {
-                                                        this.state.data && this.state.data.farm_pictures &&
-                                                        <Image className="app-image-fit-contain" src={this.state.data.farm_pictures[0].src} />
+                                                        this.state.data && this.state.farmPictures.length > 0 ?
+                                                            <Image className="app-image-fit-contain" src={this.state.farmPictures[0].src} />
+                                                            : <img className="app-image-fit-contain" alt="..." src={require('assets/img/no_image.jpg').default} />
                                                     }
                                                 </div>
                                                 <input id="inputUploadImg" type="file" accept=".png, .jpeg, .jpg, .bmp, .tiff" onChange={($event) => { this.onUploadImage($event) }} style={{ display: 'none' }} />
                                                 {
-                                                    !this.state.displayMode && this.state.data?.farm_pictures &&
+                                                    !this.state.displayMode &&
                                                     <div style={{ textAlign: 'center', marginTop: '10px' }}>
-                                                        <DefaultButton className="app-btn-uploadImange" text={this.state.data?.farm_pictures[0] ? "Thay đổi ảnh" : "Tải ảnh"} onClick={() => {
+                                                        <DefaultButton className="app-btn-uploadImange" text={this.state.farmPictures.length > 0 ? "Thay đổi ảnh" : "Tải ảnh"} onClick={() => {
                                                             this.onBtnUploadImg();
                                                         }} />
                                                     </div>
