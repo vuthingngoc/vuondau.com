@@ -5,12 +5,12 @@ import ColorNavbar from 'components/Navbars/ColorNavbarCustomize';
 import React from 'react';
 import HavestBody from './components/HavestBody';
 
-export default function HavestPage() {
+export default function HavestPage(props) {
   return (
     <>
       <ColorNavbar />
       <FarmPageHeader />
-      <HavestBody />
+      <HavestBody {...props} />
       <FooterBlack />
     </>
   );

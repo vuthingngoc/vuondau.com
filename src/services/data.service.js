@@ -1,15 +1,18 @@
 import axios from 'axios';
-// import getOptions from 'utils/services.ultils';
+import getOptions from 'utils/services.ultils';
 
 const backendUrl = 'http://52.221.245.187:90';
 
-export async function getDataByPath(path) {
+export async function getDataByPath(path, accessToken) {
   try {
     let endpoint = `${backendUrl}`;
+    let option = {};
+    if (accessToken && accessToken !== '') option = getOptions(accessToken);
     if (path !== '') {
       endpoint = `${backendUrl}/${path}`;
     }
-    const res = await axios.get(endpoint);
+
+    const res = await axios.get(endpoint, option);
     return res;
   } catch (error) {
     return error.response;
@@ -46,55 +49,77 @@ export async function deleteDataAccount(path) {
   }
 }
 
-
 //#region CRUD endpoint use Promise
 
 export function getItems(url) {
-  return new Promise(function(resolve) {
+  return new Promise(function (resolve) {
     let endpoint = `${backendUrl}/${url}`;
-    axios.get(endpoint).then(result => {
-      resolve(result);
-    }).catch(err => {
-      resolve(err);
-    })
+    axios
+      .get(endpoint)
+      .then((result) => {
+        resolve(result);
+      })
+      .catch((err) => {
+        resolve(err);
+      });
   });
 }
 
 export function getItem(url, id) {
-  return new Promise(function(resolve) {
+  return new Promise(function (resolve) {
     let endpoint = `${backendUrl}/${url}/${id}`;
-    axios.get(endpoint).then(result => {
-      resolve(result);
-    }).catch(err => {
-      resolve(err);
-    })
+    axios
+      .get(endpoint)
+      .then((result) => {
+        resolve(result);
+      })
+      .catch((err) => {
+        resolve(err);
+      });
   });
 }
 
 export function addItem(url, data) {
-  return new Promise(function(resolve) {
+  return new Promise(function (resolve) {
     let endpoint = `${backendUrl}/${url}`;
     let dataPost = JSON.stringify(data);
-    axios.post(endpoint, dataPost).then(result => {
-      resolve(result);
-    }).catch(err => {
-      resolve(err);
-    })
+    axios
+      .post(endpoint, dataPost)
+      .then((result) => {
+        resolve(result);
+      })
+      .catch((err) => {
+        resolve(err);
+      });
   });
 }
 
 export function updateItem(url, id, data) {
   // update item thì data post không chứa id, id sẽ ở trên endpoint
-  return new Promise(function(resolve) {
+  return new Promise(function (resolve) {
     let endpoint = `${backendUrl}/${url}/${id}`;
     let dataPost = JSON.stringify(data);
-    axios.put(endpoint, dataPost).then(result => {
-      resolve(result);
-    }).catch(err => {
-      resolve(err);
-    })
+    axios
+      .put(endpoint, dataPost)
+      .then((result) => {
+        resolve(result);
+      })
+      .catch((err) => {
+        resolve(err);
+      });
+  });
+}
+
+export function convertImageToBase64(file) {
+  return new Promise((resolve) => {
+    let reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      if (reader.result !== null) {
+        resolve(reader.result);
+      }
+    };
   });
 }
 
 //#endregion
-

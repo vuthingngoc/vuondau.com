@@ -33,10 +33,10 @@ const dataNavbar = [
   {
     title: 'Havests',
     child: [
-      { name: 'Spring', src: '/havests#spring' },
-      { name: 'Summer', src: '/havests#summer' },
-      { name: 'Fall', src: '/havests#fall' },
-      { name: 'Winter', src: '/havests#winter' },
+      { name: 'Spring', src: '/havests/spring' },
+      { name: 'Summer', src: '/havests/summer' },
+      { name: 'Fall', src: '/havests/fall' },
+      { name: 'Winter', src: '/havests/winter' },
     ],
   },
   {
@@ -96,16 +96,16 @@ function WhiteNavbar() {
           </div>
           <Collapse navbar isOpen={collapseOpen}>
             <Nav className="ml-auto" navbar>
-              {dataNavbar.map((ele) => {
+              {dataNavbar.map((ele, index) => {
                 return (
-                  <UncontrolledDropdown nav inNavbar>
+                  <UncontrolledDropdown key={`dropdown-${index}`} nav inNavbar>
                     <DropdownToggle className="mr-2" color="default" caret nav>
                       {ele.title}
                     </DropdownToggle>
                     <DropdownMenu className="dropdown-danger" right>
-                      {ele.child.map((child) => {
+                      {ele.child.map((child, index) => {
                         return (
-                          <DropdownItem to={child.src} tag={NavLink}>
+                          <DropdownItem to={child.src} tag={NavLink} key={`child-${index}`}>
                             {child.name}
                           </DropdownItem>
                         );
@@ -126,9 +126,12 @@ function WhiteNavbar() {
                     </DropdownItem>
                     <DropdownItem
                       to="/login"
-                      tag={NavLink}
+                      tag={Link}
                       onClick={async (e) => {
                         logout();
+                        if (localStorage) {
+                          localStorage.clear('accessToken');
+                        }
                       }}
                     >
                       <i className="nc-icon nc-button-power" />

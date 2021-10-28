@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 // nodejs library that concatenates strings
 import classnames from 'classnames';
@@ -20,6 +20,7 @@ import {
   UncontrolledTooltip,
 } from 'reactstrap';
 import { useAuth } from 'contexts/AuthContext';
+import jwtDecode from 'jwt-decode';
 // core components
 
 const dataNavbar = [
@@ -34,10 +35,10 @@ const dataNavbar = [
   {
     title: 'Havests',
     child: [
-      { name: 'Spring', src: '/havests#spring' },
-      { name: 'Summer', src: '/havests#summer' },
-      { name: 'Fall', src: '/havests#fall' },
-      { name: 'Winter', src: '/havests#winter' },
+      { name: 'Spring', src: '/havests/spring' },
+      { name: 'Summer', src: '/havests/summer' },
+      { name: 'Fall', src: '/havests/fall' },
+      { name: 'Winter', src: '/havests/winter' },
     ],
   },
   {
@@ -54,9 +55,10 @@ function ColorNavbar() {
   const [navbarColor, setNavbarColor] = React.useState('navbar-transparent');
   const [bodyClick, setBodyClick] = React.useState(false);
   const [collapseOpen, setCollapseOpen] = React.useState(false);
+  const [role, setRole] = useState(1);
   const { currentUser, logout } = useAuth();
 
-  React.useEffect(() => {
+  useEffect(() => {
     let headroom = new Headroom(document.getElementById('navbar-main'));
     // initialise
     headroom.init();
@@ -72,6 +74,17 @@ function ColorNavbar() {
       window.removeEventListener('scroll', updateNavbarColor);
     };
   });
+
+  useEffect(() => {
+    if (localStorage) {
+      if (localStorage.getItem('accessToken') !== null) {
+        const userRole = jwtDecode(localStorage.getItem('accessToken'));
+        if (userRole === 2 && role !== userRole) {
+          setRole(userRole);
+        }
+      }
+    }
+  }, [role]);
   return (
     <>
       {bodyClick ? (
@@ -140,9 +153,13 @@ function ColorNavbar() {
                     </DropdownItem>
                     <DropdownItem
                       to="/login"
-                      tag={NavLink}
+                      tag={Link}
                       onClick={async (e) => {
                         logout();
+                        if (localStorage) {
+                          localStorage.clear('accessToken');
+                        }
+                        setRole(1);
                       }}
                     >
                       <i className="nc-icon nc-button-power" />

@@ -24,6 +24,8 @@ import EditAccountPage from 'pages/EditAccountPage';
 import { NotificationContainer } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import ProductPage from 'pages/ProductListPage';
+import HomePage from 'pages/AdminHomePage/homePage';
+import FarmManagerDetail from 'pages/AdminFarmManagerDetail/farmDetail'
 
 function App() {
   initializeIcons();
@@ -44,13 +46,15 @@ function App() {
           <Route exact path="/register" render={(props) => <RegisterPage {...props} />} />
           <Route exact path="/shoppingcart" render={(props) => <ShoppingCartPage {...props} />} />
           <Route path="/addproduct" render={(props) => <AddProductPage {...props} />} />
-          <Route exact path="/havests" render={(props) => <HavestPage {...props} />} />
-          <Route path="/havests/havestdetail/" render={(props) => <HavestDetailPage {...props} />} />
+          <Route exact path="/havests/:id" render={(props) => <HavestPage {...props} />} />
+          <Route path="/havests/havestdetail/:id" render={(props) => <HavestDetailPage {...props} />} />
           <Route exact path="/production" render={(props) => <ProductPage {...props} />} />
           <Route exact path="/admin/manageaccount" render={(props) => <ListAccountPage {...props} />} />
           <Route path="/admin/manageaccount/:id/edit" render={(props) => <EditAccountPage {...props} />} />
           <Route path="/admin/manageaccount/:id/view" render={(props) => <EditAccountPage {...props} />} />
           <Route exact path="/admin/farmManagement" render={(props) => <FarmManagerPage {...props} />} />
+          <Route exact path="/admin/home" render={(props) => <HomePage {...props} />} />
+          <Route exact path="/admin/farmManagement/:id" render={(props) => <FarmManagerDetail {...props} />} />
           <Redirect to="/home" />
         </Switch>
       </BrowserRouter>

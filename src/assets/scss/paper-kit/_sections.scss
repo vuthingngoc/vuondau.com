@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 .section {
   padding: 70px 0;
   position: relative;
@@ -10,34 +11,324 @@
 .section-with-space {
   padding: 60px 0;
 }
+
+.app-image-fit-contain {
+  object-fit: contain;
+}
+
 .section-gray {
   background-color: #eeeeee;
   .section-row {
-      border-bottom: 1px solid #333;
-      margin-bottom: 15px;
-      align-items: baseline;
-      .see-more {
-          text-align: right;
-      }
+    border-bottom: 1px solid #333;
+    margin-bottom: 15px;
+    align-items: baseline;
+    .see-more {
+      text-align: right;
+    }
   }
 }
 .section-gray-custom {
   background-color: #eeeeee;
   min-height: calc(100vh - 85px);
   overflow: auto;
+  .commandbar {
+    width: 100%;
+    margin-bottom: 25px;
+  }
+  .app-body-container {
+    margin-top: 30px;
+    margin: 24px;
+  }
+  .app-block-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 24px;
+    .app-appBlockLink {
+      cursor: pointer;
+      text-decoration: none;
+      border-radius: 12px;
+      width: calc(25% - 10px);
+      background: blue;
+      height: 120px;
+      padding: 18px;
+      padding-left: 0;
+      -webkit-filter: drop-shadow(0 2px 2px #666);
+      filter: drop-shadow(0 2px 2px #666);
+      &:hover {
+        -webkit-filter: none;
+        filter: none;
+      }
+      .app-appStatusDetail {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .app-appStatusText {
+          flex-grow: 1;
+          font-weight: 400;
+          text-align: center;
+          color: white;
+          font-size: 24px;
+        }
+        .app-appStatusImg {
+          font-size: 48px;
+          color: white;
+        }
+      }
+    }
+  }
+  .detail-list {
+    .ms-DetailsList-headerWrapper {
+      .ms-DetailsHeader {
+        padding: 0;
+        border: 0;
+        .ms-DetailsHeader-cell {
+          border: 1px solid #eee;
+        }
+      }
+    }
+    .ms-DetailsList-contentWrapper {
+      .ms-DetailsRow {
+        border: 0;
+      }
+      .ms-DetailsRow-cell {
+        border: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .app-grid-main-column {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          width: 100%;
+          .app-column-text {
+            flex-grow: 1;
+            margin-right: 8px;
+          }
+          i {
+            color: #605e5c;
+          }
+        }
+      }
+    }
+  }
+  .app-content {
+    background-color: #ffffff;
+    border-radius: 12px;
+    width: 100%;
+    .commandbar {
+      margin-top: 10px;
+      margin-bottom: 0;
+      .cancelButton {
+        background-color: #f1f1f1;
+        margin-right: 10px;
+        border-radius: 5px;
+        i {
+          color: #605e5c;
+        }
+      }
+      .saveButton {
+        background-color: #f7765f;
+        border-radius: 5px;
+        i {
+          color: #605e5c;
+        }
+      }
+      .editButton {
+        background-color: #f7765f;
+        border-radius: 5px;
+        i {
+          color: #605e5c;
+        }
+      }
+    }
+    .app-farmdetail-container {
+      .app-farm-name {
+        text-align: center;
+        font-size: xx-large;
+        font-weight: 400;
+        font-family: 'FontAwesome';
+        .ms-TextField {
+          width: 40%;
+          margin-left: 30%;
+          .ms-TextField-fieldGroup {
+            border: 0;
+            border-bottom: 1px solid;
+          }
+          input {
+            text-align: center;
+            font-size: xx-large;
+            font-weight: 400;
+            font-family: 'FontAwesome';
+          }
+        }
+      }
+      .app-detail-left {
+        width: 65%;
+        border: 1px solid #eee;
+        border-radius: 7px;
+        .app-field-wrap {
+          display: flex;
+          margin-left: 10px;
+          margin-bottom: 15px;
+          .app-field-label {
+            flex-basis: 20%;
+            white-space: nowrap;
+            font-size: 16px;
+            font-weight: 400;
+          }
+          .app-field-control {
+            flex-basis: 60%;
+            white-space: nowrap;
+            font-size: 16px;
+            font-weight: 400;
+            .ms-TextField-field {
+              height: 100px;
+            }
+          }
+          .app-field-control-listImage {
+            .app-item-img {
+              display: flex;
+              flex-direction: row;
+              margin: 10px;
+              margin-bottom: 20px;
+              img {
+                border: 1px solid #eee;
+                border-radius: 7px;
+                width: calc(100% - 10px);
+              }
+              .app-footer-btn {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                margin: 5px;
+                margin-left: 25px;
+                margin-right: 30px;
+              }
+            }
+          }
+        }
+      }
+      .app-detail-right {
+        width: 33%;
+        border: 1px solid #eee;
+        border-radius: 7px;
+        .app-field-wrap {
+          display: flex;
+          margin-left: 10px;
+          margin-bottom: 15px;
+          .app-field-label-avatar {
+            flex-basis: 50%;
+            white-space: nowrap;
+            font-size: 16px;
+            font-weight: 400;
+            margin-bottom: 10px;
+          }
+          .app-field-control-avatar {
+            img {
+              display: block;
+              max-width: 340px;
+            }
+          }
+          .app-field-label {
+            flex-basis: 20%;
+            white-space: nowrap;
+            font-size: 16px;
+            font-weight: 400;
+          }
+          .app-field-control {
+            flex-basis: 60%;
+            white-space: nowrap;
+            font-size: 16px;
+            font-weight: 400;
+            margin-left: 10px;
+          }
+        }
+      }
+    }
+  }
+  .app-section-title {
+    font-size: xxx-large;
+    font-family: 'Pacifico';
+    text-align: center;
+    margin-bottom: 50px;
+  }
+  .app-section-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin: 12px;
+    margin-bottom: 50px;
+    .app-content-left {
+      width: 25%;
+      text-align: center;
+      .app-about-item {
+        margin-bottom: 30px;
+        .app-about-icon {
+          position: relative;
+        }
+        .app-about-content {
+          font-size: 18px;
+          font-weight: 500;
+        }
+        .app-about-description {
+          font-size: 15px;
+          font-weight: 100;
+        }
+      }
+    }
+    .app-content-middle {
+      width: 47%;
+      img {
+        max-width: 100%;
+      }
+    }
+    .app-content-right {
+      width: 25%;
+      text-align: center;
+      .app-about-item {
+        margin-bottom: 30px;
+        .app-about-icon {
+          position: relative;
+        }
+        .app-about-content {
+          font-size: 18px;
+          font-weight: 500;
+        }
+        .app-about-description {
+          font-size: 15px;
+          font-weight: 100;
+        }
+      }
+      .app-content-title {
+        font-size: 24px;
+        font-weight: 400;
+        margin-top: 15px;
+        margin-bottom: 10px;
+      }
+      .app-content-body {
+        text-align: left;
+        font-size: 20px;
+        margin-left: 15px;
+        .app-content-wrap {
+          margin-bottom: 10px;
+        }
+      }
+    }
+  }
 }
 .ms-Viewport {
   width: 100%;
-}
-.commandbar {
-  width: 100%;
-  margin-bottom: 25px;
 }
 .search-box {
   height: 80%;
   margin-top: 2%;
   background-color: #e6e6e6;
   width: 200px;
+  border: 1px solid #eee;
+  &.is-active {
+    border: 1px solid #eee;
+  }
 }
 .section-nude {
   background-color: $bg-nude;

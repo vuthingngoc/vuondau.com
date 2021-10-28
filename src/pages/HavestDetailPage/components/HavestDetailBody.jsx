@@ -96,10 +96,12 @@ export default function HavestDetailBody() {
                   </Card>
                   <p className="image-thumb text-center">{dataHavest.imageTitle}</p>
                   <div className="article-content">
-                    <h4>Description</h4>
-                    <p>{dataHavest.description}</p>
+                    <h4 style={{ fontWeight: 'bold' }}>Description</h4>
+                    <p style={{ fontWeight: 'bolder' }}>{dataHavest.description}</p>
                   </div>
-                  <h3 className="section-title">Havest's Products</h3>
+                  <h3 className="section-title" style={{ fontWeight: 'bolder' }}>
+                    Havest's Products
+                  </h3>
                   <br />
                   <Row>
                     <Col md="6">
@@ -112,7 +114,7 @@ export default function HavestDetailBody() {
                       </Card>
                     </Col>
                     <Col md="6">
-                      <h3>{dataProduct.productName}</h3>
+                      <h3 style={{ fontWeight: 'bolder' }}>{dataProduct.productName}</h3>
                       <p className="card-description">{dataProduct.description}</p>
                       <div className="price">
                         <h6 className="text-default">{dataProduct.salePrice}</h6>

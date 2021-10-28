@@ -22,10 +22,10 @@ const dataNavbar = [
   {
     title: 'Havests',
     child: [
-      { name: 'Spring', src: '/havests#spring' },
-      { name: 'Summer', src: '/havests#summer' },
-      { name: 'Fall', src: '/havests#fall' },
-      { name: 'Winter', src: '/havests#winter' },
+      { name: 'Spring', src: '/havests/spring' },
+      { name: 'Summer', src: '/havests/summer' },
+      { name: 'Fall', src: '/havests/fall' },
+      { name: 'Winter', src: '/havests/winter' },
     ],
   },
   {
@@ -121,9 +121,12 @@ function ColorNavbar() {
                     </DropdownItem>
                     <DropdownItem
                       to="/login"
-                      tag={NavLink}
+                      tag={Link}
                       onClick={async (e) => {
                         logout();
+                        if (localStorage) {
+                          localStorage.clear('accessToken');
+                        }
                       }}
                     >
                       <i className="nc-icon nc-button-power" />
