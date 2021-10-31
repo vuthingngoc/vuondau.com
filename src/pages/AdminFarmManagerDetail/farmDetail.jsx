@@ -1,9 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import FarmManagerDetailBody from './component/farmDetailBody';
 import DangerNavbar from 'components/Navbars/DangerNavbar';
-import FooterBlack from 'components/Footers/FooterBlack'
+import FooterBlack from 'components/Footers/FooterBlack';
+import jwtDecode from 'jwt-decode';
 
 export default function FarmManagerDetail(props) {
+  const [role, setRole] = useState(1);
+  React.useEffect(() => {
+    if (localStorage) {
+      if (localStorage.getItem('accessToken') !== null) {
+        const userRole = jwtDecode(localStorage.getItem('accessToken')).ROLE === '2' ? 2 : 1;
+        if (userRole === 2 && role !== userRole) {
+          setRole(userRole);
+        }
+      }
+    }
+  }, [role]);
   document.documentElement.classList.remove('nav-open');
   React.useEffect(() => {
     document.body.classList.add('register-page');
@@ -19,9 +31,13 @@ export default function FarmManagerDetail(props) {
 
   return (
     <>
-      <DangerNavbar />
-      <FarmManagerDetailBody {...props}/>
-      <FooterBlack />
+      {role === 2 && (
+        <div>
+          <DangerNavbar />
+          <FarmManagerDetailBody {...props} />
+          <FooterBlack />
+        </div>
+      )}
     </>
   );
 }
