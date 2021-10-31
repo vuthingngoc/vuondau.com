@@ -75,7 +75,7 @@ export default function ListAccountbody() {
                               size="sm"
                               type="button"
                             >
-                              <i className="fa fa-user" />
+                              <i className="fa fa-user fa-2x" />
                             </Button>
                             <UncontrolledTooltip delay={0} placement="top" target="tooltip542628903">
                               View Profile
@@ -89,7 +89,7 @@ export default function ListAccountbody() {
                               size="sm"
                               type="button"
                             >
-                              <i className="fa fa-edit" />
+                              <i className="fa fa-edit fa-2x" />
                             </Button>
                             <UncontrolledTooltip delay={0} placement="top" target="tooltip278266693">
                               Edit Profile
@@ -106,7 +106,7 @@ export default function ListAccountbody() {
                                 else if (window.confirm('Are you sure you wish to deactive this account?')) deleteData(ele.id);
                               }}
                             >
-                              <i className="fa fa-times" />
+                              <i className="fa fa-times fa-2x" />
                             </Button>
                             <UncontrolledTooltip delay={0} placement="top" target="tooltip16493734">
                               Delete

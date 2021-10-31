@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useHistory } from 'react-router';
 // nodejs library that concatenates strings
@@ -8,6 +8,7 @@ import Headroom from 'headroom.js';
 // reactstrap components
 import { Button, Collapse, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledDropdown, Navbar, NavItem, Nav, Container } from 'reactstrap';
 import { useAuth } from 'contexts/AuthContext';
+import jwtDecode from 'jwt-decode';
 // core components
 
 const dataNavbar = [
@@ -20,12 +21,12 @@ const dataNavbar = [
     ],
   },
   {
-    title: 'Havests',
+    title: 'Harvests',
     child: [
-      { name: 'Spring', src: '/havests/spring' },
-      { name: 'Summer', src: '/havests/summer' },
-      { name: 'Fall', src: '/havests/fall' },
-      { name: 'Winter', src: '/havests/winter' },
+      { name: 'Spring', src: '/harvests/spring' },
+      { name: 'Summer', src: '/harvests/summer' },
+      { name: 'Fall', src: '/harvests/fall' },
+      { name: 'Winter', src: '/hravests/winter' },
     ],
   },
   {
@@ -42,6 +43,7 @@ function ColorNavbar() {
   const [navbarColor, setNavbarColor] = React.useState('navbar-transparent');
   const [bodyClick, setBodyClick] = React.useState(false);
   const [collapseOpen, setCollapseOpen] = React.useState(false);
+  const [role, setRole] = useState(1);
   const { currentUser, logout } = useAuth();
 
   const history = useHistory();
@@ -61,6 +63,17 @@ function ColorNavbar() {
       window.removeEventListener('scroll', updateNavbarColor);
     };
   });
+
+  React.useEffect(() => {
+    if (localStorage) {
+      if (localStorage.getItem('accessToken') !== null) {
+        const userRole = jwtDecode(localStorage.getItem('accessToken')).ROLE === '2' ? 2 : 1;
+        if (userRole === 2 && role !== userRole) {
+          setRole(userRole);
+        }
+      }
+    }
+  }, [role]);
   return (
     <>
       {bodyClick ? (
@@ -76,7 +89,13 @@ function ColorNavbar() {
       <Navbar className={classnames('fixed-top', navbarColor)} expand="lg" id="navbar-main">
         <Container>
           <div>
-            <img alt="..." src={require('assets/img/logoVuonDau.png').default} width="110px" height="50px" onClick={() => history.push('/home')} />
+            <img
+              alt="..."
+              src={require('assets/img/logoVuonDau.png').default}
+              width="110px"
+              height="50px"
+              onClick={() => (role === 2 ? history.push('/admin/home') : history.push('/home'))}
+            />
             <div
               className="text-center"
               style={{
@@ -109,7 +128,7 @@ function ColorNavbar() {
                   </UncontrolledDropdown>
                 );
               })}
-              {currentUser !== null ? (
+              {currentUser !== null && localStorage.getItem('accessToken') !== null ? (
                 <UncontrolledDropdown nav inNavbar>
                   <DropdownToggle color="default" caret nav>
                     {currentUser.email}
