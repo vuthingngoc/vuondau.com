@@ -46,12 +46,11 @@ function App() {
           <Route exact path="/register" render={(props) => <RegisterPage {...props} />} />
           <Route exact path="/shoppingcart" render={(props) => <ShoppingCartPage {...props} />} />
           <Route path="/addproduct" render={(props) => <AddProductPage {...props} />} />
-          <Route exact path="/havests/:id" render={(props) => <HavestPage {...props} />} />
-          <Route path="/havests/havestdetail/:id" render={(props) => <HavestDetailPage {...props} />} />
+          <Route exact path="/harvests/:id" render={(props) => <HavestPage {...props} />} />
+          <Route path="/harvests/harvestdetail/:id" render={(props) => <HavestDetailPage {...props} />} />
           <Route exact path="/production" render={(props) => <ProductPage {...props} />} />
           <Route exact path="/admin/manageaccount" render={(props) => <ListAccountPage {...props} />} />
-          <Route path="/admin/manageaccount/:id/edit" render={(props) => <EditAccountPage {...props} />} />
-          <Route path="/admin/manageaccount/:id/view" render={(props) => <EditAccountPage {...props} />} />
+          <Route path="/admin/manageaccount/:id/:action" render={(props) => <EditAccountPage {...props} />} />
           <Route exact path="/admin/farmManagement" render={(props) => <FarmManagerPage {...props} />} />
           <Route exact path="/admin/home" render={(props) => <HomePage {...props} />} />
           <Route exact path="/admin/farmManagement/:id" render={(props) => <FarmManagerDetail {...props} />} />
