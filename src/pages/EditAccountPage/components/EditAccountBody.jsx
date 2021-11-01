@@ -23,6 +23,8 @@ export default function EditAccountBody(props) {
   const [gender, setGender] = useState(0);
   const [status, setStatus] = useState(0);
   const [customerType, setCustomerType] = useState('');
+
+  const [disable, setDisable] = useState(false);
   const history = useHistory();
 
   document.documentElement.classList.remove('nav-open');
@@ -38,6 +40,10 @@ export default function EditAccountBody(props) {
   const handleDate = (e) => {
     setBirthDay(e.format('DD-MM-YYYY'));
   };
+
+  // const handleDefaultDisable = () => {
+  //   const endpoint = prop
+  // }
 
   const birthDayConvertToShow = (birthDay) => {
     const string = birthDay.slice(0, 10);
@@ -56,6 +62,9 @@ export default function EditAccountBody(props) {
     if (res?.status === 200) {
       setData(res.data);
       loadToState(res.data);
+    }
+    if (props.match.params.action === 'view') {
+      setDisable(true);
     }
   }
 
@@ -146,7 +155,16 @@ export default function EditAccountBody(props) {
       <div className="main">
         <div className="section">
           <Container>
-            <h3>Account Information</h3>
+            <Row>
+              <Col md="9" sm="9">
+                <h3 style={{ fontWeight: 'bold' }}>Account Information</h3>
+              </Col>
+              <Col md="3" sm="3">
+                <Button color="success" style={{ marginTop: '20px' }} onClick={() => setDisable(!disable)}>
+                  {disable ? 'Enable Edit' : 'Disable Edit'}
+                </Button>
+              </Col>
+            </Row>
             <div>
               <Row>
                 <Col md="6" sm="6">
@@ -182,6 +200,7 @@ export default function EditAccountBody(props) {
                           className="border-input"
                           placeholder="First Name"
                           type="text"
+                          disabled={disable}
                         />
                       </Col>
                       <Col md="4">
@@ -194,6 +213,7 @@ export default function EditAccountBody(props) {
                           className="border-input"
                           placeholder="Last Name"
                           type="text"
+                          disabled={disable}
                         />
                       </Col>
                     </Row>
@@ -247,6 +267,7 @@ export default function EditAccountBody(props) {
                           className="border-input"
                           placeholder="Enter Phone"
                           type="text"
+                          disabled={disable}
                         />
                       </InputGroup>
                     </Col>
@@ -262,6 +283,7 @@ export default function EditAccountBody(props) {
                             name="exampleRadios"
                             type="radio"
                             checked={gender === 1 ? true : false}
+                            disabled={disable}
                           />
                           Male <span className="form-check-sign" />
                         </Label>
@@ -274,6 +296,7 @@ export default function EditAccountBody(props) {
                             name="exampleRadios"
                             type="radio"
                             checked={gender === 0 ? true : false}
+                            disabled={disable}
                           />
                           Female <span className="form-check-sign" />
                         </Label>
@@ -286,6 +309,7 @@ export default function EditAccountBody(props) {
                         type="checkbox"
                         checked={status === 1 ? true : false}
                         onChange={(e) => (e.target.checked ? setStatus(1) : setStatus(0))}
+                        disabled={disable}
                       />
                       Account avaiable <span className="form-check-sign" />
                     </Label>
@@ -306,12 +330,13 @@ export default function EditAccountBody(props) {
                     onClick={(e) => {
                       if (window.confirm('Are you sure you wish to deactive this account?')) deleteData();
                     }}
+                    disabled={disable}
                   >
                     Deactive
                   </Button>
                 </Col>
                 <Col md="4" sm="4">
-                  <Button block onClick={updateData} className="btn-round" color="primary" type="submit">
+                  <Button block onClick={updateData} className="btn-round" color="primary" type="submit" disabled={disable}>
                     Save and Publish
                   </Button>
                 </Col>

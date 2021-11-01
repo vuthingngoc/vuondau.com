@@ -14,11 +14,20 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { currentUser } = useAuth();
 
   const { login, signInWithGoogle } = useAuth();
 
   document.documentElement.classList.remove('nav-open');
   React.useEffect(() => {
+    if (currentUser !== null && localStorage.getItem('accessToken') !== null) {
+      const role = jwtDecode(localStorage.getItem('accessToken')).ROLE;
+      if (role === '2') {
+        history.push('/admin/home');
+      } else {
+        history.push('/home');
+      }
+    }
     document.body.classList.add('register-page');
     document.body.classList.add('full-screen');
     window.scrollTo(0, 0);
@@ -35,8 +44,9 @@ export default function LoginPage() {
       if (localStorage) {
         localStorage.setItem('accessToken', res.data);
         NotificationManager.success('Welcome', 'Login Success', 3000);
-        const role = jwtDecode(res.data).role;
-        if (role === 2) {
+        const role = jwtDecode(res.data).ROLE;
+        setIsSubmitting(false);
+        if (role === '2') {
           history.push('/admin/home');
         } else {
           history.push('/home');
@@ -75,9 +85,14 @@ export default function LoginPage() {
               <Col className="ml-auto mr-auto" lg="4" md="6" sm="6">
                 <Card className="card-register">
                   <CardImg top tag="div">
-                    <img alt="..." className="img" src={require('assets/img/iconVuondau.png').default} />
+                    <img
+                      alt="..."
+                      className="img"
+                      src={require('assets/img/iconVuondau.png').default}
+                      style={{ width: '180px', height: '200px', display: 'block', margin: 'auto' }}
+                    />
                   </CardImg>
-                  <CardTitle className="text-center" tag="h3" style={{ marginBottom: '20px' }}>
+                  <CardTitle className="text-center" tag="h3" style={{ fontWeight: 'bold', marginBottom: '10px' }}>
                     Login
                   </CardTitle>
                   <Form
@@ -87,7 +102,7 @@ export default function LoginPage() {
                       setIsSubmitting(true);
                       login(email, password)
                         .then((response) => {
-                          setIsSubmitting(false);
+                          console.log(response);
                           loginWithAccessToken(response.user.accessToken);
                         })
                         .catch((error) => {
@@ -116,6 +131,9 @@ export default function LoginPage() {
                       autoComplete="password"
                       required
                     />
+                    <Button disabled={isSubmitting} type="submit" block className="btn-round" color="default">
+                      Login
+                    </Button>
                     <div className="division">
                       <div className="line l" />
                       <span>or</span>
@@ -127,6 +145,7 @@ export default function LoginPage() {
                         onClick={() =>
                           signInWithGoogle()
                             .then((response) => {
+                              console.log(response);
                               setIsSubmitting(false);
                               loginWithAccessToken(response.user.accessToken);
                             })
@@ -141,9 +160,6 @@ export default function LoginPage() {
                         <i className="fa fa-google" />
                       </Button>
                     </div>
-                    <Button disabled={isSubmitting} type="submit" block className="btn-round" color="default">
-                      Login
-                    </Button>
                   </Form>
                   <div className="forgot">
                     <Button className="btn-link" color="danger" href="/register">

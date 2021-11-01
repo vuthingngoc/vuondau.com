@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 // JavaScript plugin that hides or shows a component based on your scroll
 import Headroom from 'headroom.js';
@@ -18,6 +18,7 @@ import {
   UncontrolledTooltip,
 } from 'reactstrap';
 import { useAuth } from 'contexts/AuthContext';
+import jwtDecode from 'jwt-decode';
 
 const dataNavbar = [
   {
@@ -31,12 +32,12 @@ const dataNavbar = [
     ],
   },
   {
-    title: 'Havests',
+    title: 'Harvests',
     child: [
-      { name: 'Spring', src: '/havests/spring' },
-      { name: 'Summer', src: '/havests/summer' },
-      { name: 'Fall', src: '/havests/fall' },
-      { name: 'Winter', src: '/havests/winter' },
+      { name: 'Spring', src: '/harvests/spring' },
+      { name: 'Summer', src: '/harvests/summer' },
+      { name: 'Fall', src: '/harvests/fall' },
+      { name: 'Winter', src: '/harvests/winter' },
     ],
   },
   {
@@ -49,15 +50,45 @@ const dataNavbar = [
   },
 ];
 
+const dataAdminNavbar = [
+  {
+    title: 'Account Manager',
+    src: '/admin/manageaccount',
+  },
+  {
+    title: 'Farm Manager',
+    src: '/admin/farmManagement',
+  },
+  {
+    title: 'Product Manager',
+    src: '/admin/manageproduct',
+  },
+  {
+    title: 'Order Manager',
+    src: '/admin/manageorder',
+  },
+];
+
 function WhiteNavbar() {
   const [bodyClick, setBodyClick] = React.useState(false);
   const [collapseOpen, setCollapseOpen] = React.useState(false);
+  const [role, setRole] = useState(1);
   const { currentUser, logout } = useAuth();
   React.useEffect(() => {
     let headroom = new Headroom(document.getElementById('navbar-main'));
     // initialise
     headroom.init();
   });
+  React.useEffect(() => {
+    if (localStorage) {
+      if (localStorage.getItem('accessToken') !== null) {
+        const userRole = jwtDecode(localStorage.getItem('accessToken')).ROLE === '2' ? 2 : 1;
+        if (userRole === 2 && role !== userRole) {
+          setRole(userRole);
+        }
+      }
+    }
+  }, [role]);
   return (
     <>
       {bodyClick ? (
@@ -73,7 +104,7 @@ function WhiteNavbar() {
       <Navbar className="fixed-top" expand="lg" id="navbar-main" color="danger">
         <Container>
           <div className="navbar-translate">
-            <NavbarBrand id="navbar-brand" to="/home" tag={Link}>
+            <NavbarBrand id="navbar-brand" to={role === 2 ? '/admin/home' : '/home'} tag={Link}>
               VuonDau
             </NavbarBrand>
             <UncontrolledTooltip placement="bottom" target="navbar-brand">
@@ -96,25 +127,42 @@ function WhiteNavbar() {
           </div>
           <Collapse navbar isOpen={collapseOpen}>
             <Nav className="ml-auto" navbar>
-              {dataNavbar.map((ele, index) => {
-                return (
-                  <UncontrolledDropdown key={`dropdown-${index}`} nav inNavbar>
-                    <DropdownToggle className="mr-2" color="default" caret nav>
-                      {ele.title}
-                    </DropdownToggle>
-                    <DropdownMenu className="dropdown-danger" right>
-                      {ele.child.map((child, index) => {
-                        return (
-                          <DropdownItem to={child.src} tag={NavLink} key={`child-${index}`}>
-                            {child.name}
-                          </DropdownItem>
-                        );
-                      })}
-                    </DropdownMenu>
-                  </UncontrolledDropdown>
-                );
-              })}
-              {currentUser !== null ? (
+              {role === 1 ? (
+                dataNavbar.map((ele, index) => {
+                  return (
+                    <UncontrolledDropdown key={`dropdown-${index}`} nav inNavbar>
+                      <DropdownToggle className="mr-2" color="default" caret nav>
+                        {ele.title}
+                      </DropdownToggle>
+                      <DropdownMenu className="dropdown-danger" right>
+                        {ele.child.map((child, index) => {
+                          return (
+                            <DropdownItem to={child.src} tag={NavLink} key={`child-${index}`}>
+                              {child.name}
+                            </DropdownItem>
+                          );
+                        })}
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
+                  );
+                })
+              ) : (
+                <UncontrolledDropdown nav inNavbar>
+                  <DropdownToggle className="mr-2" color="default" caret nav>
+                    Management
+                  </DropdownToggle>
+                  <DropdownMenu className="dropdown-danger" right>
+                    {dataAdminNavbar.map((ele, index) => {
+                      return (
+                        <DropdownItem to={ele.src} tag={NavLink} key={`adminNav-${index}`}>
+                          {ele.title}
+                        </DropdownItem>
+                      );
+                    })}
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+              )}
+              {currentUser !== null && localStorage.getItem('accessToken') !== null ? (
                 <UncontrolledDropdown nav inNavbar>
                   <DropdownToggle color="default" caret nav>
                     {currentUser.email}
@@ -156,11 +204,19 @@ function WhiteNavbar() {
                   </DropdownMenu>
                 </UncontrolledDropdown>
               )}
-              <NavItem>
-                <Button className="btn-round" color="danger" href="/shoppingcart">
-                  <i className="nc-icon nc-cart-simple" /> Your Cart
-                </Button>
-              </NavItem>
+              {role === 1 ? (
+                <NavItem>
+                  <Button className="btn-round" color="danger" href="/shoppingcart">
+                    <i className="nc-icon nc-cart-simple" /> Your Cart
+                  </Button>
+                </NavItem>
+              ) : (
+                <NavItem>
+                  <Button className="btn-round" color="info" href="/home">
+                    <i className="nc-icon nc-refresh-69" /> Switch to Customer Interface
+                  </Button>
+                </NavItem>
+              )}
             </Nav>
           </Collapse>
         </Container>

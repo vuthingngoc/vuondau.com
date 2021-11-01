@@ -7,10 +7,15 @@ import { getDataByPath } from 'services/data.service';
 
 export default function ListAccountbody() {
   const [data, setData] = useState(null);
-  async function loadData() {
+  const [view, setView] = useState(false);
+  async function loadData(viewCheck) {
     if (localStorage) {
       const accessToken = localStorage.getItem('accessToken');
-      const res = await getDataByPath('api/v1/customers', accessToken);
+      let path = 'api/v1/customers';
+      if (viewCheck) {
+        path = 'api/v1/farmers';
+      }
+      const res = await getDataByPath(path, accessToken);
       if (res?.status === 200) {
         setData(res.data);
       }
@@ -39,12 +44,28 @@ export default function ListAccountbody() {
       <div className="section section-gray">
         <Container className="tim-container">
           <div className="title">
-            <h2>Manage Customer Account</h2>
+            <Row>
+              <Col md="9">
+                <h2>{!view ? 'Manage Customer Account' : 'Manage Farmer Account'}</h2>
+              </Col>
+              <Col md="3">
+                <Button
+                  style={{ marginTop: '25px' }}
+                  onClick={() => {
+                    loadData(!view);
+                    setView(!view);
+                  }}
+                >
+                  <i className="nc-icon nc-refresh-69" />
+                  {!view ? ' Switch To Farmer' : ' Switch to Customer'}
+                </Button>
+              </Col>
+            </Row>
           </div>
           <Row>
             <Col className="ml-auto mr-auto" md="12">
-              <h4 className="title">
-                <small>List Account</small>
+              <h4 className="title" style={{ fontWeight: 'bold' }}>
+                List Account
                 <Table responsive>
                   <thead>
                     <tr>
@@ -75,7 +96,7 @@ export default function ListAccountbody() {
                               size="sm"
                               type="button"
                             >
-                              <i className="fa fa-user" />
+                              <i className="fa fa-user fa-2x" />
                             </Button>
                             <UncontrolledTooltip delay={0} placement="top" target="tooltip542628903">
                               View Profile
@@ -89,7 +110,7 @@ export default function ListAccountbody() {
                               size="sm"
                               type="button"
                             >
-                              <i className="fa fa-edit" />
+                              <i className="fa fa-edit fa-2x" />
                             </Button>
                             <UncontrolledTooltip delay={0} placement="top" target="tooltip278266693">
                               Edit Profile
@@ -106,7 +127,7 @@ export default function ListAccountbody() {
                                 else if (window.confirm('Are you sure you wish to deactive this account?')) deleteData(ele.id);
                               }}
                             >
-                              <i className="fa fa-times" />
+                              <i className="fa fa-times fa-2x" />
                             </Button>
                             <UncontrolledTooltip delay={0} placement="top" target="tooltip16493734">
                               Delete

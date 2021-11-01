@@ -7,7 +7,7 @@ export default function ShoppingCartBody() {
   const [totalPrice, setTotalPrice] = useState(0);
   const calTotal = () => {
     let total = 0;
-    data.forEach((e) => {
+    data?.forEach((e) => {
       total += e.salePrice * e.weight;
     });
     setTotalPrice(total);
@@ -51,7 +51,7 @@ export default function ShoppingCartBody() {
     const cartItem = JSON.parse(localStorage.getItem('CART'));
     setData(cartItem);
     let total = 0;
-    cartItem.forEach((e) => {
+    cartItem?.forEach((e) => {
       total += e.salePrice * e.weight;
     });
     setTotalPrice(total);

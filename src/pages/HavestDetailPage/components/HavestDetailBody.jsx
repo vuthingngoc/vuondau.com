@@ -12,7 +12,7 @@ const dataHavest = {
   imageAlt: 'imageAlt',
   imageTitle: 'Photo by Farmer',
   description: 'Cà chua đà lạt vụ mùa đông',
-  src: '/havests/havestdetail/',
+  src: '/harvests/harvestdetail/',
   status: 1,
   orderDay: 'OCTOBER 10, 2021',
   havestDay: 'DECEMBER 15, 2021',
@@ -25,7 +25,7 @@ const dataSimularHavest = [
     image:
       'https://images.unsplash.com/photo-1486328228599-85db4443971f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
     description: 'Rau cải thảo đà lạt vụ mùa đông',
-    src: '/havests/havestdetail/',
+    src: '/harvests/harvestdetail/',
   },
   {
     havestName: 'Vụ dâu Đà Lạt Mùa Đông',
@@ -33,7 +33,7 @@ const dataSimularHavest = [
     image:
       'https://images.unsplash.com/photo-1605056545110-c2ef2253aa8c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1120&q=80',
     description: 'Dâu Đà Lạt mùa đông giá cực rẻ, ngọt ngon',
-    src: '/havests/havestdetail/',
+    src: '/harvests/harvestdetail/',
   },
   {
     havestName: 'Dưa leo Đà Lạc vụ Mùa Đông',
@@ -41,7 +41,7 @@ const dataSimularHavest = [
     image:
       'https://images.unsplash.com/photo-1627738670355-45970f19bcd9?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80',
     description: 'Dưa leo Đà Lạt mùa đông',
-    src: '/havests/havestdetail/',
+    src: '/harvests/harvestdetail/',
   },
 ];
 
@@ -87,7 +87,7 @@ export default function HavestDetailBody() {
                       <h3 className="title">{dataHavest.havestName}</h3>
                     </a>
                     <h6 className="title-uppercase">Order start day: {dataHavest.orderDay} </h6>
-                    <h6 className="title-uppercase">Expect havest day: {dataHavest.havestDay} </h6>
+                    <h6 className="title-uppercase">Expect harvest day: {dataHavest.havestDay} </h6>
                   </div>
                 </Col>
                 <Col className="ml-auto mr-auto" md="8">
@@ -100,7 +100,7 @@ export default function HavestDetailBody() {
                     <p style={{ fontWeight: 'bolder' }}>{dataHavest.description}</p>
                   </div>
                   <h3 className="section-title" style={{ fontWeight: 'bolder' }}>
-                    Havest's Products
+                    Harvest's Products
                   </h3>
                   <br />
                   <Row>
@@ -155,7 +155,7 @@ export default function HavestDetailBody() {
               </Row>
               <Row>
                 <div className="related-articles">
-                  <h3 className="title">Simular havests</h3>
+                  <h3 className="title">Simular harvests</h3>
                   <legend />
                   <Container>
                     <Row>

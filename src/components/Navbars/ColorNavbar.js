@@ -33,12 +33,12 @@ const dataNavbar = [
     ],
   },
   {
-    title: 'Havests',
+    title: 'Harvests',
     child: [
-      { name: 'Spring', src: '/havests/spring' },
-      { name: 'Summer', src: '/havests/summer' },
-      { name: 'Fall', src: '/havests/fall' },
-      { name: 'Winter', src: '/havests/winter' },
+      { name: 'Spring', src: '/harvests/spring' },
+      { name: 'Summer', src: '/harvests/summer' },
+      { name: 'Fall', src: '/harvests/fall' },
+      { name: 'Winter', src: '/harvests/winter' },
     ],
   },
   {
@@ -78,7 +78,7 @@ function ColorNavbar() {
   useEffect(() => {
     if (localStorage) {
       if (localStorage.getItem('accessToken') !== null) {
-        const userRole = jwtDecode(localStorage.getItem('accessToken'));
+        const userRole = jwtDecode(localStorage.getItem('accessToken')).ROLE === '2' ? 2 : 1;
         if (userRole === 2 && role !== userRole) {
           setRole(userRole);
         }
@@ -100,7 +100,7 @@ function ColorNavbar() {
       <Navbar className={classnames('fixed-top', navbarColor)} expand="lg" id="navbar-main">
         <Container>
           <div className="navbar-translate">
-            <NavbarBrand id="navbar-brand" to="/home" tag={Link}>
+            <NavbarBrand id="navbar-brand" to={role === 2 ? '/admin/home' : '/home'} tag={Link}>
               VuonDau
             </NavbarBrand>
             <UncontrolledTooltip placement="bottom" target="navbar-brand">
@@ -141,7 +141,7 @@ function ColorNavbar() {
                   </UncontrolledDropdown>
                 );
               })}
-              {currentUser !== null ? (
+              {currentUser !== null && localStorage.getItem('accessToken') !== null ? (
                 <UncontrolledDropdown nav inNavbar>
                   <DropdownToggle color="default" caret nav>
                     {currentUser.email}
