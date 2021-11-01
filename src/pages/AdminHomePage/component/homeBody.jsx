@@ -26,8 +26,10 @@ export default function HomePageBody() {
 
     const _onRenderItemColumn = (item, index, column) => {
         switch (column.fieldName) {
-            case 'no': return (<>{index}</>)
-            default: return item[column.fieldName];
+          case 'no':
+            return <>{index + 1}</>;
+          default:
+            return item[column.fieldName];
         }
     }
 
