@@ -102,6 +102,7 @@ export default function LoginPage() {
                       setIsSubmitting(true);
                       login(email, password)
                         .then((response) => {
+                          console.log(response);
                           loginWithAccessToken(response.user.accessToken);
                         })
                         .catch((error) => {
@@ -144,6 +145,7 @@ export default function LoginPage() {
                         onClick={() =>
                           signInWithGoogle()
                             .then((response) => {
+                              console.log(response);
                               setIsSubmitting(false);
                               loginWithAccessToken(response.user.accessToken);
                             })
