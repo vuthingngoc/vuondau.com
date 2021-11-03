@@ -23,6 +23,7 @@ export default function EditAccountBody(props) {
   const [gender, setGender] = useState(0);
   const [status, setStatus] = useState(0);
   const [customerType, setCustomerType] = useState('');
+  const [view] = useState(props.match.params.view);
 
   const [disable, setDisable] = useState(false);
   const history = useHistory();
@@ -57,7 +58,10 @@ export default function EditAccountBody(props) {
   };
 
   async function loadData(id) {
-    const path = `api/v1/customers/${id}`;
+    let path = `api/v1/customers/${id}`;
+    if (view === 'farmer') {
+      path = `api/v1/farmers/${id}`;
+    }
     const res = await getDataByPath(path);
     if (res?.status === 200) {
       setData(res.data);
@@ -91,14 +95,14 @@ export default function EditAccountBody(props) {
       setPhone(data.phone);
       setGender(data.gender);
       setStatus(data.status);
-      setCustomerType({ value: data.customer_type_navigation.id, label: data.customer_type_navigation.name });
+      if (view === 'customer') setCustomerType({ value: data.customer_type_navigation.id, label: data.customer_type_navigation.name });
     }
   };
 
   async function updateData() {
     if (data !== null) {
       const birth_day = birtDayConvertToUpdate(birthDay);
-      const updateData = {
+      let updateData = {
         customer_type: customerType.value,
         first_name: firstName,
         last_name: lastName,
@@ -108,7 +112,19 @@ export default function EditAccountBody(props) {
         gender: gender,
         status: status,
       };
-      const res = await updateDataAccount(`api/v1/customers/${props.match.params.id}`, updateData);
+      let path = 'api/v1/customers/';
+      if (view === 'farmer') {
+        updateData = {
+          first_name: firstName,
+          last_name: lastName,
+          password: data.password,
+          phone: phone,
+          birth_day: birth_day,
+          gender: gender,
+        };
+        path = 'api/v1/farmers/';
+      }
+      const res = await updateDataAccount(`${path}${props.match.params.id}`, updateData);
       if (res.status === 200) {
         setData(res.data);
         NotificationManager.success('Update Success', 'Your data has been update success', 3000);
@@ -146,7 +162,7 @@ export default function EditAccountBody(props) {
   useEffect(() => {
     if (data === null) {
       loadData(props.match.params.id);
-      loadCustomerTypeData();
+      if (view === 'customer') loadCustomerTypeData();
     }
   });
 
@@ -170,19 +186,21 @@ export default function EditAccountBody(props) {
                 <Col md="6" sm="6">
                   <h6>Account Image</h6>
                   <ImageUpload />
-                  <Col md="8" sm="8">
-                    <h6>Customer Type</h6>
-                    <FormGroup>
-                      <Select
-                        name="customerType"
-                        value={customerType}
-                        onChange={(value) => setCustomerType(value)}
-                        options={customerTypeData}
-                        placeholder="CHOOSE CUSTOMER TYPE"
-                        styles={colourStyles}
-                      />
-                    </FormGroup>
-                  </Col>
+                  {view === 'customer' && (
+                    <Col md="8" sm="8">
+                      <h6>Customer Type</h6>
+                      <FormGroup>
+                        <Select
+                          name="customerType"
+                          value={customerType}
+                          onChange={(value) => setCustomerType(value)}
+                          options={customerTypeData}
+                          placeholder="CHOOSE CUSTOMER TYPE"
+                          styles={colourStyles}
+                        />
+                      </FormGroup>
+                    </Col>
+                  )}
                 </Col>
                 <Col md="6" sm="6">
                   <FormGroup>

@@ -89,7 +89,7 @@ export default function ListAccountbody() {
                           <td className="td-actions text-right">
                             <Button
                               className="btn-link mr-1"
-                              href={`/admin/manageaccount/${ele.id}/view`}
+                              href={`/admin/manageaccount/${view ? 'farmer' : 'customer'}/${ele.id}/view`}
                               color="info"
                               data-toggle="tooltip"
                               id="tooltip542628903"
@@ -103,7 +103,7 @@ export default function ListAccountbody() {
                             </UncontrolledTooltip>
                             <Button
                               className="btn-link mr-1"
-                              href={`/admin/manageaccount/${ele.id}/edit`}
+                              href={`/admin/manageaccount/${view ? 'farmer' : 'customer'}/${ele.id}/edit`}
                               color="success"
                               data-toggle="tooltip"
                               id="tooltip278266693"
