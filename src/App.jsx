@@ -27,6 +27,8 @@ import ProductPage from 'pages/ProductListPage';
 import HomePage from 'pages/AdminHomePage/homePage';
 import FarmManagerDetail from 'pages/AdminFarmManagerDetail/farmDetail'
 import CheckoutPage from 'pages/CheckoutPage';
+import ProductoManagerPage from 'pages/ProductManagerPage';
+import AdminProductDetailPage from 'pages/AdminProductDetailPage';
 
 function App() {
   initializeIcons();
@@ -53,9 +55,11 @@ function App() {
           <Route exact path="/production" render={(props) => <ProductPage {...props} />} />
           <Route exact path="/admin/manageaccount" render={(props) => <ListAccountPage {...props} />} />
           <Route path="/admin/manageaccount/:view/:id/:action" render={(props) => <EditAccountPage {...props} />} />
+          <Route path="/admin/manageproduct/productdetail/:id/:action" render={(props) => <AdminProductDetailPage {...props} />} />
           <Route exact path="/admin/farmManagement" render={(props) => <FarmManagerPage {...props} />} />
           <Route exact path="/admin/home" render={(props) => <HomePage {...props} />} />
           <Route exact path="/admin/farmManagement/:id" render={(props) => <FarmManagerDetail {...props} />} />
+          <Route exact path="/admin/manageproduct" render={(props) => <ProductoManagerPage {...props} />} />
           <Redirect to="/home" />
         </Switch>
       </BrowserRouter>
