@@ -40,12 +40,11 @@ export default function LoginPage() {
 
   async function loginWithAccessToken(accessToken) {
     const res = await loginByPath('api/v1/login', accessToken);
-    console.log(res);
     if (res.status === 200) {
       if (localStorage) {
         localStorage.setItem('accessToken', res.data);
         NotificationManager.success('Welcome', 'Login Success', 3000);
-        console.log(jwtDecode(res.data));
+        console.log('jwt', jwtDecode(res.data));
         const role = jwtDecode(res.data).ROLE;
         setIsSubmitting(false);
         if (role === '2') {

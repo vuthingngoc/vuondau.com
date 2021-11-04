@@ -52,7 +52,7 @@ export default function HomePageBody() {
               </div>
             </div>
           </a>
-          <a href="/#" class="app-appBlockLink" style={{ backgroundColor: '#088A4B' }}>
+          <a href="/admin/manageproduct" class="app-appBlockLink" style={{ backgroundColor: '#088A4B' }}>
             <div className="app-appStatusDetail">
               <div className="app-appStatusText">Quản lý Sản phẩm</div>
               <div className="app-appStatusImg">

@@ -8,7 +8,7 @@ import ImageUpload from 'components/CustomUpload/ImageUpload.js';
 import 'react-notifications/lib/notifications.css';
 import { getDataByPath } from 'services/data.service';
 import { updateDataAccount } from 'services/data.service';
-import { deleteDataAccount } from 'services/data.service';
+import { deleteDataByPath } from 'services/data.service';
 import { useHistory } from 'react-router';
 import { NotificationManager } from 'react-notifications';
 
@@ -121,6 +121,7 @@ export default function EditAccountBody(props) {
           phone: phone,
           birth_day: birth_day,
           gender: gender,
+          status: status,
         };
         path = 'api/v1/farmers/';
       }
@@ -135,8 +136,12 @@ export default function EditAccountBody(props) {
   }
 
   async function deleteData() {
+    let path = 'api/v1/customers/';
+    if (view === 'farmer') {
+      path = 'api/farmers/';
+    }
     if (data !== null) {
-      const res = await deleteDataAccount(`api/v1/customers/${props.match.params.id}`, props.match.params.id);
+      const res = await deleteDataByPath(`${path}${props.match.params.id}`, props.match.params.id);
       if (res.status === 204) {
         setData(null);
         NotificationManager.success('Deactive Success', 'Your data has been deactive success', 3000);

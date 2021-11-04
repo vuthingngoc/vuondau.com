@@ -6,7 +6,6 @@ import { Badge, Button, Card, Media, Container, Row, Col, CardTitle } from 'reac
 const dataHavest = {
   havestName: 'Vụ cà chua Đà Lạt Mùa đông',
   ordered: 200,
-  heart: 56,
   image:
     'https://images.unsplash.com/photo-1516253593875-bd7ba052fbc5?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80',
   imageAlt: 'imageAlt',
@@ -54,11 +53,10 @@ const dataProduct = {
 };
 
 const dataFarm = {
-  farmName: 'Nông Trại Thảo Điền',
+  farmName: 'Vườn Cà Đà Lạt',
   image: require('assets/img/sections/farms/MamNon.jpg').default,
-  description:
-    'Nông trại Thảo Điền hiện có một vườn rau canh tác theo kỹ thuật hữu cơ rộng 5.000m2 tại huyện ..., Tỉnh .... Tất cả sản phẩm rau hữu cơ đều do Farmers Market tự trồng và kiểm soát chất lượng theo tiêu chuẩn canh tác hữu cơ tại nông trại này.',
-  src: '/farms/farmdetail',
+  description: 'Trồng cà ở Đà Lạt',
+  src: '/farms/farmdetail/a2a6be8c-c219-468a-b143-873c0fb26768',
 };
 
 export default function HavestDetailBody() {
@@ -140,7 +138,7 @@ export default function HavestDetailBody() {
                         </a>
                         <Media body>
                           <Media heading>{dataFarm.farmName}</Media>
-                          <div className="pull-right">
+                          <div className="pull-right" style={{ marginLeft: '50px', float: 'right' }}>
                             <Button className="btn-round" color="default" href={dataFarm.src}>
                               <i className="fa fa-reply mr-1" />
                               Check Info
@@ -156,24 +154,25 @@ export default function HavestDetailBody() {
               <Row>
                 <div className="related-articles">
                   <h3 className="title">Simular harvests</h3>
-                  <legend />
                   <Container>
                     <Row>
                       {dataSimularHavest.map((ele) => {
                         return (
                           <Col md="4">
-                            <a href={ele.src}>
-                              <img alt="..." className="img-rounded img-responsive" src={ele.image} />
-                            </a>
-                            <CardTitle tag="h5">
-                              <a href={ele.src} class="mr-1 btn btn-link">
-                                {ele.havestName}
+                            <Card>
+                              <a href={ele.src}>
+                                <img alt="..." className="img-rounded img-responsive" src={ele.image} />
                               </a>
-                            </CardTitle>
-                            <p className="blog-title">{ele.description}</p>
-                            <h6 style={{ textAlign: 'right' }}>
-                              Đã đặt <i className="fa fa-handshake-o" /> {ele.ordered}
-                            </h6>
+                              <CardTitle tag="h5">
+                                <a href={ele.src} class="mr-1 btn btn-link">
+                                  {ele.havestName}
+                                </a>
+                              </CardTitle>
+                              <p className="blog-title">{ele.description}</p>
+                              <h6 style={{ textAlign: 'right' }}>
+                                Đã đặt <i className="fa fa-handshake-o" /> {ele.ordered}
+                              </h6>
+                            </Card>
                           </Col>
                         );
                       })}

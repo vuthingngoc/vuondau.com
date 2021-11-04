@@ -5,16 +5,12 @@ import { deleteDataByPath } from 'services/data.service';
 
 import { getDataByPath } from 'services/data.service';
 
-export default function ListAccountbody() {
+export default function ProductManagerBody() {
   const [data, setData] = useState(null);
-  const [view, setView] = useState(false);
-  async function loadData(viewCheck) {
+  async function loadData() {
     if (localStorage) {
       const accessToken = localStorage.getItem('accessToken');
-      let path = 'api/v1/customers';
-      if (viewCheck) {
-        path = 'api/v1/farmers';
-      }
+      let path = 'api/v1/products';
       const res = await getDataByPath(path, accessToken);
       if (res?.status === 200) {
         setData(res.data);
@@ -24,19 +20,19 @@ export default function ListAccountbody() {
 
   async function deleteData(id) {
     if (data !== null) {
-      let path = 'api/v1/customers/';
-      if (view) {
-        path = 'api/farmers/';
-      }
-      const res = await deleteDataByPath(`${path}${id}`, id);
+      const res = await deleteDataByPath(`api/v1/products/${id}`, id);
       if (res.status === 204) {
-        await loadData(view);
+        await loadData();
         NotificationManager.success('Deactive Success', 'Your data has been deactive success', 3000);
       } else {
         NotificationManager.warning('Deactive Failed', 'Something wrongs when deactive', 3000);
       }
     }
   }
+
+  const convertDateToShow = (date) => {
+    return date.slice(0, 10);
+  };
 
   useEffect(() => {
     if (data === null) {
@@ -50,33 +46,21 @@ export default function ListAccountbody() {
           <div className="title">
             <Row>
               <Col md="9">
-                <h2>{!view ? 'Manage Customer Account' : 'Manage Farmer Account'}</h2>
-              </Col>
-              <Col md="3">
-                <Button
-                  style={{ marginTop: '25px' }}
-                  onClick={() => {
-                    loadData(!view);
-                    setView(!view);
-                  }}
-                >
-                  <i className="nc-icon nc-refresh-69" />
-                  {!view ? ' Switch To Farmer' : ' Switch to Customer'}
-                </Button>
+                <h2>Manage Products</h2>
               </Col>
             </Row>
           </div>
           <Row>
             <Col className="ml-auto mr-auto" md="12">
               <h4 className="title" style={{ fontWeight: 'bold' }}>
-                List Account
+                List Products
                 <Table responsive>
                   <thead>
                     <tr>
                       <th className="text-center">#</th>
-                      <th>First Name</th>
-                      <th>Last Name</th>
-                      <th>Email</th>
+                      <th>Product Name</th>
+                      <th>Product Type</th>
+                      <th>Date of create</th>
                       <th className="text-right">Status</th>
                       <th className="text-right">Actions</th>
                     </tr>
@@ -86,14 +70,14 @@ export default function ListAccountbody() {
                       return (
                         <tr key={`table-${index}`}>
                           <td className="text-center">{index + 1}</td>
-                          <td>{ele.first_name}</td>
-                          <td>{ele.last_name}</td>
-                          <td>{ele.email}</td>
+                          <td>{ele.name}</td>
+                          <td>{ele.product_type.name}</td>
+                          <td>{ele.data_of_create && convertDateToShow(ele.data_of_create)}</td>
                           <td className="text-right">{ele.status === 1 ? 'Avaiable' : 'Unavaiable'}</td>
                           <td className="td-actions text-right">
                             <Button
                               className="btn-link mr-1"
-                              href={`/admin/manageaccount/${view ? 'farmer' : 'customer'}/${ele.id}/view`}
+                              href={`/admin/manageproduct/productdetail/${ele.id}/view`}
                               color="info"
                               data-toggle="tooltip"
                               id="tooltip542628903"
@@ -103,11 +87,11 @@ export default function ListAccountbody() {
                               <i className="fa fa-user fa-2x" />
                             </Button>
                             <UncontrolledTooltip delay={0} placement="top" target="tooltip542628903">
-                              View Profile
+                              View Product
                             </UncontrolledTooltip>
                             <Button
                               className="btn-link mr-1"
-                              href={`/admin/manageaccount/${view ? 'farmer' : 'customer'}/${ele.id}/edit`}
+                              href={`/admin/manageproduct/productdetail/${ele.id}/edit`}
                               color="success"
                               data-toggle="tooltip"
                               id="tooltip278266693"
@@ -117,7 +101,7 @@ export default function ListAccountbody() {
                               <i className="fa fa-edit fa-2x" />
                             </Button>
                             <UncontrolledTooltip delay={0} placement="top" target="tooltip278266693">
-                              Edit Profile
+                              Edit Product
                             </UncontrolledTooltip>
                             <Button
                               className="btn-link"
@@ -127,14 +111,14 @@ export default function ListAccountbody() {
                               size="sm"
                               type="button"
                               onClick={() => {
-                                if (ele.status === 0) window.alert('This Account has been Unavaible');
-                                else if (window.confirm('Are you sure you wish to deactive this account?')) deleteData(ele.id);
+                                if (ele.status === 0) window.alert('This product has been Unavaible');
+                                else if (window.confirm('Are you sure you wish to deactive this product?')) deleteData(ele.id);
                               }}
                             >
                               <i className="fa fa-times fa-2x" />
                             </Button>
                             <UncontrolledTooltip delay={0} placement="top" target="tooltip16493734">
-                              Delete
+                              Remove
                             </UncontrolledTooltip>
                           </td>
                         </tr>

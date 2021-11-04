@@ -36,7 +36,7 @@ export async function updateDataAccount(path, data) {
   }
 }
 
-export async function deleteDataAccount(path) {
+export async function deleteDataByPath(path) {
   try {
     let endpoint = `${backendUrl}`;
     if (path !== '') {
