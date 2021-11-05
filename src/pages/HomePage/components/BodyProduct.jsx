@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 // import { Card, Col, Container, Row } from 'react-bootstrap';
 import { CardBody, CardTitle, Card, Col, Container, Row } from 'reactstrap';
+import { getDataByPath } from 'services/data.service';
 // import styled from 'styled-components';
 
 const dataProduct = [
@@ -52,9 +53,8 @@ const dataHavest = [
   {
     havestName: 'Vụ cà chua Đà Lạt Mùa Đông',
     ordered: 200,
-    image:
-      'https://images.unsplash.com/photo-1516253593875-bd7ba052fbc5?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80',
-    description: 'Cà chua đà lạt vụ mùa xuân',
+    image: 'https://kiemsat.1cdn.vn/2018/04/16/nho-11-2018.jpg',
+    description: 'Cà chua đà lạt vụ mùa đông',
     src: '/harvests/harvestdetail/ca-chua-da-lat',
   },
   {
@@ -91,6 +91,35 @@ const dataNew = [
 ];
 
 export default function BodyProduction() {
+  const [dataHarvest, setDataHarvest] = useState(null);
+
+  async function loadDataHarvest() {
+    let path = 'api/v1/harvest-sellings';
+    const res = await getDataByPath(path);
+    console.log(res);
+    if (res?.status === 200) {
+      const data = res.data;
+      const dataHarvestTmp = [];
+      data.forEach((element, index) => {
+        const harvest = {
+          harvestName: element.harvest.name,
+          description: element.harvest.description,
+          status: element.status,
+          image: dataHavest[index].image,
+          src: `/harvests/harvestdetail/${element.id}`,
+        };
+        dataHarvestTmp.push(harvest);
+      });
+      setDataHarvest(dataHarvestTmp);
+    }
+  }
+
+  useEffect(() => {
+    if (dataHarvest === null) {
+      loadDataHarvest();
+    }
+  });
+
   return (
     <>
       <div className="wrapper">
@@ -208,7 +237,7 @@ export default function BodyProduction() {
               </Row>
               <br />
               <Row>
-                {dataHavest.map((ele) => {
+                {dataHarvest?.map((ele) => {
                   return (
                     <Col md="4">
                       <Card className="card-product card-plain-custom">
@@ -220,16 +249,16 @@ export default function BodyProduction() {
                             <div className="card-description">
                               <CardTitle tag="h5">
                                 <a href={ele.src} class="mr-1 btn btn-link">
-                                  {ele.havestName}
+                                  {ele.harvestName}
                                 </a>
                               </CardTitle>
                               <p className="card-description" style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
                                 {ele.description}
                               </p>
                             </div>
-                            <h6 style={{ textAlign: 'right' }}>
+                            {/* <h6 style={{ textAlign: 'right' }}>
                               Đã đặt <i className="fa fa-handshake-o" /> {ele.ordered}
-                            </h6>
+                            </h6> */}
                           </CardBody>
                         </div>
                       </Card>

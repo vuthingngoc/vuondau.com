@@ -53,7 +53,15 @@ export default function ProductManagerBody() {
           <Row>
             <Col className="ml-auto mr-auto" md="12">
               <h4 className="title" style={{ fontWeight: 'bold' }}>
-                List Products
+                <Row style={{ marginBottom: '10px' }}>
+                  <Col md="8">List Products</Col>
+                  <Col md="4">
+                    <Button color="success" href="/admin/manageproduct/productdetail/addnew/newproduct">
+                      <i class="fa fa-plus" />
+                      Create New Product
+                    </Button>
+                  </Col>
+                </Row>
                 <Table responsive>
                   <thead>
                     <tr>

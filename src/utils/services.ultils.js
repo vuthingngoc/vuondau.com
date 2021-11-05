@@ -18,3 +18,15 @@ export class ultilities {
     return false;
   }
 }
+
+export function getOptionsForImgur(clientID) {
+  let headers = {};
+
+  if (clientID && clientID !== '') {
+    headers = {
+      Authorization: `Client-ID ${clientID}`,
+    };
+  }
+  const options = { headers };
+  return options;
+}
