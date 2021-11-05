@@ -144,12 +144,10 @@ export async function uploadImgToImgur(image) {
   try {
     const key = 'a7c0eac2517f5a94054e3ef257acf02b';
     let endpoint = 'https://api.imgbb.com/1/upload';
-    let body = {};
-    if (image !== '') {
-      body = { key: key, image: image };
-    }
-    const res = await axios.post(endpoint, body);
-    console.log(res);
+    const bodyFormData = new FormData();
+    bodyFormData.append('key', key);
+    bodyFormData.append('image', image);
+    const res = await axios.post(endpoint, bodyFormData);
     return res;
   } catch (error) {
     return error.response;
