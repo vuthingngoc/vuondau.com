@@ -22,6 +22,8 @@ export default function AdminProductDetailBody(props) {
   const [productType, setProductType] = useState('');
   const [createDate, setCreateDate] = useState('');
   const [imageBase64, setImageBase64] = useState('');
+  const [image, setImage] = useState('');
+  const [imageId, setimageId] = useState('');
 
   const [disable, setDisable] = useState(false);
   const history = useHistory();
@@ -33,8 +35,6 @@ export default function AdminProductDetailBody(props) {
   document.documentElement.classList.remove('nav-open');
   React.useEffect(() => {
     document.body.classList.add('add-product');
-    window.scrollTo(0, 0);
-    document.body.scrollTop = 0;
     return function cleanup() {
       document.body.classList.remove('add-product');
     };
@@ -46,8 +46,14 @@ export default function AdminProductDetailBody(props) {
     if (res?.status === 200) {
       setData(res.data);
       loadToState(res.data);
+      const resImage = await getDataByPath(`api/v1/product-pictures/${id}`);
+      if (resImage?.status === 200) {
+        if (resImage.data[0]) {
+          setImage(resImage.data[0].src);
+          setimageId(resImage.data[0].id);
+        }
+      }
     }
-
     if (props.match.params.action === 'view') {
       setDisable(true);
     }
@@ -78,7 +84,7 @@ export default function AdminProductDetailBody(props) {
 
   async function updateData() {
     if (data !== null) {
-      let updateData = {
+      const updateData = {
         product_type_id: productType.value,
         name: name,
         description: description,
@@ -88,9 +94,27 @@ export default function AdminProductDetailBody(props) {
       const res = await updateDataByPath(`${path}${props.match.params.id}`, updateData);
       if (res.status === 200) {
         setData(res.data);
-        NotificationManager.success('Update Success', 'Your data has been update success', 3000);
+        updateDataImage(res.data.id);
       } else {
         NotificationManager.warning('Update Failed', 'Something wrongs when updating', 3000);
+      }
+    }
+  }
+
+  async function updateDataImage(productID) {
+    const imageUrl = await uploadImgForUrl();
+    if (imageUrl !== '' && productID !== '') {
+      const updateDataImage = {
+        product_id: productID,
+        src: imageUrl,
+        alt: '...',
+      };
+      const path = 'api/v1/product-pictures/';
+      const resImage = await updateDataByPath(`${path}${imageId}`, updateDataImage);
+      if (resImage.status === 200) {
+        NotificationManager.success('Update Success', 'Your data has been update success', 3000);
+      } else {
+        NotificationManager.warning('Update Failed', 'Update Product Success But Update Image Failed', 3000);
       }
     }
   }
@@ -110,22 +134,40 @@ export default function AdminProductDetailBody(props) {
 
   async function createData() {
     if (name !== '' && productType !== '') {
-      let createData = {
+      const createData = {
         product_type_id: productType.value,
         name: name,
         description: description,
       };
       const path = 'api/v1/products';
       const res = await createDataByPath(`${path}`, createData);
-      console.log(res);
       if (res.status === 201) {
-        NotificationManager.success('Create Success', 'Your data has been create success', 3000);
-        history.push(`/admin/manageproduct/productdetail/${res.data.id}/edit`);
+        createDataImage(res.data.id);
       } else {
         NotificationManager.warning('Create Failed', 'Something wrongs when create', 3000);
       }
     } else {
       NotificationManager.warning('You need to fill Product Name and Product Type', 'Create Failed', 3000);
+    }
+  }
+
+  async function createDataImage(id) {
+    const imageUrl = await uploadImgForUrl();
+    if (imageUrl !== '') {
+      const createDataImage = {
+        product_id: id,
+        src: imageUrl,
+        alt: '...',
+      };
+      const path = 'api/v1/product-pictures';
+      const res = await createDataByPath(`${path}`, createDataImage);
+      if (res.status === 201) {
+        NotificationManager.success('Create Success', 'Your data has been create success', 3000);
+        history.push(`/admin/manageproduct/productdetail/${res.data.id}/edit`);
+      } else {
+        NotificationManager.warning('Create Error', 'Create Product Successed But Upload Image Failed', 3000);
+        history.push(`/admin/manageproduct/productdetail/${res.data.id}/edit`);
+      }
     }
   }
 
@@ -145,8 +187,9 @@ export default function AdminProductDetailBody(props) {
     if (imageBase64 !== '') {
       const image = convertBase64Img(imageBase64);
       const res = await uploadImgToImgur(image);
-      console.log(image);
-      console.log(res);
+      if (res.status === 200) {
+        return res.data.data.display_url;
+      } else return '';
     }
   }
 
@@ -189,7 +232,7 @@ export default function AdminProductDetailBody(props) {
               <Row>
                 <Col md="6" sm="6">
                   <h6>Product Image</h6>
-                  <ImageUpload base64Callback={base64Callback} />
+                  <ImageUpload imageUrl={image} base64Callback={base64Callback} />
                   <Col md="8" sm="8">
                     <h6>Product Type</h6>
                     <FormGroup>
@@ -306,12 +349,6 @@ export default function AdminProductDetailBody(props) {
                     </Button>
                   </Col>
                 )}
-
-                <Col md="6" sm="6">
-                  <Button block className="btn-round" color="success" type="submit" onClick={() => uploadImgForUrl()}>
-                    test
-                  </Button>
-                </Col>
               </Row>
             </div>
           </Container>
