@@ -135,7 +135,7 @@ export default function ShoppingCartBody() {
                 <tr className="tr-actions">
                   <td colSpan="3" />
                   <td className="text-right" colSpan="2">
-                    <Button color="danger" size="lg" type="button">
+                    <Button color="danger" size="lg" type="button" href="/shoppingcart/checkout/17f65276-a1ef-470a-a15a-1422a23ceb0f">
                       Complete Purchase <i className="fa fa-chevron-right" />
                     </Button>
                   </td>

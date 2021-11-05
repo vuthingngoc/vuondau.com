@@ -4,25 +4,25 @@ import { Button, Label, FormGroup, Input, InputGroup, Container, Row, Col, Input
 import ReactDatetime from 'react-datetime';
 import Select from 'react-select';
 
-import ImageUpload from 'components/CustomUpload/ImageUpload.js';
+// import ImageUpload from 'components/CustomUpload/ImageUpload.js';
 import 'react-notifications/lib/notifications.css';
 import { getDataByPath } from 'services/data.service';
-import { updateDataAccount } from 'services/data.service';
-import { deleteDataAccount } from 'services/data.service';
+import { updateDataByPath } from 'services/data.service';
+import { deleteDataByPath } from 'services/data.service';
 import { useHistory } from 'react-router';
 import { NotificationManager } from 'react-notifications';
 
 export default function EditAccountBody(props) {
   const [data, setData] = useState(null);
   const [customerTypeData, setCustomerTypeData] = useState([]);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [fullname, setFullname] = useState('');
   const [birthDay, setBirthDay] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [gender, setGender] = useState(0);
   const [status, setStatus] = useState(0);
   const [customerType, setCustomerType] = useState('');
+  const [view] = useState(props.match.params.view);
 
   const [disable, setDisable] = useState(false);
   const history = useHistory();
@@ -57,7 +57,10 @@ export default function EditAccountBody(props) {
   };
 
   async function loadData(id) {
-    const path = `api/v1/customers/${id}`;
+    let path = `api/v1/customers/${id}`;
+    if (view === 'farmer') {
+      path = `api/v1/farmers/${id}`;
+    }
     const res = await getDataByPath(path);
     if (res?.status === 200) {
       setData(res.data);
@@ -83,32 +86,42 @@ export default function EditAccountBody(props) {
 
   const loadToState = (data) => {
     if (data !== null) {
-      setFirstName(data.first_name);
-      setLastName(data.last_name);
+      setFullname(data.full_name);
       setEmail(data.email);
       const birth_day = birthDayConvertToShow(data.birth_day);
       setBirthDay(birth_day);
       setPhone(data.phone);
       setGender(data.gender);
       setStatus(data.status);
-      setCustomerType({ value: data.customer_type_navigation.id, label: data.customer_type_navigation.name });
+      if (view === 'customer') setCustomerType({ value: data.customer_type_navigation.id, label: data.customer_type_navigation.name });
     }
   };
 
   async function updateData() {
     if (data !== null) {
       const birth_day = birtDayConvertToUpdate(birthDay);
-      const updateData = {
+      let updateData = {
         customer_type: customerType.value,
-        first_name: firstName,
-        last_name: lastName,
+        full_name: fullname,
         password: data.password,
         phone: phone,
         birth_day: birth_day,
         gender: gender,
         status: status,
       };
-      const res = await updateDataAccount(`api/v1/customers/${props.match.params.id}`, updateData);
+      let path = 'api/v1/customers/';
+      if (view === 'farmer') {
+        updateData = {
+          full_name: fullname,
+          password: data.password,
+          phone: phone,
+          birth_day: birth_day,
+          gender: gender,
+          status: status,
+        };
+        path = 'api/v1/farmers/';
+      }
+      const res = await updateDataByPath(`${path}${props.match.params.id}`, updateData);
       if (res.status === 200) {
         setData(res.data);
         NotificationManager.success('Update Success', 'Your data has been update success', 3000);
@@ -119,8 +132,12 @@ export default function EditAccountBody(props) {
   }
 
   async function deleteData() {
+    let path = 'api/v1/customers/';
+    if (view === 'farmer') {
+      path = 'api/farmers/';
+    }
     if (data !== null) {
-      const res = await deleteDataAccount(`api/v1/customers/${props.match.params.id}`, props.match.params.id);
+      const res = await deleteDataByPath(`${path}${props.match.params.id}`, props.match.params.id);
       if (res.status === 204) {
         setData(null);
         NotificationManager.success('Deactive Success', 'Your data has been deactive success', 3000);
@@ -146,7 +163,7 @@ export default function EditAccountBody(props) {
   useEffect(() => {
     if (data === null) {
       loadData(props.match.params.id);
-      loadCustomerTypeData();
+      if (view === 'customer') loadCustomerTypeData();
     }
   });
 
@@ -168,21 +185,21 @@ export default function EditAccountBody(props) {
             <div>
               <Row>
                 <Col md="6" sm="6">
-                  <h6>Account Image</h6>
-                  <ImageUpload />
-                  <Col md="8" sm="8">
-                    <h6>Customer Type</h6>
-                    <FormGroup>
-                      <Select
-                        name="customerType"
-                        value={customerType}
-                        onChange={(value) => setCustomerType(value)}
-                        options={customerTypeData}
-                        placeholder="CHOOSE CUSTOMER TYPE"
-                        styles={colourStyles}
-                      />
-                    </FormGroup>
-                  </Col>
+                  {view === 'customer' && (
+                    <Col md="8" sm="8">
+                      <h6>Customer Type</h6>
+                      <FormGroup>
+                        <Select
+                          name="customerType"
+                          value={customerType}
+                          onChange={(value) => setCustomerType(value)}
+                          options={customerTypeData}
+                          placeholder="CHOOSE CUSTOMER TYPE"
+                          styles={colourStyles}
+                        />
+                      </FormGroup>
+                    </Col>
+                  )}
                 </Col>
                 <Col md="6" sm="6">
                   <FormGroup>
@@ -190,28 +207,15 @@ export default function EditAccountBody(props) {
                       Account's Name <span className="icon-danger">*</span>
                     </h6>
                     <Row>
-                      <Col md="4">
+                      <Col md="10">
                         <h6>
-                          First Name <span className="icon-danger">*</span>
+                          Fullname <span className="icon-danger">*</span>
                         </h6>
                         <Input
-                          value={firstName}
-                          onChange={(e) => setFirstName(e.target.value)}
+                          value={fullname}
+                          onChange={(e) => setFullname(e.target.value)}
                           className="border-input"
-                          placeholder="First Name"
-                          type="text"
-                          disabled={disable}
-                        />
-                      </Col>
-                      <Col md="4">
-                        <h6>
-                          Last Name <span className="icon-danger">*</span>
-                        </h6>
-                        <Input
-                          value={lastName}
-                          onChange={(e) => setLastName(e.target.value)}
-                          className="border-input"
-                          placeholder="Last Name"
+                          placeholder="Fullname"
                           type="text"
                           disabled={disable}
                         />

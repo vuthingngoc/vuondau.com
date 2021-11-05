@@ -26,6 +26,10 @@ import 'react-notifications/lib/notifications.css';
 import ProductPage from 'pages/ProductListPage';
 import HomePage from 'pages/AdminHomePage/homePage';
 import FarmManagerDetail from 'pages/AdminFarmManagerDetail/farmDetail'
+import CheckoutPage from 'pages/CheckoutPage';
+import ProductoManagerPage from 'pages/ProductManagerPage';
+import AdminProductDetailPage from 'pages/AdminProductDetailPage';
+import CreateProfilePage from 'pages/CreateProfilePage';
 
 function App() {
   initializeIcons();
@@ -44,16 +48,20 @@ function App() {
           <Route exact path="/components" render={(props) => <Index {...props} />} />
           <Route exact path="/login" render={(props) => <LoginPage {...props} />} />
           <Route exact path="/register" render={(props) => <RegisterPage {...props} />} />
+          <Route exact path="/newprofile" render={(props) => <CreateProfilePage {...props} />} />
           <Route exact path="/shoppingcart" render={(props) => <ShoppingCartPage {...props} />} />
+          <Route path="/shoppingcart/checkout/:id" render={(props) => <CheckoutPage {...props} />} />
           <Route path="/addproduct" render={(props) => <AddProductPage {...props} />} />
           <Route exact path="/harvests/:id" render={(props) => <HavestPage {...props} />} />
           <Route path="/harvests/harvestdetail/:id" render={(props) => <HavestDetailPage {...props} />} />
           <Route exact path="/production" render={(props) => <ProductPage {...props} />} />
           <Route exact path="/admin/manageaccount" render={(props) => <ListAccountPage {...props} />} />
-          <Route path="/admin/manageaccount/:id/:action" render={(props) => <EditAccountPage {...props} />} />
+          <Route path="/admin/manageaccount/:view/:id/:action" render={(props) => <EditAccountPage {...props} />} />
+          <Route path="/admin/manageproduct/productdetail/:id/:action" render={(props) => <AdminProductDetailPage {...props} />} />
           <Route exact path="/admin/farmManagement" render={(props) => <FarmManagerPage {...props} />} />
           <Route exact path="/admin/home" render={(props) => <HomePage {...props} />} />
           <Route exact path="/admin/farmManagement/:id" render={(props) => <FarmManagerDetail {...props} />} />
+          <Route exact path="/admin/manageproduct" render={(props) => <ProductoManagerPage {...props} />} />
           <Redirect to="/home" />
         </Switch>
       </BrowserRouter>
