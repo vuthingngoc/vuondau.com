@@ -1,26 +1,26 @@
-import React from "react";
+import React, { useEffect } from 'react';
 // used for making the prop types of this component
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
-import { Button } from "reactstrap";
+import { Button } from 'reactstrap';
 
-import defaultImage from "assets/img/image_placeholder.jpg";
-import defaultAvatar from "assets/img/placeholder.jpg";
+import defaultImage from 'assets/img/image_placeholder.jpg';
+import defaultAvatar from 'assets/img/placeholder.jpg';
 import { convertImageToBase64 } from 'services/data.service';
 
 function ImageUpload(props) {
   const [file, setFile] = React.useState(null);
   const [setImagePreviewUrl] = React.useState(props.avatar ? defaultAvatar : defaultImage);
-  const [imgBase64, setImgBase64] = React.useState('')
+  const [imgBase64, setImgBase64] = React.useState('');
   const fileInput = React.useRef(null);
   const handleImageChange = (e) => {
     e.preventDefault();
     if (e.target.files[0]) {
       let _convertImageToBase64 = convertImageToBase64(e.target.files[0]);
-        Promise.all([_convertImageToBase64]).then(values => {
-          setImgBase64(values[0]);
-          props.base64Callback(values[0]);
-        })
+      Promise.all([_convertImageToBase64]).then((values) => {
+        setImgBase64(values[0]);
+        props.base64Callback(values[0]);
+      });
     }
   };
   // const handleSubmit = e => {
@@ -37,6 +37,11 @@ function ImageUpload(props) {
     setImagePreviewUrl(props.avatar ? defaultAvatar : defaultImage);
     fileInput.current.value = null;
   };
+  useEffect(() => {
+    if (props.imageUrl !== '') {
+      setImgBase64(props.imageUrl);
+    }
+  }, [props.imageUrl]);
   return (
     <div className="fileinput text-center">
       <input type="file" onChange={handleImageChange} ref={fileInput} />
