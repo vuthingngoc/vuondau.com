@@ -74,8 +74,7 @@ export default function ListAccountbody() {
                   <thead>
                     <tr>
                       <th className="text-center">#</th>
-                      <th>First Name</th>
-                      <th>Last Name</th>
+                      <th>Fullname</th>
                       <th>Email</th>
                       <th className="text-right">Status</th>
                       <th className="text-right">Actions</th>
@@ -86,8 +85,7 @@ export default function ListAccountbody() {
                       return (
                         <tr key={`table-${index}`}>
                           <td className="text-center">{index + 1}</td>
-                          <td>{ele.first_name}</td>
-                          <td>{ele.last_name}</td>
+                          <td>{ele.full_name}</td>
                           <td>{ele.email}</td>
                           <td className="text-right">{ele.status === 1 ? 'Avaiable' : 'Unavaiable'}</td>
                           <td className="td-actions text-right">

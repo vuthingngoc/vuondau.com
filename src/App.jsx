@@ -29,6 +29,7 @@ import FarmManagerDetail from 'pages/AdminFarmManagerDetail/farmDetail'
 import CheckoutPage from 'pages/CheckoutPage';
 import ProductoManagerPage from 'pages/ProductManagerPage';
 import AdminProductDetailPage from 'pages/AdminProductDetailPage';
+import CreateProfilePage from 'pages/CreateProfilePage';
 
 function App() {
   initializeIcons();
@@ -47,6 +48,7 @@ function App() {
           <Route exact path="/components" render={(props) => <Index {...props} />} />
           <Route exact path="/login" render={(props) => <LoginPage {...props} />} />
           <Route exact path="/register" render={(props) => <RegisterPage {...props} />} />
+          <Route exact path="/newprofile" render={(props) => <CreateProfilePage {...props} />} />
           <Route exact path="/shoppingcart" render={(props) => <ShoppingCartPage {...props} />} />
           <Route path="/shoppingcart/checkout/:id" render={(props) => <CheckoutPage {...props} />} />
           <Route path="/addproduct" render={(props) => <AddProductPage {...props} />} />

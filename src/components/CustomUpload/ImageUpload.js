@@ -19,6 +19,7 @@ function ImageUpload(props) {
       let _convertImageToBase64 = convertImageToBase64(e.target.files[0]);
         Promise.all([_convertImageToBase64]).then(values => {
           setImgBase64(values[0]);
+          props.base64Callback(values[0]);
         })
     }
   };

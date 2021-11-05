@@ -40,6 +40,7 @@ export default function LoginPage() {
 
   async function loginWithAccessToken(accessToken) {
     const res = await loginByPath('api/v1/login', accessToken);
+    console.log(res);
     if (res.status === 200) {
       if (localStorage) {
         localStorage.setItem('accessToken', res.data);

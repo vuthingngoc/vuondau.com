@@ -1,5 +1,6 @@
 import axios from 'axios';
 import getOptions from 'utils/services.ultils';
+// import { getOptionsForImgur } from 'utils/services.ultils';
 
 const backendUrl = 'http://52.221.245.187:90';
 
@@ -19,7 +20,7 @@ export async function getDataByPath(path, accessToken) {
   }
 }
 
-export async function updateDataAccount(path, data) {
+export async function updateDataByPath(path, data) {
   try {
     let endpoint = `${backendUrl}`;
     let body = {};
@@ -43,6 +44,23 @@ export async function deleteDataByPath(path) {
       endpoint = `${backendUrl}/${path}`;
     }
     const res = await axios.delete(endpoint);
+    return res;
+  } catch (error) {
+    return error.response;
+  }
+}
+
+export async function createDataByPath(path, data) {
+  try {
+    let endpoint = `${backendUrl}`;
+    let body = {};
+    if (path !== '') {
+      endpoint = `${backendUrl}/${path}`;
+    }
+    if (data !== '') {
+      body = data;
+    }
+    const res = await axios.post(endpoint, body);
     return res;
   } catch (error) {
     return error.response;
@@ -120,6 +138,22 @@ export function convertImageToBase64(file) {
       }
     };
   });
+}
+
+export async function uploadImgToImgur(image) {
+  try {
+    const key = 'a7c0eac2517f5a94054e3ef257acf02b';
+    let endpoint = 'https://api.imgbb.com/1/upload';
+    let body = {};
+    if (image !== '') {
+      body = { key: key, image: image };
+    }
+    const res = await axios.post(endpoint, body);
+    console.log(res);
+    return res;
+  } catch (error) {
+    return error.response;
+  }
 }
 
 //#endregion
