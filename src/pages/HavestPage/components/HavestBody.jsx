@@ -1,74 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { Card, CardHeader, CardBody, CardTitle, Collapse, Label, FormGroup, Input, Container, Row, Col, Button } from 'reactstrap';
-
-const dataFarmHavest = [
-  {
-    name: 'Nông Trại Đà Lạt',
-    location: 'Miền Nam',
-    src: '/havestsgroupfarm',
-    havests: [
-      {
-        havestName: 'Vụ cà chua Đà Lạt Mùa Đông',
-        ordered: 200,
-        image:
-          'https://images.unsplash.com/photo-1516253593875-bd7ba052fbc5?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80',
-        description: 'Cà chua đà lạt vụ mùa xuân',
-        src: '/harvests/harvestdetail/ca-chua-da-lat',
-      },
-      {
-        havestName: 'Vụ rau cải thảo đà lạt Mùa Đông',
-        ordered: 352,
-        image:
-          'https://images.unsplash.com/photo-1486328228599-85db4443971f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-        description: 'Rau cải thảo đà lạt vụ mùa đông',
-        src: '/harvests/harvestdetail/ca-chua-da-lat',
-      },
-      {
-        havestName: 'Vụ dâu Đà Lạt Mùa Đông',
-        ordered: 123,
-        image:
-          'https://images.unsplash.com/photo-1605056545110-c2ef2253aa8c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1120&q=80',
-        description: 'Dâu Đà Lạt mùa đông giá cực rẻ, ngọt ngon',
-        src: '/harvests/harvestdetail/ca-chua-da-lat',
-      },
-    ],
-  },
-  {
-    name: 'Nông Trại Lâm Đồng',
-    location: 'Miền Nam',
-    src: '/harvestgroupfarm',
-    havests: [
-      {
-        havestName: 'Dưa leo Lâm Đồng vụ Mùa Đông',
-        ordered: 431,
-        image:
-          'https://images.unsplash.com/photo-1627738670355-45970f19bcd9?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80',
-        description: 'Dưa leo Lâm Đồng mùa đông',
-        src: '/harvests/harvestdetail/',
-      },
-    ],
-  },
-];
-
-const dataSeason = [
-  {
-    name: 'Spring',
-    checked: false,
-  },
-  {
-    name: 'Summer',
-    checked: false,
-  },
-  {
-    name: 'Fall',
-    checked: false,
-  },
-  {
-    name: 'Winter',
-    checked: false,
-  },
-];
+import { getDataByPath } from 'services/data.service';
 
 const dataLocation = [
   {
@@ -87,54 +20,133 @@ const dataLocation = [
 
 const dataCategory = [
   {
-    name: 'Vegetable',
+    name: 'Trái cây',
     checked: false,
   },
   {
-    name: 'Fruit',
+    name: 'Rau',
     checked: false,
   },
   {
-    name: 'Meat',
-    checked: false,
-  },
-  {
-    name: 'Fish',
+    name: 'Củ',
     checked: false,
   },
 ];
 
 export default function HavestBody(props) {
   // states for collapses
-  const [season, setSeason] = useState(false);
   const [location, setLocation] = useState(false);
   const [category, setCategory] = useState(false);
-  const [defaultSeason, setDefaultSeason] = useState('');
+  const [defaultCategory, setDefaultCategory] = useState('');
+  const [dataFarmHarvest, setDataFarmHarvest] = useState(null);
+  // const [listHarvestID, setListHarvestID] = useState(null);
+
+  async function loadDataFarmHarvest() {
+    const path = 'api/v1/harvest-sellings';
+    const res = await getDataByPath(path);
+    const tmpImg = 'https://giaoducthuydien.vn/wp-content/themes/consultix/images/no-image-found-360x250.png';
+    if (res.status === 200) {
+      let data = [];
+      for (let ele of res.data) {
+        const resImage = await getDataByPath(`api/v1/harvest-pictures/${ele.harvest.id}`);
+        if (resImage.status === 200) {
+          if (resImage.data.length > 0) {
+            ele.harvest = { ...ele.harvest, image: resImage.data[0].src };
+            data.push(ele);
+          } else {
+            ele.harvest = { ...ele.harvest, image: tmpImg };
+            data.push(ele);
+          }
+        }
+      }
+      const listHarvestByFarm = [];
+      data.forEach((ele) => {
+        let check = false;
+        if (listHarvestByFarm.find((obj) => obj.id === ele.harvest.farm.id)) {
+          check = true;
+        }
+        if (!check) {
+          listHarvestByFarm.push({
+            id: ele.harvest.farm.id,
+            name: ele.harvest.farm.name,
+            location: ele.harvest.farm.address,
+            src: `/farms/farmdetail/${ele.harvest.farm.id}`,
+            harvest: [
+              {
+                harvestID: ele.harvest.id,
+                havestName: ele.harvest.name,
+                image: ele.harvest.image,
+                description: ele.harvest.description,
+                src: `/harvests/harvestdetail/${ele.id}`,
+              },
+            ],
+          });
+        } else {
+          listHarvestByFarm.forEach((farm, index) => {
+            if (farm.id === ele.harvest.farm.id) {
+              listHarvestByFarm[index].harvest.push({
+                havestName: ele.harvest.name,
+                image: ele.harvest.image,
+                description: ele.harvest.description,
+                src: `/harvests/harvestdetail/${ele.id}`,
+              });
+            }
+          });
+        }
+      });
+      setDataFarmHarvest(listHarvestByFarm);
+      // await loadImage(listHarvest, listHarvestByFarm);
+      // await setDataFarmHarvest(listHarvestByFarm);
+    }
+  }
+
+  // async function loadImage(harvestIDList, listHarvestByFarm) {
+  //   // const tmpImage = 'https://giaoducthuydien.vn/wp-content/themes/consultix/images/no-image-found-360x250.png';
+  //   const tmpListHarvest = listHarvestByFarm;
+  //   for (const id of harvestIDList) {
+  //     console.log(id);
+  //     const resImage = await getDataByPath(`api/v1/harvest-pictures/${id}`);
+  //     if (resImage === 200 && resImage.data.length > 0) {
+  //       tmpListHarvest.forEach((ele, index1) => {
+  //         ele.harvest.forEach((e, index2) => {
+  //           if (e.id === id) {
+  //             tmpListHarvest[index1].harvest[index2].image = resImage[0].src;
+  //           }
+  //         });
+  //       });
+  //     }
+  //   }
+  //   console.log('test', tmpListHarvest);
+  //   setDataFarmHarvest(tmpListHarvest);
+  // }
 
   useEffect(() => {
-    if (defaultSeason !== props.match.params.id) {
-      dataSeason.forEach((element) => {
+    if (dataFarmHarvest === null) {
+      loadDataFarmHarvest();
+    }
+  });
+
+  useEffect(() => {
+    if (defaultCategory !== props.match.params.id) {
+      dataCategory.forEach((element) => {
         element.checked = false;
       });
       switch (props.match.params.id) {
-        case 'spring':
-          dataSeason[0].checked = true;
+        case 'trai-cay':
+          dataCategory[0].checked = true;
           break;
-        case 'summer':
-          dataSeason[1].checked = true;
+        case 'rau':
+          dataCategory[1].checked = true;
           break;
-        case 'fall':
-          dataSeason[2].checked = true;
-          break;
-        case 'winter':
-          dataSeason[3].checked = true;
+        case 'cu':
+          dataCategory[2].checked = true;
           break;
         default:
           break;
       }
-      setDefaultSeason(props.match.params.id);
+      setDefaultCategory(props.match.params.id);
     }
-  }, [props.match.params.id, defaultSeason]);
+  }, [props.match.params.id, defaultCategory]);
   return (
     <>
       <div className="section section">
@@ -146,43 +158,6 @@ export default function HavestBody(props) {
             <Col md="3">
               <Card className="card-refine">
                 <div aria-expanded={true} aria-multiselectable={true} className="panel-group" id="accordion">
-                  <CardHeader className="card-collapse" id="seasonGear" role="tab">
-                    <h5 className="mb-0 panel-title">
-                      <a
-                        href="#pablo"
-                        aria-expanded={season}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setSeason(!season);
-                        }}
-                        style={{ fontWeight: 'bold' }}
-                      >
-                        Season
-                      </a>
-                    </h5>
-                  </CardHeader>
-                  <Collapse isOpen={true}>
-                    <CardBody>
-                      {dataSeason.map((ele, index) => {
-                        return (
-                          <FormGroup check>
-                            <Label check style={{ fontWeight: 'bolder' }}>
-                              <Input
-                                checked={ele.checked}
-                                defaultValue=""
-                                type="checkbox"
-                                onClick={(e) => {
-                                  dataSeason[index].checked = e.checked;
-                                  setSeason(!season);
-                                }}
-                              />
-                              {ele.name} <span className="form-check-sign" />
-                            </Label>
-                          </FormGroup>
-                        );
-                      })}
-                    </CardBody>
-                  </Collapse>
                   <CardHeader className="card-collapse" id="location" role="tab">
                     <h5 className="mb-0 panel-title">
                       <a
@@ -190,6 +165,7 @@ export default function HavestBody(props) {
                         href="#pablo"
                         onClick={(e) => {
                           e.preventDefault();
+                          loadDataFarmHarvest();
                           setLocation(!location);
                         }}
                         style={{ fontWeight: 'bold' }}
@@ -267,7 +243,7 @@ export default function HavestBody(props) {
 
             {/* Havest List */}
             <Col md="9">
-              {dataFarmHavest.map((ele) => {
+              {dataFarmHarvest?.map((ele) => {
                 return (
                   <>
                     <Row style={{ borderBottom: '2px groove black', marginBottom: '10px' }}>
@@ -282,7 +258,7 @@ export default function HavestBody(props) {
                     </Row>
                     <div className="products">
                       <Row>
-                        {ele.havests.map((e) => {
+                        {ele?.harvest.map((e) => {
                           return (
                             <Col md="4">
                               <Card className="card-product card-plain-custom">
@@ -301,9 +277,6 @@ export default function HavestBody(props) {
                                         {e.description}
                                       </p>
                                     </div>
-                                    <h6 style={{ textAlign: 'right' }}>
-                                      Đã đặt <i className="fa fa-handshake-o" /> {e.ordered}
-                                    </h6>
                                   </CardBody>
                                 </div>
                               </Card>

@@ -60,8 +60,7 @@ const dataHavest = [
   {
     havestName: 'Vụ rau cải thảo đà lạt Mùa Đông',
     ordered: 352,
-    image:
-      'https://images.unsplash.com/photo-1486328228599-85db4443971f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
+    image: 'https://www.btaskee.com/wp-content/uploads/2021/07/Di%CC%81t-bo%CC%9B-gia%CC%80.jpg',
     description: 'Rau cải thảo đà lạt vụ mùa đông',
     src: '/harvests/harvestdetail/ca-chua-da-lat',
   },
@@ -101,14 +100,16 @@ export default function BodyProduction() {
       const data = res.data;
       const dataHarvestTmp = [];
       data.forEach((element, index) => {
-        const harvest = {
-          harvestName: element.harvest.name,
-          description: element.harvest.description,
-          status: element.status,
-          image: dataHavest[index].image,
-          src: `/harvests/harvestdetail/${element.id}`,
-        };
-        dataHarvestTmp.push(harvest);
+        if (index < 3) {
+          const harvest = {
+            harvestName: element.harvest.name,
+            description: element.harvest.description,
+            status: element.status,
+            image: dataHavest[index].image,
+            src: `/harvests/harvestdetail/${element.id}`,
+          };
+          dataHarvestTmp.push(harvest);
+        }
       });
       setDataHarvest(dataHarvestTmp);
     }
@@ -229,7 +230,7 @@ export default function BodyProduction() {
                 </Col>
                 <Col md="3">
                   <h6 style={{ marginTop: '20px' }}>
-                    <a href="/harvests" className="mr-1 btn btn-link">
+                    <a href="/harvests/top-selling" className="mr-1 btn btn-link">
                       More information &gt;&gt;
                     </a>
                   </h6>
@@ -237,7 +238,7 @@ export default function BodyProduction() {
               </Row>
               <br />
               <Row>
-                {dataHarvest?.map((ele) => {
+                {dataHarvest?.map((ele, index) => {
                   return (
                     <Col md="4">
                       <Card className="card-product card-plain-custom">
