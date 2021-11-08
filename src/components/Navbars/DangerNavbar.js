@@ -22,22 +22,12 @@ import jwtDecode from 'jwt-decode';
 
 const dataNavbar = [
   {
-    title: 'Category',
-    child: [
-      { name: 'All Productions', src: '/production' },
-      { name: 'Vegetable', src: '/production/vegetable' },
-      { name: 'Fruit', src: '/production/fruit' },
-      { name: 'Meat', src: '/production/meat' },
-      { name: 'Fish', src: '/production/fish' },
-    ],
-  },
-  {
     title: 'Harvests',
     child: [
-      { name: 'Spring', src: '/harvests/spring' },
-      { name: 'Summer', src: '/harvests/summer' },
-      { name: 'Fall', src: '/harvests/fall' },
-      { name: 'Winter', src: '/harvests/winter' },
+      { name: 'Tất cả', src: '/harvests/tat-ca' },
+      { name: 'Trái cây', src: '/harvests/trai-cay' },
+      { name: 'Rau', src: '/harvests/rau' },
+      { name: 'Củ', src: '/harvests/cu' },
     ],
   },
   {
@@ -171,6 +161,10 @@ function WhiteNavbar() {
                     <DropdownItem to="/profile" tag={NavLink}>
                       <i className="nc-icon nc-circle-10" />
                       Profile
+                    </DropdownItem>
+                    <DropdownItem to="/order" tag={NavLink}>
+                      <i className="nc-icon nc-paper" />
+                      Order
                     </DropdownItem>
                     <DropdownItem
                       to="/login"

@@ -96,7 +96,7 @@ export default function HavestDetailBody(props) {
     if (res?.status === 200) {
       let img = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
       const data = res.data;
-      console.log(data);
+      console.log('data', data);
       const dataHarvestTmp = {
         harvestName: data.harvest.name,
         image: dataHavest.image,
@@ -129,6 +129,7 @@ export default function HavestDetailBody(props) {
         id: dataProductApi.id,
         productName: dataProductApi.name,
         image: img,
+        alt: 'none',
         description: dataProductApi.description,
         salePrice: '41000',
         src: `/product/productdetail/${dataProductApi.id}`,
@@ -139,7 +140,8 @@ export default function HavestDetailBody(props) {
         if (resProductPic.data[0]) {
           console.log(resFarmPic);
           dataProductTmp.image = resProductPic.data[0].src;
-          console.log(resFarmPic.data[0].src);
+          dataProductTmp.alt = '...';
+          console.log(resFarmPic.data[0]?.src);
           setDataFarm(dataFarmTmp);
         }
       }
@@ -239,7 +241,11 @@ export default function HavestDetailBody(props) {
                     <Media>
                       <a className="pull-left" href="#pablo" onClick={(e) => e.preventDefault()}>
                         <div className="avatar big-avatar">
-                          <Media alt="..." object src={dataFarm?.image} style={{ width: '80px', height: '80px' }} />
+                          {dataFarm?.alt !== 'none' ? (
+                            <Media alt="..." object src={dataFarm?.image} style={{ width: '60px', height: '60px' }} />
+                          ) : (
+                            <Media alt="..." object src={dataFarm?.image} style={{ width: '80px', height: '80px' }} />
+                          )}
                         </div>
                       </a>
                       <Media body>

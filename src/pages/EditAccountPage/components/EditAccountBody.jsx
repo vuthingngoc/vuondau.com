@@ -30,8 +30,6 @@ export default function EditAccountBody(props) {
   document.documentElement.classList.remove('nav-open');
   React.useEffect(() => {
     document.body.classList.add('add-product');
-    window.scrollTo(0, 0);
-    document.body.scrollTop = 0;
     return function cleanup() {
       document.body.classList.remove('add-product');
     };
