@@ -3,6 +3,8 @@ import styled from 'styled-components';
 
 import { Container, Input, Row, Col, Form, Button, CardBody, Label } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { getDataByPath } from 'services/data.service';
+import jwtDecode from 'jwt-decode';
 
 const Step = styled.span`
   background-color: white;
@@ -36,21 +38,53 @@ const CenterSpan = styled.span`
 
 export default function CheckoutBody() {
   const [step, setStep] = useState(1);
-  const [dataCart, setDataCart] = useState([]);
+  const [dataCart, setDataCart] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
   const [fullname, setFullname] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
 
+  async function loadData(customerID) {
+    const res = await getDataByPath(`api/v1/productInCarts/${customerID}`);
+    const dataItem = [];
+    console.log(res);
+    if (res.status === 200) {
+      for (let ele of res.data) {
+        let cartItemTmp = {
+          id: ele.id,
+          productName: ele.harvest_selling.harvest.product.name,
+          harvestName: ele.harvest_selling.harvest.name,
+          description: ele.harvest_selling.harvest.description,
+          salePrice: ele.price,
+          src: `/harvests/harvestdetail/${ele.harvest_selling.id}`,
+          harvest_selling_id: ele.harvest_selling.id,
+          weight: ele.quantity,
+          status: ele.status,
+        };
+        dataItem.push(cartItemTmp);
+      }
+      let total = 0;
+      dataItem?.forEach((e) => {
+        total += e.salePrice * e.weight;
+      });
+      setTotalPrice(total);
+    }
+    setDataCart(dataItem);
+  }
+
+  const convertPrice = (price) => {
+    return new Intl.NumberFormat({ style: 'currency', currency: 'VND' }).format(price);
+  };
+
   useEffect(() => {
-    const cartItem = JSON.parse(localStorage.getItem('CART'));
-    setDataCart(cartItem);
-    let total = 0;
-    cartItem?.forEach((e) => {
-      total += e.salePrice * e.weight;
-    });
-    setTotalPrice(total);
-  }, []);
+    let userInfo = '';
+    if (localStorage.getItem('accessToken') !== null && localStorage.getItem('accessToken') !== '') {
+      userInfo = jwtDecode(localStorage.getItem('accessToken'));
+    }
+    if (dataCart === null) {
+      loadData(userInfo.ID);
+    }
+  });
 
   return (
     <>
@@ -83,7 +117,7 @@ export default function CheckoutBody() {
                 ) : (
                   <Row>
                     <RightBar />
-                    <Step style={{ color: 'black' }}>2</Step>
+                    <Step style={{ backgroundColor: 'red', color: 'white' }}>2</Step>
                   </Row>
                 )}
               </Col>
@@ -92,6 +126,11 @@ export default function CheckoutBody() {
                 {step >= 3 ? (
                   <Row>
                     <RightBar style={{ backgroundColor: 'red' }} />
+                    <Step style={{ backgroundColor: 'red', color: 'white' }}>3</Step>
+                  </Row>
+                ) : step >= 2 ? (
+                  <Row>
+                    <RightBar />
                     <Step style={{ backgroundColor: 'red', color: 'white' }}>3</Step>
                   </Row>
                 ) : (
@@ -213,13 +252,17 @@ export default function CheckoutBody() {
                   <div className="icon icon-danger">
                     <i className="fa fa-check-circle-o" />
                   </div>
-                  <div className="description">
-                    <h4 className="info-title">Đơn hàng đã được đặt thành công </h4>
-                    <p className="description">Chúng tôi sẽ cố gắng gửi đơn hàng cho bạn sớm nhất có thể.</p>
-                    <Button className="btn-link" color="danger" href="/home">
-                      Trang chủ
-                    </Button>
-                  </div>
+
+                  <h4 className="info-title" style={{ fontWeight: 'bold' }}>
+                    Đơn hàng đã được đặt thành công{' '}
+                  </h4>
+                  <p className="description">Chúng tôi sẽ cố gắng gửi đơn hàng cho bạn sớm nhất có thể.</p>
+                  <Button className="btn-link" color="success" href="/order">
+                    Lịch sử đặt hàng
+                  </Button>
+                  <Button className="btn-link" color="danger" href="/home">
+                    Trang chủ
+                  </Button>
                 </div>
               </Col>
               <h3 className="visit">
@@ -279,7 +322,7 @@ export default function CheckoutBody() {
               </span>
               <div className="clearfix" style={{ borderBottomStyle: 'solid' }} />
               <Col md="12">
-                {dataCart.map((e) => {
+                {dataCart?.map((e) => {
                   return (
                     <div>
                       <Row style={{ marginLeft: '1px' }}>
@@ -288,7 +331,7 @@ export default function CheckoutBody() {
                           {e.productName}
                         </Link>
                       </Row>
-                      <span style={{ fontWeight: 'bolder', color: 'red' }}>{e.salePrice} vnđ </span>
+                      <span style={{ fontWeight: 'bolder', color: 'red' }}>{convertPrice(e.salePrice)}đ </span>
                       <div className="clearfix" style={{ borderBottomStyle: 'solid', borderBottomWidth: '1px' }} />
                     </div>
                   );
@@ -298,7 +341,7 @@ export default function CheckoutBody() {
                     Tạm tính:
                   </Col>
                   <Col md="5" style={{ fontWeight: 'bold' }}>
-                    {totalPrice} vnđ
+                    {convertPrice(totalPrice)}đ
                   </Col>
                 </Row>
                 <div className="clearfix" style={{ borderBottomStyle: 'solid', borderBottomWidth: '1px' }} />

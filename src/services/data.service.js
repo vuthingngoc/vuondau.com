@@ -4,7 +4,7 @@ import getOptions from 'utils/services.ultils';
 
 const backendUrl = 'http://52.221.245.187:90';
 
-export async function getDataByPath(path, accessToken) {
+export async function getDataByPath(path, accessToken, data) {
   try {
     let endpoint = `${backendUrl}`;
     let option = {};
@@ -12,7 +12,9 @@ export async function getDataByPath(path, accessToken) {
     if (path !== '') {
       endpoint = `${backendUrl}/${path}`;
     }
-
+    if (data !== '') {
+      endpoint = `${backendUrl}/${path}?${data}`;
+    }
     const res = await axios.get(endpoint, option);
     return res;
   } catch (error) {
