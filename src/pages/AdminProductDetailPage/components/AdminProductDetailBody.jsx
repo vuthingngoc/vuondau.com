@@ -92,7 +92,7 @@ export default function AdminProductDetailBody(props) {
       };
       const path = 'api/v1/products/';
       const res = await updateDataByPath(`${path}${props.match.params.id}`, updateData);
-      if (res.status === 200) {
+      if (res?.status === 200) {
         setData(res.data);
         updateDataImage(res.data.id);
       } else {
@@ -122,7 +122,7 @@ export default function AdminProductDetailBody(props) {
   async function deleteData() {
     if (data !== null) {
       const res = await deleteDataByPath(`api/v1/products/${props.match.params.id}`, props.match.params.id);
-      if (res.status === 204) {
+      if (res?.status === 204) {
         setData(null);
         NotificationManager.success('Deactive Success', 'Your data has been deactive success', 3000);
         history.push('/admin/manageproduct');
@@ -141,7 +141,7 @@ export default function AdminProductDetailBody(props) {
       };
       const path = 'api/v1/products';
       const res = await createDataByPath(`${path}`, createData);
-      if (res.status === 201) {
+      if (res?.status === 201) {
         createDataImage(res.data.id);
       } else {
         NotificationManager.warning('Create Failed', 'Something wrongs when create', 3000);
@@ -161,7 +161,7 @@ export default function AdminProductDetailBody(props) {
       };
       const path = 'api/v1/product-pictures';
       const res = await createDataByPath(`${path}`, createDataImage);
-      if (res.status === 201) {
+      if (res?.status === 201) {
         NotificationManager.success('Create Success', 'Your data has been create success', 3000);
         history.push(`/admin/manageproduct/productdetail/${res.data.id}/edit`);
       } else {
@@ -187,7 +187,7 @@ export default function AdminProductDetailBody(props) {
     if (imageBase64 !== '') {
       const image = convertBase64Img(imageBase64);
       const res = await uploadImgToImgur(image);
-      if (res.status === 200) {
+      if (res?.status === 200) {
         return res.data.data.display_url;
       } else return '';
     }
