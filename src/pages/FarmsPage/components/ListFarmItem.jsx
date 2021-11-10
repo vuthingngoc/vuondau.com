@@ -7,9 +7,9 @@ export default function ListFarm(props) {
     let items = props.items;
     let elems = [];
     let imageErrorSource = require('assets/img/no_image.jpg').default;
-    elems = items.map((ele, index) => {
+    elems = items.map((ele, index, arr) => {
       let elemUrl = `/farms/farmdetail/${ele.id}`
-      let displayItem = props.displayItem ? props.displayItem : elems.length;
+      let displayItem = props.displayItem ? props.displayItem : arr.length;
       return (
         index < displayItem &&
         <Col md="4">
