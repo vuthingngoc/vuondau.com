@@ -5,14 +5,17 @@ import { getDataByPath } from 'services/data.service';
 
 const dataLocation = [
   {
+    id: '2155c809-bdfe-48ef-a56d-726360143c9a',
     name: 'Miền Nam',
     checked: false,
   },
   {
+    id: '5b786a02-e1fb-4db5-b5b5-9eebac46ebf6',
     name: 'Miền Trung',
     checked: false,
   },
   {
+    id: 'c4b80051-a91e-402a-89d1-e68d5218fe5e',
     name: 'Miền Bắc',
     checked: false,
   },
@@ -20,14 +23,17 @@ const dataLocation = [
 
 const dataCategory = [
   {
+    id: '0c62b9c6-10ac-465e-99c4-3dff07279c93',
     name: 'Trái cây',
     checked: false,
   },
   {
+    id: '408cb360-eccd-40c8-ae73-c8143994ce84',
     name: 'Rau',
     checked: false,
   },
   {
+    id: 'aae688f7-d8aa-4ef7-b42e-5c69d3a2fe27',
     name: 'Củ',
     checked: false,
   },
@@ -41,22 +47,57 @@ export default function HavestBody(props) {
   const [dataFarmHarvest, setDataFarmHarvest] = useState(null);
   // const [listHarvestID, setListHarvestID] = useState(null);
 
+  const convertPrice = (price) => {
+    return new Intl.NumberFormat({ style: 'currency', currency: 'VND' }).format(price);
+  };
+
   async function loadDataFarmHarvest() {
     const path = 'api/v1/harvest-sellings';
-    const res = await getDataByPath(path);
     const tmpImg = 'https://giaoducthuydien.vn/wp-content/themes/consultix/images/no-image-found-360x250.png';
+    const res = await getDataByPath(path);
     if (res.status === 200) {
       let data = [];
       for (let ele of res.data) {
-        const resImage = await getDataByPath(`api/v1/harvest-pictures/${ele.harvest.id}`);
-        if (resImage.status === 200) {
-          if (resImage.data.length > 0) {
-            ele.harvest = { ...ele.harvest, image: resImage.data[0].src };
-            data.push(ele);
-          } else {
-            ele.harvest = { ...ele.harvest, image: tmpImg };
-            data.push(ele);
+        let checkedType = false;
+        let checkedLocation = false;
+        dataCategory.forEach((e) => {
+          if (e.checked && e.id === ele.harvest.product.product_type.id) {
+            checkedType = true;
           }
+        });
+        if (!dataCategory[0].checked && !dataCategory[1].checked && !dataCategory[2].checked) {
+          checkedType = true;
+        }
+
+        dataLocation.forEach((e) => {
+          if (e.checked && e.id === ele.harvest.farm.area.id) {
+            checkedLocation = true;
+          }
+        });
+        if (!dataLocation[0].checked && !dataLocation[1].checked && !dataLocation[2].checked) {
+          checkedLocation = true;
+        }
+        if (checkedType && checkedLocation) {
+          const resImage = await getDataByPath(`api/v1/harvest-pictures/${ele.harvest.id}`);
+          if (resImage.status === 200) {
+            if (resImage.data.length > 0) {
+              ele.harvest = { ...ele.harvest, image: resImage.data[0].src };
+            } else {
+              ele.harvest = { ...ele.harvest, image: tmpImg };
+            }
+          }
+
+          const resPrice = await getDataByPath(`api/v1/harvest-selling-prices/${ele.id}`);
+          if (resPrice.status === 200) {
+            if (resPrice.data.length > 0) {
+              ele.harvest = { ...ele.harvest, price: resPrice.data[0].price };
+            } else {
+              ele.harvest = { ...ele.harvest, price: 0 };
+            }
+          } else {
+            ele.harvest = { ...ele.harvest, price: 0 };
+          }
+          data.push(ele);
         }
       }
       const listHarvestByFarm = [];
@@ -77,6 +118,7 @@ export default function HavestBody(props) {
                 havestName: ele.harvest.name,
                 image: ele.harvest.image,
                 description: ele.harvest.description,
+                price: ele.harvest.price,
                 src: `/harvests/harvestdetail/${ele.id}`,
               },
             ],
@@ -87,6 +129,7 @@ export default function HavestBody(props) {
               listHarvestByFarm[index].harvest.push({
                 havestName: ele.harvest.name,
                 image: ele.harvest.image,
+                price: ele.harvest.price,
                 description: ele.harvest.description,
                 src: `/harvests/harvestdetail/${ele.id}`,
               });
@@ -95,36 +138,14 @@ export default function HavestBody(props) {
         }
       });
       setDataFarmHarvest(listHarvestByFarm);
-      // await loadImage(listHarvest, listHarvestByFarm);
-      // await setDataFarmHarvest(listHarvestByFarm);
     }
   }
 
-  // async function loadImage(harvestIDList, listHarvestByFarm) {
-  //   // const tmpImage = 'https://giaoducthuydien.vn/wp-content/themes/consultix/images/no-image-found-360x250.png';
-  //   const tmpListHarvest = listHarvestByFarm;
-  //   for (const id of harvestIDList) {
-  //     console.log(id);
-  //     const resImage = await getDataByPath(`api/v1/harvest-pictures/${id}`);
-  //     if (resImage === 200 && resImage.data.length > 0) {
-  //       tmpListHarvest.forEach((ele, index1) => {
-  //         ele.harvest.forEach((e, index2) => {
-  //           if (e.id === id) {
-  //             tmpListHarvest[index1].harvest[index2].image = resImage[0].src;
-  //           }
-  //         });
-  //       });
-  //     }
+  // useEffect(() => {
+  //   if (dataFarmHarvest === null) {
+  //     loadDataFarmHarvest();
   //   }
-  //   console.log('test', tmpListHarvest);
-  //   setDataFarmHarvest(tmpListHarvest);
-  // }
-
-  useEffect(() => {
-    if (dataFarmHarvest === null) {
-      loadDataFarmHarvest();
-    }
-  });
+  // });
 
   useEffect(() => {
     if (defaultCategory !== props.match.params.id) {
@@ -145,8 +166,11 @@ export default function HavestBody(props) {
           break;
       }
       setDefaultCategory(props.match.params.id);
+      if (dataFarmHarvest === null) {
+        loadDataFarmHarvest();
+      }
     }
-  }, [props.match.params.id, defaultCategory]);
+  }, [props.match.params.id, defaultCategory, dataFarmHarvest]);
   return (
     <>
       <div className="section section">
@@ -185,7 +209,7 @@ export default function HavestBody(props) {
                                 defaultValue=""
                                 type="checkbox"
                                 onClick={(e) => {
-                                  dataLocation[index].checked = e.checked;
+                                  dataLocation[index].checked = e.target.checked;
                                   setLocation(!location);
                                 }}
                               />
@@ -222,7 +246,7 @@ export default function HavestBody(props) {
                                 defaultValue=""
                                 type="checkbox"
                                 onClick={(e) => {
-                                  dataCategory[index].checked = e.checked;
+                                  dataCategory[index].checked = e.target.checked;
                                   setCategory(!category);
                                 }}
                               />
@@ -235,60 +259,73 @@ export default function HavestBody(props) {
                   </Collapse>
                 </div>
               </Card>
-              <Button className="btn-round" color="default" outline style={{ marginLeft: '80px' }}>
+              <Button className="btn-round" color="default" outline style={{ marginLeft: '80px' }} onClick={() => loadDataFarmHarvest()}>
                 Filter
               </Button>
               {/* end card */}
             </Col>
 
             {/* Havest List */}
-            <Col md="9">
-              {dataFarmHarvest?.map((ele) => {
-                return (
-                  <>
-                    <Row style={{ borderBottom: '2px groove black', marginBottom: '10px' }}>
-                      <Col md="9">
-                        <h4 style={{ fontWeight: 'bold' }}>{ele.name}</h4>
-                      </Col>
-                      <Col md="3">
-                        <a href={ele.src} className="mr-1 btn btn-link" style={{ fontWeight: 'bold', marginTop: '25px', marginLeft: '50px' }}>
-                          Xem thêm {'>>'}
-                        </a>
-                      </Col>
-                    </Row>
-                    <div className="products">
-                      <Row>
-                        {ele?.harvest.map((e) => {
-                          return (
-                            <Col md="4">
-                              <Card className="card-product card-plain-custom">
-                                <div className="card-image">
-                                  <a href={e.src}>
-                                    <img alt="..." src={e.image} />
-                                  </a>
-                                  <CardBody>
-                                    <div className="card-description">
-                                      <CardTitle tag="h5">
-                                        <a href={e.src} class="mr-1 btn btn-link">
-                                          {e.havestName}
-                                        </a>
-                                      </CardTitle>
-                                      <p className="card-description" style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
-                                        {e.description}
-                                      </p>
-                                    </div>
-                                  </CardBody>
-                                </div>
-                              </Card>
-                            </Col>
-                          );
-                        })}
+            {dataFarmHarvest !== null ? (
+              <Col md="9">
+                {dataFarmHarvest?.map((ele) => {
+                  return (
+                    <>
+                      <Row style={{ borderBottom: '2px groove black', marginBottom: '10px' }}>
+                        <Col md="9">
+                          <h4 style={{ fontWeight: 'bold' }}>{ele.name}</h4>
+                        </Col>
+                        <Col md="3">
+                          <a href={ele.src} className="mr-1 btn btn-link" style={{ fontWeight: 'bold', marginTop: '25px', marginLeft: '50px' }}>
+                            Xem thêm {'>>'}
+                          </a>
+                        </Col>
                       </Row>
-                    </div>
-                  </>
-                );
-              })}
-            </Col>
+                      <div className="products">
+                        <Row>
+                          {ele?.harvest.map((e) => {
+                            return (
+                              <Col md="4">
+                                <Card className="card-product card-plain-custom">
+                                  <div className="card-image">
+                                    <a href={e.src}>
+                                      <img alt="..." src={e.image} />
+                                    </a>
+                                    <CardBody>
+                                      <div className="card-description">
+                                        <CardTitle tag="h5">
+                                          <a href={e.src} class="mr-1 btn btn-link">
+                                            {e.havestName}
+                                          </a>
+                                        </CardTitle>
+                                        <p
+                                          className="card-description"
+                                          style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}
+                                        >
+                                          {e.description}
+                                          <br />
+                                          <span className="text-danger" style={{ fontWeight: 'bold' }}>
+                                            {convertPrice(e.price)} vnđ/kg
+                                          </span>
+                                        </p>
+                                      </div>
+                                    </CardBody>
+                                  </div>
+                                </Card>
+                              </Col>
+                            );
+                          })}
+                        </Row>
+                      </div>
+                    </>
+                  );
+                })}
+              </Col>
+            ) : (
+              <div className="uil-reload-css reload-background" style={{ display: 'block', margin: 'auto' }}>
+                <div />
+              </div>
+            )}
           </Row>
         </Container>
       </div>

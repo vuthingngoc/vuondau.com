@@ -6,19 +6,6 @@ import { NotificationManager } from 'react-notifications';
 import { Badge, Button, Card, Media, Container, Row, Col, CardTitle } from 'reactstrap';
 import { getDataByPath } from 'services/data.service';
 
-const dataHavest = {
-  havestName: 'Vụ cà chua Đà Lạt Mùa đông',
-  ordered: 200,
-  image: 'https://kiemsat.1cdn.vn/2018/04/16/nho-11-2018.jpg',
-  imageAlt: 'imageAlt',
-  imageTitle: 'Photo by Farmer',
-  description: 'Cà chua đà lạt vụ mùa đông',
-  src: '/harvests/harvestdetail/',
-  status: 1,
-  orderDay: 'OCTOBER 10, 2021',
-  havestDay: 'DECEMBER 15, 2021',
-};
-
 const dataSimularHavest = [
   {
     havestName: 'Vụ rau cải thảo đà lạt Mùa Đông',
@@ -94,17 +81,33 @@ export default function HavestDetailBody(props) {
     const path = `api/v1/harvest-sellings/${id}`;
     const res = await getDataByPath(path);
     if (res?.status === 200) {
-      let img = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
+      const img = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
+      const imgHarvestTmp = 'https://giaoducthuydien.vn/wp-content/themes/consultix/images/no-image-found-360x250.png';
       const data = res.data;
       console.log('data', data);
       const dataHarvestTmp = {
         harvestName: data.harvest.name,
-        image: dataHavest.image,
+        image: imgHarvestTmp,
         description: data.harvest.description,
         status: data.status,
         orderDay: data.date_of_create.slice(0, 10),
+        price: 0,
         havestDay: data.end_date.slice(0, 10),
       };
+      const resHarvestPic = await getDataByPath(`api/v1/harvest-pictures/${data.harvest.id}`);
+      if (resHarvestPic?.status === 200) {
+        if (resHarvestPic.data[0]) {
+          dataHarvestTmp.image = resHarvestPic.data[0].src;
+        }
+      }
+      const resHarvestSelling = await getDataByPath(`api/v1/harvest-selling-prices/${data.id}`);
+      if (resHarvestSelling?.status === 200) {
+        console.log('price', resHarvestSelling);
+        if (resHarvestSelling.data[0]) {
+          dataHarvestTmp.price = resHarvestSelling.data[0].price;
+        }
+      }
+
       setDataHarvest(dataHarvestTmp);
       const dataFarmApi = data.harvest.farm;
       const dataFarmTmp = {
@@ -116,10 +119,7 @@ export default function HavestDetailBody(props) {
       const resFarmPic = await getDataByPath(`api/v1/farm-pictures/${dataFarmApi.id}`);
       if (resFarmPic?.status === 200) {
         if (resFarmPic.data[0]) {
-          console.log(resFarmPic);
           dataFarmTmp.image = resFarmPic.data[0].src;
-          console.log(resFarmPic.data[0].src);
-          setDataFarm(dataFarmTmp);
         }
       }
       setDataFarm(dataFarmTmp);
@@ -138,16 +138,18 @@ export default function HavestDetailBody(props) {
       if (resProductPic?.status === 200) {
         console.log('product pic', resProductPic);
         if (resProductPic.data[0]) {
-          console.log(resFarmPic);
           dataProductTmp.image = resProductPic.data[0].src;
           dataProductTmp.alt = '...';
-          console.log(resFarmPic.data[0]?.src);
           setDataFarm(dataFarmTmp);
         }
       }
       setdataProduct(dataProductTmp);
     }
   }
+
+  const convertPrice = (price) => {
+    return new Intl.NumberFormat({ style: 'currency', currency: 'VND' }).format(price);
+  };
 
   useEffect(() => {
     if (dataHarvest === null) {
@@ -166,7 +168,9 @@ export default function HavestDetailBody(props) {
                     {dataHarvest?.status === 1 ? 'Avaiable' : 'Closed'}
                   </Badge>
                   <a href="javascrip: void(0);">
-                    <h3 className="title">{dataHarvest?.harvestName}</h3>
+                    <h3 className="title" style={{ fontWeight: 'bold' }}>
+                      {dataHarvest?.harvestName}
+                    </h3>
                   </a>
                   <h6 className="title-uppercase">Order start day: {dataHarvest?.orderDay} </h6>
                   <h6 className="title-uppercase">Expect harvest day: {dataHarvest?.havestDay} </h6>
@@ -175,9 +179,14 @@ export default function HavestDetailBody(props) {
               <Col className="ml-auto mr-auto" md="12">
                 <Col className="ml-auto mr-auto" md="8">
                   <Card data-radius="none">
-                    <img alt={dataHavest.imageAlt} className="img-rounded img-responsive" src={dataHarvest?.image} />
+                    {dataHarvest === null ? (
+                      <div className="uil-reload-css reload-background" style={{ display: 'block', margin: 'auto' }}>
+                        <div />
+                      </div>
+                    ) : (
+                      <img alt="..." className="img-rounded img-responsive" src={dataHarvest?.image} />
+                    )}
                   </Card>
-                  <p className="image-thumb text-center">{dataHavest.imageTitle}</p>
                   <div className="article-content">
                     <h4 style={{ fontWeight: 'bold' }}>Description</h4>
                     <p style={{ fontWeight: 'bolder' }}>{dataHarvest?.description}</p>
@@ -204,7 +213,7 @@ export default function HavestDetailBody(props) {
                           <h3 style={{ fontWeight: 'bolder' }}>{dataProduct?.productName}</h3>
                           <p className="card-description">{dataProduct?.description}</p>
                           <div className="price">
-                            <h6 className="text-default">{`${dataProduct?.salePrice} vnđ/kg`}</h6>
+                            <h6 className="text-default">{`${convertPrice(dataHarvest?.price)} vnđ/kg`}</h6>
                           </div>
                           <Row>
                             <Col md="8" sm="8">
@@ -241,7 +250,11 @@ export default function HavestDetailBody(props) {
                     <Media>
                       <a className="pull-left" href="#pablo" onClick={(e) => e.preventDefault()}>
                         <div className="avatar big-avatar">
-                          {dataFarm?.alt !== 'none' ? (
+                          {dataFarm === null ? (
+                            <div className="uil-reload-css reload-small" style={{ marginTop: '10px', marginLeft: '10px' }}>
+                              <div />
+                            </div>
+                          ) : dataFarm?.alt !== 'none' ? (
                             <Media alt="..." object src={dataFarm?.image} style={{ width: '60px', height: '60px' }} />
                           ) : (
                             <Media alt="..." object src={dataFarm?.image} style={{ width: '80px', height: '80px' }} />
@@ -278,10 +291,9 @@ export default function HavestDetailBody(props) {
                                   {ele.havestName}
                                 </a>
                               </CardTitle>
-                              <p className="blog-title">{ele.description}</p>
-                              <h6 style={{ textAlign: 'right' }}>
-                                Đã đặt <i className="fa fa-handshake-o" /> {ele.ordered}
-                              </h6>
+                              <p className="blog-title" style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
+                                {ele.description}
+                              </p>
                             </Card>
                           </Col>
                         );
