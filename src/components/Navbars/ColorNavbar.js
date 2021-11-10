@@ -49,6 +49,7 @@ function ColorNavbar() {
   const [collapseOpen, setCollapseOpen] = React.useState(false);
   const [role, setRole] = useState(1);
   const { currentUser, logout } = useAuth();
+  const [fullname, setFullname] = useState(null);
 
   useEffect(() => {
     let headroom = new Headroom(document.getElementById('navbar-main'));
@@ -70,10 +71,12 @@ function ColorNavbar() {
   useEffect(() => {
     if (localStorage) {
       if (localStorage.getItem('accessToken') !== null) {
-        const userRole = jwtDecode(localStorage.getItem('accessToken')).ROLE === '2' ? 2 : 1;
+        const jwtData = jwtDecode(localStorage.getItem('accessToken'));
+        const userRole = jwtData.ROLE === '2' ? 2 : 1;
         if (userRole === 2 && role !== userRole) {
           setRole(userRole);
         }
+        setFullname(jwtData.FIRSTNAME);
       }
     }
   }, [role]);
@@ -133,10 +136,10 @@ function ColorNavbar() {
                   </UncontrolledDropdown>
                 );
               })}
-              {currentUser !== null && localStorage.getItem('accessToken') !== null ? (
+              {currentUser !== null && localStorage.getItem('accessToken') !== null && fullname !== null ? (
                 <UncontrolledDropdown nav inNavbar>
                   <DropdownToggle color="default" caret nav>
-                    {currentUser.email}
+                    {fullname}
                   </DropdownToggle>
                   <DropdownMenu className="dropdown-danger" right>
                     <DropdownItem to="/profile" tag={NavLink}>

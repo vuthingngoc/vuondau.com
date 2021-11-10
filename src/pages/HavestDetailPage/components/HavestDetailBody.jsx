@@ -6,37 +6,11 @@ import { NotificationManager } from 'react-notifications';
 import { Badge, Button, Card, Media, Container, Row, Col, CardTitle } from 'reactstrap';
 import { getDataByPath } from 'services/data.service';
 
-const dataSimularHavest = [
-  {
-    havestName: 'Vụ rau cải thảo đà lạt Mùa Đông',
-    ordered: 352,
-    image:
-      'https://images.unsplash.com/photo-1486328228599-85db4443971f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-    description: 'Rau cải thảo đà lạt vụ mùa đông',
-    src: '/harvests/harvestdetail/',
-  },
-  {
-    havestName: 'Vụ dâu Đà Lạt Mùa Đông',
-    ordered: 123,
-    image:
-      'https://images.unsplash.com/photo-1605056545110-c2ef2253aa8c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1120&q=80',
-    description: 'Dâu Đà Lạt mùa đông giá cực rẻ, ngọt ngon',
-    src: '/harvests/harvestdetail/',
-  },
-  {
-    havestName: 'Dưa leo Đà Lạc vụ Mùa Đông',
-    ordered: 431,
-    image:
-      'https://images.unsplash.com/photo-1627738670355-45970f19bcd9?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80',
-    description: 'Dưa leo Đà Lạt mùa đông',
-    src: '/harvests/harvestdetail/',
-  },
-];
-
 export default function HavestDetailBody(props) {
   const [dataHarvest, setDataHarvest] = useState(null);
   const [dataFarm, setDataFarm] = useState(null);
   const [dataProduct, setdataProduct] = useState(null);
+  const [dataHarvestSimilar, setDataHarvestSimilar] = useState(null);
   const [weight, setWeight] = React.useState(1);
 
   const increateWeight = () => {
@@ -54,11 +28,9 @@ export default function HavestDetailBody(props) {
     item['weight'] = weight;
     let dataCart = JSON.parse(localStorage.getItem('CART'));
     if (dataCart === null) {
-      console.log(1);
       const array = [item];
       localStorage.setItem('CART', JSON.stringify(array));
     } else {
-      console.log(2);
       let checkAvaiableItem = false;
       let pos = -1;
       dataCart.forEach((e, index) => {
@@ -84,8 +56,8 @@ export default function HavestDetailBody(props) {
       const img = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
       const imgHarvestTmp = 'https://giaoducthuydien.vn/wp-content/themes/consultix/images/no-image-found-360x250.png';
       const data = res.data;
-      console.log('data', data);
       const dataHarvestTmp = {
+        id: data.id,
         harvestName: data.harvest.name,
         image: imgHarvestTmp,
         description: data.harvest.description,
@@ -102,7 +74,6 @@ export default function HavestDetailBody(props) {
       }
       const resHarvestSelling = await getDataByPath(`api/v1/harvest-selling-prices/${data.id}`);
       if (resHarvestSelling?.status === 200) {
-        console.log('price', resHarvestSelling);
         if (resHarvestSelling.data[0]) {
           dataHarvestTmp.price = resHarvestSelling.data[0].price;
         }
@@ -136,7 +107,6 @@ export default function HavestDetailBody(props) {
       };
       const resProductPic = await getDataByPath(`api/v1/product-pictures/${dataProductApi.id}`);
       if (resProductPic?.status === 200) {
-        console.log('product pic', resProductPic);
         if (resProductPic.data[0]) {
           dataProductTmp.image = resProductPic.data[0].src;
           dataProductTmp.alt = '...';
@@ -144,6 +114,38 @@ export default function HavestDetailBody(props) {
         }
       }
       setdataProduct(dataProductTmp);
+
+      const tmpImg = 'https://giaoducthuydien.vn/wp-content/themes/consultix/images/no-image-found-360x250.png';
+      const resSimular = await getDataByPath(`api/v1/harvest-sellings?product-type-id=${data.harvest.product.product_type.id}`);
+      const simularDataTmp = [];
+      for (let e of resSimular.data) {
+        if (simularDataTmp.length < 3) {
+          if (e.id !== data.id) {
+            const dataTmp = {
+              havestName: e.harvest.name,
+              image: tmpImg,
+              price: 0,
+              description: e.harvest.description,
+              src: `/harvests/harvestdetail/${e.id}`,
+            };
+            const resImage = await getDataByPath(`api/v1/harvest-pictures/${e.harvest.id}`);
+            if (resImage.status === 200) {
+              if (resImage.data.length > 0) {
+                dataTmp.image = resImage.data[0].src;
+              }
+            }
+
+            const resPrice = await getDataByPath(`api/v1/harvest-selling-prices/${e.id}`);
+            if (resPrice.status === 200) {
+              if (resPrice.data.length > 0) {
+                dataTmp.price = resPrice.data[0].price;
+              }
+            }
+            simularDataTmp.push(dataTmp);
+          }
+        }
+      }
+      setDataHarvestSimilar(simularDataTmp);
     }
   }
 
@@ -279,21 +281,27 @@ export default function HavestDetailBody(props) {
                   <h3 className="title">Simular harvests</h3>
                   <Container>
                     <Row>
-                      {dataSimularHavest.map((ele) => {
+                      {dataHarvestSimilar?.map((ele, index) => {
                         return (
-                          <Col md="4">
+                          <Col md="4" key={`similar-${index}`}>
                             <Card>
                               <a href={ele.src}>
                                 <img alt="..." className="img-rounded img-responsive" src={ele.image} />
                               </a>
                               <CardTitle tag="h5">
-                                <a href={ele.src} class="mr-1 btn btn-link">
+                                <a href={ele.src} className="mr-1 btn btn-link">
                                   {ele.havestName}
                                 </a>
                               </CardTitle>
-                              <p className="blog-title" style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
+                              <p
+                                className="blog-title"
+                                style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden', marginLeft: '10px' }}
+                              >
                                 {ele.description}
                               </p>
+                              <span className="text-danger" style={{ fontWeight: 'bold' }}>
+                                {convertPrice(ele.price)} vnđ/kg
+                              </span>
                             </Card>
                           </Col>
                         );
