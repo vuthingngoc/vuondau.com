@@ -1,6 +1,6 @@
 import { Container, Row } from 'reactstrap';
 import React from 'react';
-import { DetailsList, SelectionMode, IconButton, CommandBar, SearchBox } from 'office-ui-fabric-react';
+import { DetailsList, SelectionMode, IconButton } from 'office-ui-fabric-react';
 import { getItems, updateItem } from 'services/data.service';
 import { NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
@@ -139,9 +139,9 @@ export default class OrderManagerBody extends React.Component {
                         <Row className="title-row">
                             <br />
                         </Row>
-                        <Row>
+                        {/* <Row>
                             <CommandBar className="commandbar" items={commandBarItems} farItems={commandBarfarItems} />
-                        </Row>
+                        </Row> */}
                         <Row>
                             <DetailsList
                                 className="detail-list"
@@ -210,21 +210,21 @@ const columns = [
     },
 ];
 
-const commandBarItems = [
-    {
-        key: 'create',
-        text: 'Tạo mới',
-        iconProps: { iconName: 'Add' },
-        onClick: () => { },
-    },
-];
+// const commandBarItems = [
+//     {
+//         key: 'create',
+//         text: 'Tạo mới',
+//         iconProps: { iconName: 'Add' },
+//         onClick: () => { },
+//     },
+// ];
 
-const commandBarfarItems = [
-    {
-        key: 'search',
-        text: '',
-        onRender: () => {
-            return <SearchBox className="search-box" placeholder="Search" onSearch={(newValue) => console.log('value is ' + newValue)} disableAnimation />;
-        },
-    },
-];
+// const commandBarfarItems = [
+//     {
+//         key: 'search',
+//         text: '',
+//         onRender: () => {
+//             return <SearchBox className="search-box" placeholder="Search" onSearch={(newValue) => console.log('value is ' + newValue)} disableAnimation />;
+//         },
+//     },
+// ];
