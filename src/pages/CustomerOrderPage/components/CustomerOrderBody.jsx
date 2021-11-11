@@ -24,7 +24,6 @@ export default function CustomerOrderBody() {
     if (id !== null) {
       const path = 'api/v1/orders/';
       const res = await getDataByPath(`${path}${id}`);
-      console.log(res);
       if (res?.status === 200) {
         setDataOrder(res.data);
       }
@@ -34,10 +33,11 @@ export default function CustomerOrderBody() {
   async function getDataFeedback(orderID, harvestID) {
     if (orderID !== '' && harvestID !== '') {
       const res = await getDataByPath(`api/v1/feedbacks/${orderID}`);
+      console.log(res);
       if (res.status === 200) {
-        console.log(res.data);
         const feedbackTmp = [];
         if (res.data.length > 0) {
+          console.log(1);
           res.data.forEach((ele) => {
             if (ele.harvest.id === harvestID) {
               feedbackTmp.push(ele);
@@ -45,6 +45,8 @@ export default function CustomerOrderBody() {
           });
         }
         setDataFeedback(feedbackTmp);
+      } else if (res.status === 404) {
+        setDataFeedback([]);
       }
     }
   }
