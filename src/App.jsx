@@ -17,7 +17,7 @@ import HavestDetailPage from 'pages/HavestDetailPage';
 import AuthContextProvider from 'contexts/AuthContext';
 import FarmManagerPage from 'pages/AdminFarmManagerPage';
 import FarmByRegion from 'pages/FarmsPage/components/FarmByRegion'
-
+import OrderManagerPage from './pages/AdminOrderManager/adminOrderManagerPage'
 import { initializeIcons } from '@fluentui/font-icons-mdl2';
 import ListAccountPage from 'pages/ListAccountPage';
 import EditAccountPage from 'pages/EditAccountPage';
@@ -30,6 +30,7 @@ import CheckoutPage from 'pages/CheckoutPage';
 import ProductoManagerPage from 'pages/ProductManagerPage';
 import AdminProductDetailPage from 'pages/AdminProductDetailPage';
 import CreateProfilePage from 'pages/CreateProfilePage';
+import CustomerOrder from 'pages/CustomerOrderPage';
 
 function App() {
   initializeIcons();
@@ -51,6 +52,7 @@ function App() {
           <Route exact path="/newprofile" render={(props) => <CreateProfilePage {...props} />} />
           <Route exact path="/shoppingcart" render={(props) => <ShoppingCartPage {...props} />} />
           <Route path="/shoppingcart/checkout/:id" render={(props) => <CheckoutPage {...props} />} />
+          <Route path="/order" render={(props) => <CustomerOrder {...props} />} />
           <Route path="/addproduct" render={(props) => <AddProductPage {...props} />} />
           <Route exact path="/harvests/:id" render={(props) => <HavestPage {...props} />} />
           <Route path="/harvests/harvestdetail/:id" render={(props) => <HavestDetailPage {...props} />} />
@@ -62,6 +64,7 @@ function App() {
           <Route exact path="/admin/home" render={(props) => <HomePage {...props} />} />
           <Route exact path="/admin/farmManagement/:id" render={(props) => <FarmManagerDetail {...props} />} />
           <Route exact path="/admin/manageproduct" render={(props) => <ProductoManagerPage {...props} />} />
+          <Route exact path="/admin/manageorder" render={(props) => <OrderManagerPage {...props} />} />
           <Redirect to="/home" />
         </Switch>
       </BrowserRouter>

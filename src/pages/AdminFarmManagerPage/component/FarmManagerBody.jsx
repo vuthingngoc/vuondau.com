@@ -1,7 +1,10 @@
 import { Container, Row } from 'reactstrap';
 import React from 'react';
 import { DetailsList, SelectionMode, IconButton, CommandBar, SearchBox } from 'office-ui-fabric-react';
-import { getItems } from 'services/data.service';
+import { getItems, deleteItem } from 'services/data.service';
+import { NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
+import { updateItem } from 'services/data.service';
 
 export default class FarmManagerBody extends React.Component {
   constructor(props) {
@@ -37,7 +40,7 @@ export default class FarmManagerBody extends React.Component {
   onUpdateDataSource(data) {
     for (let item of data) {
       item._farm_type = item.farm_type.name
-      item._farmer = `${item.farmer.first_name} ${item.farmer.last_name}`
+      item._farmer = `${item.farmer.full_name}`
     }
     return data;
   }
@@ -45,43 +48,59 @@ export default class FarmManagerBody extends React.Component {
   _onRenderItemColumn(item, index, column) {
     //define UI hiển của từng cột mong muốn
     switch (column.fieldName) {
-      case 'no': return(<>{index}</>)
+      case 'no': return (<>{index}</>)
       case 'name':
-        let _menuProps = {
-          items: [
-            {
-              key: 'edit',
-              text: 'Chỉnh sửa',
-              href: `/admin/farmManagement/${item.id}`,
-            },
-          ],
-        };
-        if (item.status === 1) {
-          _menuProps.items.push({
-            key: 'deactivate',
-            text: 'Vô hiệu hóa',
-            onClick: () => {
-              //do something
-            },
-          });
-        } else {
-          _menuProps.items.push({
-            key: 'activate',
-            text: 'Kích hoạt',
-            onClick: () => {
-              //do something
-            },
-          });
-        }
-
         return (
           <div className="app-grid-main-column">
             <div className="app-column-text" style={{ width: '85%' }} >{item['name']}</div>
-            <IconButton style={{ width: '10%' }} menuIconProps={{iconName: "More"}} title="More actions" menuProps={_menuProps} />
+            {/* <IconButton style={{ width: '10%' }} menuIconProps={{ iconName: "More" }} title="More actions" menuProps={_menuProps} /> */}
           </div>
         );
       case 'status':
-        return item.status === 1 ? 'Acitve' : 'Deactive';
+        switch (item.status) {
+          case 0: return 'Deactive';
+          case 1: return 'Active';
+          case 2: return 'Waiting';
+          default: return 'Acitve';
+        }
+      case 'command': return (
+        <div>
+          {
+            item.status !== 2 &&
+            <IconButton
+              iconProps={{ iconName: 'Edit' }}
+              href={`/admin/farmManagement/${item.id}`}
+            />
+          }
+          {
+            item.status === 2 &&
+            <IconButton
+              iconProps={{ iconName: 'Accept' }}
+              onClick={() => {
+                let approvedFarm = updateItem("api/v1/farms/update-status", item.id, { status: 1 });
+                Promise.all([approvedFarm]).then(values => {
+                  if (values[0].status === 200 || values[0].status === 204) {
+                    NotificationManager.success('Approved', 'Approved', 3000);
+                    this.loadData();
+                  }
+                })
+              }}
+            />
+          }
+          <IconButton
+            iconProps={{ iconName: 'Delete' }}
+            onClick={() => {
+              let removeFarm = deleteItem("api/v1/farms", item.id);
+              Promise.all([removeFarm]).then(values => {
+                if (values[0].status === 200 || values[0].status === 204) {
+                  NotificationManager.success('Deleted', 'Deleted', 3000);
+                  this.loadData();
+                }
+              })
+            }}
+          />
+        </div>
+      )
       default:
         return item[column.fieldName];
     }
@@ -126,7 +145,7 @@ const columns = [
     key: 'name',
     name: 'Tên nông trại',
     fieldName: 'name',
-    minWidth: 200,
+    minWidth: 180,
   },
   {
     key: '_farm_type',
@@ -138,25 +157,25 @@ const columns = [
     key: '_farmer',
     name: 'Chủ nông trại',
     fieldName: '_farmer',
-    minWidth: 100,
-  },
-  {
-    key: 'description',
-    name: 'Mô tả',
-    fieldName: 'description',
-    minWidth: 200,
+    minWidth: 150,
   },
   {
     key: 'address',
     name: 'Địa chỉ',
     fieldName: 'address',
-    minWidth: 100,
+    minWidth: 140,
   },
   {
     key: 'status',
     name: 'Trạng thái',
     fieldName: 'status',
     minWidth: 100,
+  },
+  {
+    key: 'command',
+    name: '',
+    fieldName: 'command',
+    minWidth: 80,
   },
 ];
 

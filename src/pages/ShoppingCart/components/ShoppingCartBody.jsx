@@ -1,10 +1,16 @@
+import jwtDecode from 'jwt-decode';
 import React, { useEffect, useState } from 'react';
+import { NotificationManager } from 'react-notifications';
 import { Link } from 'react-router-dom';
 import { Button, ButtonGroup, Table, Container, Row, Col } from 'reactstrap';
+import { deleteDataByPath } from 'services/data.service';
+import { updateDataByPath } from 'services/data.service';
+import { getDataByPath } from 'services/data.service';
 
 export default function ShoppingCartBody() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
+
   const calTotal = () => {
     let total = 0;
     data?.forEach((e) => {
@@ -14,48 +20,129 @@ export default function ShoppingCartBody() {
     return totalPrice;
   };
 
-  const updateData = (data) => {
-    setData(data);
-    if (localStorage) {
-      localStorage.setItem('CART', JSON.stringify(data));
+  async function updateData(dataItem, customerID) {
+    const dataUpdate = {
+      customer_id: customerID,
+      harvest_selling_id: dataItem.harvest_selling_id,
+      price: dataItem.salePrice,
+      quantity: dataItem.weight,
+      status: 1,
+    };
+    const res = await updateDataByPath(`api/v1/productInCarts/${dataItem.id}`, dataUpdate);
+    if (res.status === 200) {
+      const dataTmp = data;
+      dataTmp.forEach((ele, i) => {
+        if (ele.id === dataItem.id) {
+          dataTmp[i].weight = dataItem.weight;
+        }
+      });
+      setData(dataTmp);
+    } else {
+      NotificationManager.warning('Update Weight Failed', 'Server is busy now, please try later', 3000);
     }
-  };
+  }
 
-  const increateWeight = (id) => {
+  async function deleteItem(itemID, customerID) {
+    if (customerID !== '' && itemID !== '') {
+      const res = await deleteDataByPath(`api/v1/productInCarts/${itemID}`);
+      console.log(res);
+      if (res?.status === 204) {
+        loadData(customerID);
+        NotificationManager.success('Remove Item Success', 'Your item has been remove success', 3000);
+      } else {
+        NotificationManager.warning('Remove Item Failed', 'Something wrongs when remove', 3000);
+      }
+    }
+  }
+
+  async function increateWeight(id) {
+    let userID = '';
+    if (localStorage.getItem('accessToken') !== null && localStorage.getItem('accessToken') !== '') {
+      userID = jwtDecode(localStorage.getItem('accessToken')).ID;
+    }
     let tmpData = data;
+    let index = -1;
     tmpData.forEach((ele, i) => {
       if (ele.id === id) {
         tmpData[i].weight += 1;
+        index = i;
       }
     });
-    updateData(tmpData);
+    await updateData(tmpData[index], userID);
     calTotal();
-  };
+  }
 
-  const decreaseWeight = (id) => {
+  async function decreaseWeight(id) {
+    let userID = '';
+    if (localStorage.getItem('accessToken') !== null && localStorage.getItem('accessToken') !== '') {
+      userID = jwtDecode(localStorage.getItem('accessToken')).ID;
+    }
     let tmpData = data;
+    let index = -1;
     tmpData.forEach((ele, i) => {
       if (ele.id === id) {
-        if (ele.weight > 1) {
+        index = i;
+        if (ele.weight >= 0) {
           tmpData[i].weight -= 1;
-        } else if ((ele.weight = 1)) {
-          tmpData.splice(i, 1);
         }
       }
     });
-    updateData(tmpData);
+    if (tmpData[index].weight === 0) {
+      await deleteItem(tmpData[index].id, userID);
+    } else {
+      await updateData(tmpData[index], userID);
+    }
     calTotal();
+  }
+
+  async function loadData(customerID) {
+    const res = await getDataByPath(`api/v1/productInCarts/${customerID}`);
+    const dataItem = [];
+    if (res.status === 200) {
+      for (let ele of res.data) {
+        let cartItemTmp = {
+          id: ele.id,
+          productName: ele.harvest_selling.harvest.product.name,
+          harvestName: ele.harvest_selling.harvest.name,
+          image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png',
+          alt: '...',
+          description: ele.harvest_selling.harvest.description,
+          salePrice: ele.price,
+          src: `/harvests/harvestdetail/${ele.harvest_selling.id}`,
+          harvest_selling_id: ele.harvest_selling.id,
+          weight: ele.quantity,
+          status: ele.status,
+        };
+        const resProductPic = await getDataByPath(`api/v1/product-pictures/${ele.harvest_selling.harvest.product.id}`);
+        if (resProductPic?.status === 200) {
+          if (resProductPic.data[0]) {
+            cartItemTmp.image = resProductPic.data[0].src;
+          }
+        }
+        dataItem.push(cartItemTmp);
+      }
+      let total = 0;
+      dataItem?.forEach((e) => {
+        total += e.salePrice * e.weight;
+      });
+      setTotalPrice(total);
+    }
+    setData(dataItem);
+  }
+
+  const convertPrice = (price) => {
+    return new Intl.NumberFormat({ style: 'currency', currency: 'VND' }).format(price);
   };
 
   useEffect(() => {
-    const cartItem = JSON.parse(localStorage.getItem('CART'));
-    setData(cartItem);
-    let total = 0;
-    cartItem?.forEach((e) => {
-      total += e.salePrice * e.weight;
-    });
-    setTotalPrice(total);
-  }, []);
+    let userInfo = '';
+    if (localStorage.getItem('accessToken') !== null && localStorage.getItem('accessToken') !== '') {
+      userInfo = jwtDecode(localStorage.getItem('accessToken'));
+    }
+    if (data === null) {
+      loadData(userInfo.ID);
+    }
+  });
 
   return (
     <>
@@ -81,12 +168,15 @@ export default function ShoppingCartBody() {
                   <th className="text-right" style={{ fontWeight: 'bold' }}>
                     Total
                   </th>
+                  <th className="text-center" style={{ fontWeight: 'bold' }}>
+                    Action
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                {data?.map((ele) => {
+                {data?.map((ele, index) => {
                   return (
-                    <tr>
+                    <tr key={`item-${index}`}>
                       <td>
                         <div className="img-container">
                           <Link to={ele.src}>
@@ -96,12 +186,13 @@ export default function ShoppingCartBody() {
                       </td>
                       <td className="td-product">
                         <Link to={ele.src}>
-                          <strong>{ele.productName}</strong>
+                          <strong>{ele.harvestName}</strong> <br />
+                          <h6>{`Sản phẩm: ${ele.productName}`}</h6>
                         </Link>
                         <p>{ele.description}</p>
                       </td>
                       <td className="td-price">
-                        {ele.salePrice}
+                        {convertPrice(ele.salePrice)}
                         <small> vnđ</small>
                       </td>
                       <td className="td-number td-quantity">
@@ -115,10 +206,27 @@ export default function ShoppingCartBody() {
                             +
                           </Button>
                         </ButtonGroup>
+                        <br />
                       </td>
                       <td className="td-number">
-                        {ele.salePrice * ele.weight}
+                        {convertPrice(ele.salePrice * ele.weight)}
                         <small> vnđ</small>
+                      </td>
+                      <td className="text-right">
+                        <Button
+                          className="btn-link mr-1"
+                          color="danger"
+                          onClick={() => {
+                            let userID = '';
+                            if (localStorage.getItem('accessToken') !== null && localStorage.getItem('accessToken') !== '') {
+                              userID = jwtDecode(localStorage.getItem('accessToken')).ID;
+                            }
+                            deleteItem(ele.id, userID);
+                            calTotal();
+                          }}
+                        >
+                          Remove
+                        </Button>
                       </td>
                     </tr>
                   );
@@ -126,9 +234,10 @@ export default function ShoppingCartBody() {
                 <tr>
                   <td colSpan="2" />
                   <td />
+                  <td />
                   <td className="td-total">Total:</td>
                   <td className="td-total">
-                    {totalPrice}
+                    {data?.length > 0 ? convertPrice(totalPrice) : 0}
                     <small> vnđ</small>
                   </td>
                 </tr>

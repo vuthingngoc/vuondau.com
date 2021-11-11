@@ -1,55 +1,18 @@
+import jwtDecode from 'jwt-decode';
 import React, { useEffect, useState } from 'react';
 import { ButtonGroup } from 'react-bootstrap';
 import { NotificationManager } from 'react-notifications';
 // import { Link } from 'react-router-dom';
 
 import { Badge, Button, Card, Media, Container, Row, Col, CardTitle } from 'reactstrap';
+import { createDataByPath } from 'services/data.service';
 import { getDataByPath } from 'services/data.service';
-
-const dataHavest = {
-  havestName: 'Vụ cà chua Đà Lạt Mùa đông',
-  ordered: 200,
-  image: 'https://kiemsat.1cdn.vn/2018/04/16/nho-11-2018.jpg',
-  imageAlt: 'imageAlt',
-  imageTitle: 'Photo by Farmer',
-  description: 'Cà chua đà lạt vụ mùa đông',
-  src: '/harvests/harvestdetail/',
-  status: 1,
-  orderDay: 'OCTOBER 10, 2021',
-  havestDay: 'DECEMBER 15, 2021',
-};
-
-const dataSimularHavest = [
-  {
-    havestName: 'Vụ rau cải thảo đà lạt Mùa Đông',
-    ordered: 352,
-    image:
-      'https://images.unsplash.com/photo-1486328228599-85db4443971f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-    description: 'Rau cải thảo đà lạt vụ mùa đông',
-    src: '/harvests/harvestdetail/',
-  },
-  {
-    havestName: 'Vụ dâu Đà Lạt Mùa Đông',
-    ordered: 123,
-    image:
-      'https://images.unsplash.com/photo-1605056545110-c2ef2253aa8c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1120&q=80',
-    description: 'Dâu Đà Lạt mùa đông giá cực rẻ, ngọt ngon',
-    src: '/harvests/harvestdetail/',
-  },
-  {
-    havestName: 'Dưa leo Đà Lạc vụ Mùa Đông',
-    ordered: 431,
-    image:
-      'https://images.unsplash.com/photo-1627738670355-45970f19bcd9?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80',
-    description: 'Dưa leo Đà Lạt mùa đông',
-    src: '/harvests/harvestdetail/',
-  },
-];
 
 export default function HavestDetailBody(props) {
   const [dataHarvest, setDataHarvest] = useState(null);
   const [dataFarm, setDataFarm] = useState(null);
   const [dataProduct, setdataProduct] = useState(null);
+  const [dataHarvestSimilar, setDataHarvestSimilar] = useState(null);
   const [weight, setWeight] = React.useState(1);
 
   const increateWeight = () => {
@@ -62,49 +25,36 @@ export default function HavestDetailBody(props) {
     }
   };
 
-  const addToCartHandle = () => {
-    const item = dataProduct;
-    item['weight'] = weight;
-    let dataCart = JSON.parse(localStorage.getItem('CART'));
-    if (dataCart === null) {
-      console.log(1);
-      const array = [item];
-      localStorage.setItem('CART', JSON.stringify(array));
-    } else {
-      console.log(2);
-      let checkAvaiableItem = false;
-      let pos = -1;
-      dataCart.forEach((e, index) => {
-        if (e.id === item.id) {
-          checkAvaiableItem = true;
-          pos = index;
-        }
-      });
-      if (checkAvaiableItem) {
-        dataCart[pos] = item;
-      } else {
-        dataCart.push(item);
-      }
-      localStorage.setItem('CART', JSON.stringify(dataCart));
-    }
-    NotificationManager.success('Add to Cart Success', 'Your item has been add to cart', 3000);
-  };
-
   async function loadData(id) {
     const path = `api/v1/harvest-sellings/${id}`;
     const res = await getDataByPath(path);
     if (res?.status === 200) {
-      let img = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
+      const img = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
+      const imgHarvestTmp = 'https://giaoducthuydien.vn/wp-content/themes/consultix/images/no-image-found-360x250.png';
       const data = res.data;
-      console.log(data);
       const dataHarvestTmp = {
+        id: data.id,
         harvestName: data.harvest.name,
-        image: dataHavest.image,
+        image: imgHarvestTmp,
         description: data.harvest.description,
         status: data.status,
         orderDay: data.date_of_create.slice(0, 10),
+        price: 0,
         havestDay: data.end_date.slice(0, 10),
       };
+      const resHarvestPic = await getDataByPath(`api/v1/harvest-pictures/${data.harvest.id}`);
+      if (resHarvestPic?.status === 200) {
+        if (resHarvestPic.data[0]) {
+          dataHarvestTmp.image = resHarvestPic.data[0].src;
+        }
+      }
+      const resHarvestSellingPrice = await getDataByPath(`api/v1/harvest-selling-prices/${data.id}`);
+      if (resHarvestSellingPrice?.status === 200) {
+        if (resHarvestSellingPrice.data[0]) {
+          dataHarvestTmp.price = resHarvestSellingPrice.data[0].price;
+        }
+      }
+
       setDataHarvest(dataHarvestTmp);
       const dataFarmApi = data.harvest.farm;
       const dataFarmTmp = {
@@ -116,10 +66,7 @@ export default function HavestDetailBody(props) {
       const resFarmPic = await getDataByPath(`api/v1/farm-pictures/${dataFarmApi.id}`);
       if (resFarmPic?.status === 200) {
         if (resFarmPic.data[0]) {
-          console.log(resFarmPic);
           dataFarmTmp.image = resFarmPic.data[0].src;
-          console.log(resFarmPic.data[0].src);
-          setDataFarm(dataFarmTmp);
         }
       }
       setDataFarm(dataFarmTmp);
@@ -129,23 +76,85 @@ export default function HavestDetailBody(props) {
         id: dataProductApi.id,
         productName: dataProductApi.name,
         image: img,
+        alt: 'none',
         description: dataProductApi.description,
         salePrice: '41000',
         src: `/product/productdetail/${dataProductApi.id}`,
       };
       const resProductPic = await getDataByPath(`api/v1/product-pictures/${dataProductApi.id}`);
       if (resProductPic?.status === 200) {
-        console.log('product pic', resProductPic);
         if (resProductPic.data[0]) {
-          console.log(resFarmPic);
           dataProductTmp.image = resProductPic.data[0].src;
-          console.log(resFarmPic.data[0].src);
+          dataProductTmp.alt = '...';
           setDataFarm(dataFarmTmp);
         }
       }
       setdataProduct(dataProductTmp);
+
+      const tmpImg = 'https://giaoducthuydien.vn/wp-content/themes/consultix/images/no-image-found-360x250.png';
+      const resSimular = await getDataByPath(`api/v1/harvest-sellings`, '', `product-type-id=${data.harvest.product.product_type.id}`);
+      const simularDataTmp = [];
+      for (let e of resSimular.data) {
+        if (simularDataTmp.length < 3) {
+          if (e.id !== data.id) {
+            const dataTmp = {
+              havestName: e.harvest.name,
+              image: tmpImg,
+              price: 0,
+              description: e.harvest.description,
+              src: `/harvests/harvestdetail/${e.id}`,
+            };
+            const resImage = await getDataByPath(`api/v1/harvest-pictures/${e.harvest.id}`);
+            if (resImage.status === 200) {
+              if (resImage.data.length > 0) {
+                dataTmp.image = resImage.data[0].src;
+              }
+            }
+
+            const resPrice = await getDataByPath(`api/v1/harvest-selling-prices/${e.id}`);
+            if (resPrice.status === 200) {
+              if (resPrice.data.length > 0) {
+                dataTmp.price = resPrice.data[0].price;
+              }
+            }
+            simularDataTmp.push(dataTmp);
+          }
+        }
+      }
+      setDataHarvestSimilar(simularDataTmp);
     }
   }
+
+  async function addItemToCart() {
+    let userID = '';
+    if (localStorage.getItem('accessToken') !== null && localStorage.getItem('accessToken') !== '') {
+      userID = jwtDecode(localStorage.getItem('accessToken')).ID;
+    }
+    const harvestSellingID = dataHarvest.id;
+    const price = dataHarvest.price;
+    const weightItem = weight;
+    if (userID !== '' && harvestSellingID !== '' && price !== 0 && weightItem > 0) {
+      const createData = {
+        customer_id: userID,
+        harvest_selling_id: harvestSellingID,
+        price: price,
+        quantity: weightItem,
+      };
+      console.log(createData);
+      const path = 'api/v1/productInCarts';
+      const res = await createDataByPath(path, createData);
+      console.log(res);
+      if (res?.status === 201) {
+        NotificationManager.success('Add Item Success', 'Your item has been add to cart', 3000);
+      } else {
+        NotificationManager.warning('Add Item Error', 'Server is busy now, pleasy try againt', 3000);
+      }
+    }
+  }
+
+  const convertPrice = (price) => {
+    return new Intl.NumberFormat({ style: 'currency', currency: 'VND' }).format(price);
+  };
 
   useEffect(() => {
     if (dataHarvest === null) {
@@ -164,7 +173,9 @@ export default function HavestDetailBody(props) {
                     {dataHarvest?.status === 1 ? 'Avaiable' : 'Closed'}
                   </Badge>
                   <a href="javascrip: void(0);">
-                    <h3 className="title">{dataHarvest?.harvestName}</h3>
+                    <h3 className="title" style={{ fontWeight: 'bold' }}>
+                      {dataHarvest?.harvestName}
+                    </h3>
                   </a>
                   <h6 className="title-uppercase">Order start day: {dataHarvest?.orderDay} </h6>
                   <h6 className="title-uppercase">Expect harvest day: {dataHarvest?.havestDay} </h6>
@@ -173,9 +184,14 @@ export default function HavestDetailBody(props) {
               <Col className="ml-auto mr-auto" md="12">
                 <Col className="ml-auto mr-auto" md="8">
                   <Card data-radius="none">
-                    <img alt={dataHavest.imageAlt} className="img-rounded img-responsive" src={dataHarvest?.image} />
+                    {dataHarvest === null ? (
+                      <div className="uil-reload-css reload-background" style={{ display: 'block', margin: 'auto' }}>
+                        <div />
+                      </div>
+                    ) : (
+                      <img alt="..." className="img-rounded img-responsive" src={dataHarvest?.image} />
+                    )}
                   </Card>
-                  <p className="image-thumb text-center">{dataHavest.imageTitle}</p>
                   <div className="article-content">
                     <h4 style={{ fontWeight: 'bold' }}>Description</h4>
                     <p style={{ fontWeight: 'bolder' }}>{dataHarvest?.description}</p>
@@ -202,7 +218,7 @@ export default function HavestDetailBody(props) {
                           <h3 style={{ fontWeight: 'bolder' }}>{dataProduct?.productName}</h3>
                           <p className="card-description">{dataProduct?.description}</p>
                           <div className="price">
-                            <h6 className="text-default">{`${dataProduct?.salePrice} vnđ/kg`}</h6>
+                            <h6 className="text-default">{`${convertPrice(dataHarvest?.price)} vnđ/kg`}</h6>
                           </div>
                           <Row>
                             <Col md="8" sm="8">
@@ -227,7 +243,7 @@ export default function HavestDetailBody(props) {
                             </Col>
                           </Row>
                           <Row>
-                            <Button className="btn-round" color="danger" onClick={addToCartHandle}>
+                            <Button className="btn-round" color="danger" onClick={() => addItemToCart()}>
                               Add to cart
                             </Button>
                           </Row>
@@ -239,7 +255,15 @@ export default function HavestDetailBody(props) {
                     <Media>
                       <a className="pull-left" href="#pablo" onClick={(e) => e.preventDefault()}>
                         <div className="avatar big-avatar">
-                          <Media alt="..." object src={dataFarm?.image} style={{ width: '80px', height: '80px' }} />
+                          {dataFarm === null ? (
+                            <div className="uil-reload-css reload-small" style={{ marginTop: '10px', marginLeft: '10px' }}>
+                              <div />
+                            </div>
+                          ) : dataFarm?.alt !== 'none' ? (
+                            <Media alt="..." object src={dataFarm?.image} style={{ width: '60px', height: '60px' }} />
+                          ) : (
+                            <Media alt="..." object src={dataFarm?.image} style={{ width: '80px', height: '80px' }} />
+                          )}
                         </div>
                       </a>
                       <Media body>
@@ -260,22 +284,27 @@ export default function HavestDetailBody(props) {
                   <h3 className="title">Simular harvests</h3>
                   <Container>
                     <Row>
-                      {dataSimularHavest.map((ele) => {
+                      {dataHarvestSimilar?.map((ele, index) => {
                         return (
-                          <Col md="4">
+                          <Col md="4" key={`similar-${index}`}>
                             <Card>
                               <a href={ele.src}>
                                 <img alt="..." className="img-rounded img-responsive" src={ele.image} />
                               </a>
                               <CardTitle tag="h5">
-                                <a href={ele.src} class="mr-1 btn btn-link">
+                                <a href={ele.src} className="mr-1 btn btn-link">
                                   {ele.havestName}
                                 </a>
                               </CardTitle>
-                              <p className="blog-title">{ele.description}</p>
-                              <h6 style={{ textAlign: 'right' }}>
-                                Đã đặt <i className="fa fa-handshake-o" /> {ele.ordered}
-                              </h6>
+                              <p
+                                className="blog-title"
+                                style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden', marginLeft: '10px' }}
+                              >
+                                {ele.description}
+                              </p>
+                              <span className="text-danger text-right" style={{ fontWeight: 'bold', marginBottom: '10px' }}>
+                                {convertPrice(ele.price)} vnđ/kg
+                              </span>
                             </Card>
                           </Col>
                         );

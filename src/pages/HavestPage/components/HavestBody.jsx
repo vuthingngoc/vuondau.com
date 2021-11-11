@@ -1,85 +1,21 @@
 import React, { useState, useEffect } from 'react';
 
 import { Card, CardHeader, CardBody, CardTitle, Collapse, Label, FormGroup, Input, Container, Row, Col, Button } from 'reactstrap';
-
-const dataFarmHavest = [
-  {
-    name: 'Nông Trại Đà Lạt',
-    location: 'Miền Nam',
-    src: '/havestsgroupfarm',
-    havests: [
-      {
-        havestName: 'Vụ cà chua Đà Lạt Mùa Đông',
-        ordered: 200,
-        image:
-          'https://images.unsplash.com/photo-1516253593875-bd7ba052fbc5?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80',
-        description: 'Cà chua đà lạt vụ mùa xuân',
-        src: '/harvests/harvestdetail/ca-chua-da-lat',
-      },
-      {
-        havestName: 'Vụ rau cải thảo đà lạt Mùa Đông',
-        ordered: 352,
-        image:
-          'https://images.unsplash.com/photo-1486328228599-85db4443971f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-        description: 'Rau cải thảo đà lạt vụ mùa đông',
-        src: '/harvests/harvestdetail/ca-chua-da-lat',
-      },
-      {
-        havestName: 'Vụ dâu Đà Lạt Mùa Đông',
-        ordered: 123,
-        image:
-          'https://images.unsplash.com/photo-1605056545110-c2ef2253aa8c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1120&q=80',
-        description: 'Dâu Đà Lạt mùa đông giá cực rẻ, ngọt ngon',
-        src: '/harvests/harvestdetail/ca-chua-da-lat',
-      },
-    ],
-  },
-  {
-    name: 'Nông Trại Lâm Đồng',
-    location: 'Miền Nam',
-    src: '/harvestgroupfarm',
-    havests: [
-      {
-        havestName: 'Dưa leo Lâm Đồng vụ Mùa Đông',
-        ordered: 431,
-        image:
-          'https://images.unsplash.com/photo-1627738670355-45970f19bcd9?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80',
-        description: 'Dưa leo Lâm Đồng mùa đông',
-        src: '/harvests/harvestdetail/',
-      },
-    ],
-  },
-];
-
-const dataSeason = [
-  {
-    name: 'Spring',
-    checked: false,
-  },
-  {
-    name: 'Summer',
-    checked: false,
-  },
-  {
-    name: 'Fall',
-    checked: false,
-  },
-  {
-    name: 'Winter',
-    checked: false,
-  },
-];
+import { getDataByPath } from 'services/data.service';
 
 const dataLocation = [
   {
+    id: '2155c809-bdfe-48ef-a56d-726360143c9a',
     name: 'Miền Nam',
     checked: false,
   },
   {
+    id: '5b786a02-e1fb-4db5-b5b5-9eebac46ebf6',
     name: 'Miền Trung',
     checked: false,
   },
   {
+    id: 'c4b80051-a91e-402a-89d1-e68d5218fe5e',
     name: 'Miền Bắc',
     checked: false,
   },
@@ -87,54 +23,154 @@ const dataLocation = [
 
 const dataCategory = [
   {
-    name: 'Vegetable',
+    id: '0c62b9c6-10ac-465e-99c4-3dff07279c93',
+    name: 'Trái cây',
     checked: false,
   },
   {
-    name: 'Fruit',
+    id: '408cb360-eccd-40c8-ae73-c8143994ce84',
+    name: 'Rau',
     checked: false,
   },
   {
-    name: 'Meat',
-    checked: false,
-  },
-  {
-    name: 'Fish',
+    id: 'aae688f7-d8aa-4ef7-b42e-5c69d3a2fe27',
+    name: 'Củ',
     checked: false,
   },
 ];
 
 export default function HavestBody(props) {
   // states for collapses
-  const [season, setSeason] = useState(false);
   const [location, setLocation] = useState(false);
   const [category, setCategory] = useState(false);
-  const [defaultSeason, setDefaultSeason] = useState('');
+  const [defaultCategory, setDefaultCategory] = useState('');
+  const [dataFarmHarvest, setDataFarmHarvest] = useState(null);
+  // const [listHarvestID, setListHarvestID] = useState(null);
+
+  const convertPrice = (price) => {
+    return new Intl.NumberFormat({ style: 'currency', currency: 'VND' }).format(price);
+  };
+
+  async function loadDataFarmHarvest() {
+    const path = 'api/v1/harvest-sellings';
+    const tmpImg = 'https://giaoducthuydien.vn/wp-content/themes/consultix/images/no-image-found-360x250.png';
+    const res = await getDataByPath(path);
+    if (res.status === 200) {
+      let data = [];
+      for (let ele of res.data) {
+        let checkedType = false;
+        let checkedLocation = false;
+        dataCategory.forEach((e) => {
+          if (e.checked && e.id === ele.harvest.product.product_type.id) {
+            checkedType = true;
+          }
+        });
+        if (!dataCategory[0].checked && !dataCategory[1].checked && !dataCategory[2].checked) {
+          checkedType = true;
+        }
+
+        dataLocation.forEach((e) => {
+          if (e.checked && e.id === ele.harvest.farm.area.id) {
+            checkedLocation = true;
+          }
+        });
+        if (!dataLocation[0].checked && !dataLocation[1].checked && !dataLocation[2].checked) {
+          checkedLocation = true;
+        }
+        if (checkedType && checkedLocation) {
+          const resImage = await getDataByPath(`api/v1/harvest-pictures/${ele.harvest.id}`);
+          if (resImage.status === 200) {
+            if (resImage.data.length > 0) {
+              ele.harvest = { ...ele.harvest, image: resImage.data[0].src };
+            } else {
+              ele.harvest = { ...ele.harvest, image: tmpImg };
+            }
+          }
+
+          const resPrice = await getDataByPath(`api/v1/harvest-selling-prices/${ele.id}`);
+          if (resPrice.status === 200) {
+            if (resPrice.data.length > 0) {
+              ele.harvest = { ...ele.harvest, price: resPrice.data[0].price };
+            } else {
+              ele.harvest = { ...ele.harvest, price: 0 };
+            }
+          } else {
+            ele.harvest = { ...ele.harvest, price: 0 };
+          }
+          data.push(ele);
+        }
+      }
+      const listHarvestByFarm = [];
+      data.forEach((ele) => {
+        let check = false;
+        if (listHarvestByFarm.find((obj) => obj.id === ele.harvest.farm.id)) {
+          check = true;
+        }
+        if (!check) {
+          listHarvestByFarm.push({
+            id: ele.harvest.farm.id,
+            name: ele.harvest.farm.name,
+            location: ele.harvest.farm.address,
+            src: `/farms/farmdetail/${ele.harvest.farm.id}`,
+            harvest: [
+              {
+                harvestID: ele.harvest.id,
+                havestName: ele.harvest.name,
+                image: ele.harvest.image,
+                description: ele.harvest.description,
+                price: ele.harvest.price,
+                src: `/harvests/harvestdetail/${ele.id}`,
+              },
+            ],
+          });
+        } else {
+          listHarvestByFarm.forEach((farm, index) => {
+            if (farm.id === ele.harvest.farm.id) {
+              listHarvestByFarm[index].harvest.push({
+                havestName: ele.harvest.name,
+                image: ele.harvest.image,
+                price: ele.harvest.price,
+                description: ele.harvest.description,
+                src: `/harvests/harvestdetail/${ele.id}`,
+              });
+            }
+          });
+        }
+      });
+      setDataFarmHarvest(listHarvestByFarm);
+    }
+  }
+
+  // useEffect(() => {
+  //   if (dataFarmHarvest === null) {
+  //     loadDataFarmHarvest();
+  //   }
+  // });
 
   useEffect(() => {
-    if (defaultSeason !== props.match.params.id) {
-      dataSeason.forEach((element) => {
+    if (defaultCategory !== props.match.params.id) {
+      dataCategory.forEach((element) => {
         element.checked = false;
       });
       switch (props.match.params.id) {
-        case 'spring':
-          dataSeason[0].checked = true;
+        case 'trai-cay':
+          dataCategory[0].checked = true;
           break;
-        case 'summer':
-          dataSeason[1].checked = true;
+        case 'rau':
+          dataCategory[1].checked = true;
           break;
-        case 'fall':
-          dataSeason[2].checked = true;
-          break;
-        case 'winter':
-          dataSeason[3].checked = true;
+        case 'cu':
+          dataCategory[2].checked = true;
           break;
         default:
           break;
       }
-      setDefaultSeason(props.match.params.id);
+      setDefaultCategory(props.match.params.id);
+      if (dataFarmHarvest === null) {
+        loadDataFarmHarvest();
+      }
     }
-  }, [props.match.params.id, defaultSeason]);
+  }, [props.match.params.id, defaultCategory, dataFarmHarvest]);
   return (
     <>
       <div className="section section">
@@ -146,43 +182,6 @@ export default function HavestBody(props) {
             <Col md="3">
               <Card className="card-refine">
                 <div aria-expanded={true} aria-multiselectable={true} className="panel-group" id="accordion">
-                  <CardHeader className="card-collapse" id="seasonGear" role="tab">
-                    <h5 className="mb-0 panel-title">
-                      <a
-                        href="#pablo"
-                        aria-expanded={season}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setSeason(!season);
-                        }}
-                        style={{ fontWeight: 'bold' }}
-                      >
-                        Season
-                      </a>
-                    </h5>
-                  </CardHeader>
-                  <Collapse isOpen={true}>
-                    <CardBody>
-                      {dataSeason.map((ele, index) => {
-                        return (
-                          <FormGroup check>
-                            <Label check style={{ fontWeight: 'bolder' }}>
-                              <Input
-                                checked={ele.checked}
-                                defaultValue=""
-                                type="checkbox"
-                                onClick={(e) => {
-                                  dataSeason[index].checked = e.checked;
-                                  setSeason(!season);
-                                }}
-                              />
-                              {ele.name} <span className="form-check-sign" />
-                            </Label>
-                          </FormGroup>
-                        );
-                      })}
-                    </CardBody>
-                  </Collapse>
                   <CardHeader className="card-collapse" id="location" role="tab">
                     <h5 className="mb-0 panel-title">
                       <a
@@ -190,6 +189,7 @@ export default function HavestBody(props) {
                         href="#pablo"
                         onClick={(e) => {
                           e.preventDefault();
+                          loadDataFarmHarvest();
                           setLocation(!location);
                         }}
                         style={{ fontWeight: 'bold' }}
@@ -209,7 +209,7 @@ export default function HavestBody(props) {
                                 defaultValue=""
                                 type="checkbox"
                                 onClick={(e) => {
-                                  dataLocation[index].checked = e.checked;
+                                  dataLocation[index].checked = e.target.checked;
                                   setLocation(!location);
                                 }}
                               />
@@ -246,7 +246,7 @@ export default function HavestBody(props) {
                                 defaultValue=""
                                 type="checkbox"
                                 onClick={(e) => {
-                                  dataCategory[index].checked = e.checked;
+                                  dataCategory[index].checked = e.target.checked;
                                   setCategory(!category);
                                 }}
                               />
@@ -259,63 +259,73 @@ export default function HavestBody(props) {
                   </Collapse>
                 </div>
               </Card>
-              <Button className="btn-round" color="default" outline style={{ marginLeft: '80px' }}>
+              <Button className="btn-round" color="default" outline style={{ marginLeft: '80px' }} onClick={() => loadDataFarmHarvest()}>
                 Filter
               </Button>
               {/* end card */}
             </Col>
 
             {/* Havest List */}
-            <Col md="9">
-              {dataFarmHavest.map((ele) => {
-                return (
-                  <>
-                    <Row style={{ borderBottom: '2px groove black', marginBottom: '10px' }}>
-                      <Col md="9">
-                        <h4 style={{ fontWeight: 'bold' }}>{ele.name}</h4>
-                      </Col>
-                      <Col md="3">
-                        <a href={ele.src} className="mr-1 btn btn-link" style={{ fontWeight: 'bold', marginTop: '25px', marginLeft: '50px' }}>
-                          Xem thêm {'>>'}
-                        </a>
-                      </Col>
-                    </Row>
-                    <div className="products">
-                      <Row>
-                        {ele.havests.map((e) => {
-                          return (
-                            <Col md="4">
-                              <Card className="card-product card-plain-custom">
-                                <div className="card-image">
-                                  <a href={e.src}>
-                                    <img alt="..." src={e.image} />
-                                  </a>
-                                  <CardBody>
-                                    <div className="card-description">
-                                      <CardTitle tag="h5">
-                                        <a href={e.src} class="mr-1 btn btn-link">
-                                          {e.havestName}
-                                        </a>
-                                      </CardTitle>
-                                      <p className="card-description" style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
-                                        {e.description}
-                                      </p>
-                                    </div>
-                                    <h6 style={{ textAlign: 'right' }}>
-                                      Đã đặt <i className="fa fa-handshake-o" /> {e.ordered}
-                                    </h6>
-                                  </CardBody>
-                                </div>
-                              </Card>
-                            </Col>
-                          );
-                        })}
+            {dataFarmHarvest !== null ? (
+              <Col md="9">
+                {dataFarmHarvest?.map((ele) => {
+                  return (
+                    <>
+                      <Row style={{ borderBottom: '2px groove black', marginBottom: '10px' }}>
+                        <Col md="9">
+                          <h4 style={{ fontWeight: 'bold' }}>{ele.name}</h4>
+                        </Col>
+                        <Col md="3">
+                          <a href={ele.src} className="mr-1 btn btn-link" style={{ fontWeight: 'bold', marginTop: '25px', marginLeft: '50px' }}>
+                            Xem thêm {'>>'}
+                          </a>
+                        </Col>
                       </Row>
-                    </div>
-                  </>
-                );
-              })}
-            </Col>
+                      <div className="products">
+                        <Row>
+                          {ele?.harvest.map((e) => {
+                            return (
+                              <Col md="4">
+                                <Card className="card-product card-plain-custom">
+                                  <div className="card-image">
+                                    <a href={e.src}>
+                                      <img alt="..." src={e.image} />
+                                    </a>
+                                    <CardBody>
+                                      <div className="card-description">
+                                        <CardTitle tag="h5">
+                                          <a href={e.src} class="mr-1 btn btn-link">
+                                            {e.havestName}
+                                          </a>
+                                        </CardTitle>
+                                        <p
+                                          className="card-description"
+                                          style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}
+                                        >
+                                          {e.description}
+                                          <br />
+                                          <span className="text-danger" style={{ fontWeight: 'bold' }}>
+                                            {convertPrice(e.price)} vnđ/kg
+                                          </span>
+                                        </p>
+                                      </div>
+                                    </CardBody>
+                                  </div>
+                                </Card>
+                              </Col>
+                            );
+                          })}
+                        </Row>
+                      </div>
+                    </>
+                  );
+                })}
+              </Col>
+            ) : (
+              <div className="uil-reload-css reload-background" style={{ display: 'block', margin: 'auto' }}>
+                <div />
+              </div>
+            )}
           </Row>
         </Container>
       </div>

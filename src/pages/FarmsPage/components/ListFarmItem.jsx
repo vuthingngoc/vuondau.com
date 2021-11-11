@@ -2,17 +2,20 @@ import React from 'react';
 import { Container, CardBody, Col, Card, CardTitle, Row, Button } from 'reactstrap';
 
 export default function ListFarm(props) {
+
   const renderDataItem = () => {
     let items = props.items;
     let elems = [];
-    let imageErrorSource = require('assets/img/sections/farms/VuonRau.jpg').default;
-    elems = items.map((ele) => {
+    let imageErrorSource = require('assets/img/no_image.jpg').default;
+    elems = items.map((ele, index, arr) => {
       let elemUrl = `/farms/farmdetail/${ele.id}`
+      let displayItem = props.displayItem ? props.displayItem : arr.length;
       return (
+        index < displayItem &&
         <Col md="4">
           <Card className="card-product card-plain-custom">
             <div className="card-image">
-                <img alt="..." src={ele.image ? ele.image : imageErrorSource} />
+                <img alt="..." src={ele.src ? ele.src : imageErrorSource} />
               <CardBody>
                 <div className="card-description" style={{ textAlign: 'center' }}>
                   <CardTitle tag="h5">

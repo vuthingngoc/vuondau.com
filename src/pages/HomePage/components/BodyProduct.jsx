@@ -4,77 +4,6 @@ import { CardBody, CardTitle, Card, Col, Container, Row } from 'reactstrap';
 import { getDataByPath } from 'services/data.service';
 // import styled from 'styled-components';
 
-const dataProduct = [
-  {
-    productName: 'Cà chua',
-    image: 'https://bonmuaminimart.vn/upload/product/ca-chua-beef-4652_500x500.jpg',
-    originPrice: '50,000 vnđ/kg',
-    salePrice: '41,000 vnđ/kg',
-    src: '/product/productdetail/ca-chua',
-  },
-  {
-    productName: 'Dưa leo',
-    image: 'https://bonmuaminimart.vn/upload/product/dua-leo-9895_500x500.jpg',
-    originPrice: '20,000 vnđ',
-    salePrice: '15,000 vnđ/kg',
-    src: '/product/productdetail/ca-chua',
-  },
-  {
-    productName: 'Rau cải thìa',
-    image: 'https://bonmuaminimart.vn/upload/product/cai-thia-8501_500x500.jpg',
-    originPrice: '41,800 vnđ',
-    salePrice: '33,000 vnđ/kg',
-    src: '/product/productdetail/ca-chua',
-  },
-];
-
-const dataFruit = [
-  {
-    productName: 'Dưa hấu rằn',
-    image: 'https://bonmuaminimart.vn/upload/product/dua-hau-5860_500x500.jpg',
-    salePrice: '36,000 vnđ/kg',
-    src: '/product/productdetail/ca-chua',
-  },
-  {
-    productName: 'Ổi lê',
-    image: 'https://bonmuaminimart.vn/upload/product/oi-le-9781_500x500.jpg',
-    salePrice: '20,000 vnđ/kg',
-    src: '/product/productdetail/ca-chua',
-  },
-  {
-    productName: 'Chuối sứ',
-    image: 'https://bonmuaminimart.vn/upload/product/chuoi-su-3291_500x500.jpg',
-    salePrice: '30,000 vnđ/kg',
-    src: '/product/productdetail/ca-chua',
-  },
-];
-
-const dataHavest = [
-  {
-    havestName: 'Vụ cà chua Đà Lạt Mùa Đông',
-    ordered: 200,
-    image: 'https://kiemsat.1cdn.vn/2018/04/16/nho-11-2018.jpg',
-    description: 'Cà chua đà lạt vụ mùa đông',
-    src: '/harvests/harvestdetail/ca-chua-da-lat',
-  },
-  {
-    havestName: 'Vụ rau cải thảo đà lạt Mùa Đông',
-    ordered: 352,
-    image:
-      'https://images.unsplash.com/photo-1486328228599-85db4443971f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-    description: 'Rau cải thảo đà lạt vụ mùa đông',
-    src: '/harvests/harvestdetail/ca-chua-da-lat',
-  },
-  {
-    havestName: 'Vụ dâu Đà Lạt Mùa Đông',
-    ordered: 123,
-    image:
-      'https://images.unsplash.com/photo-1605056545110-c2ef2253aa8c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1120&q=80',
-    description: 'Dâu Đà Lạt mùa đông giá cực rẻ, ngọt ngon',
-    src: '/harvests/harvestdetail/ca-chua-da-lat',
-  },
-];
-
 const dataNew = [
   {
     title: 'Đi chợ online tăng mạnh trong những ngày giản cách',
@@ -92,25 +21,131 @@ const dataNew = [
 
 export default function BodyProduction() {
   const [dataHarvest, setDataHarvest] = useState(null);
+  const [dataHarvestTraiCay, setDataHarvestTraiCay] = useState(null);
+  const [dataHarvestRau, setDataHarvestRau] = useState(null);
+  const [dataHarvestCu, setDataHarvestCu] = useState(null);
+
+  const convertPrice = (price) => {
+    return new Intl.NumberFormat({ style: 'currency', currency: 'VND' }).format(price);
+  };
 
   async function loadDataHarvest() {
     let path = 'api/v1/harvest-sellings';
     const res = await getDataByPath(path);
-    console.log(res);
+    const tmpImg = 'https://giaoducthuydien.vn/wp-content/themes/consultix/images/no-image-found-360x250.png';
+    const traicayCategory = '0c62b9c6-10ac-465e-99c4-3dff07279c93';
+    const rauCategory = '408cb360-eccd-40c8-ae73-c8143994ce84';
+    const cuCategory = 'aae688f7-d8aa-4ef7-b42e-5c69d3a2fe27';
     if (res?.status === 200) {
       const data = res.data;
       const dataHarvestTmp = [];
-      data.forEach((element, index) => {
-        const harvest = {
-          harvestName: element.harvest.name,
-          description: element.harvest.description,
-          status: element.status,
-          image: dataHavest[index].image,
-          src: `/harvests/harvestdetail/${element.id}`,
-        };
-        dataHarvestTmp.push(harvest);
-      });
+      const dataHarvestTraiCayTmp = [];
+      const dataHarvestRauTmp = [];
+      const dataHarvestCuTmp = [];
+      for (const [index, ele] of data.entries()) {
+        if (index < 3) {
+          const harvest = {
+            harvestName: ele.harvest.name,
+            price: 0,
+            status: ele.status,
+            image: tmpImg,
+            src: `/harvests/harvestdetail/${ele.id}`,
+          };
+          const resImage = await getDataByPath(`api/v1/harvest-pictures/${ele.harvest.id}`);
+          if (resImage.status === 200) {
+            if (resImage.data[0]) {
+              harvest.image = resImage.data[0].src;
+            }
+          }
+          const resPrice = await getDataByPath(`api/v1/harvest-selling-prices/${ele.id}`);
+          if (resPrice.status === 200) {
+            if (resPrice.data[0]) {
+              harvest.price = resPrice.data[0].price;
+            }
+          }
+          dataHarvestTmp.push(harvest);
+        }
+
+        if (dataHarvestTraiCayTmp.length < 3) {
+          if (ele.harvest.product.product_type.id === traicayCategory) {
+            const harvest = {
+              harvestName: ele.harvest.name,
+              price: 0,
+              status: ele.status,
+              image: tmpImg,
+              src: `/harvests/harvestdetail/${ele.id}`,
+            };
+            const resImage = await getDataByPath(`api/v1/harvest-pictures/${ele.harvest.id}`);
+            if (resImage.status === 200) {
+              if (resImage.data[0]) {
+                harvest.image = resImage.data[0].src;
+              }
+            }
+            const resPrice = await getDataByPath(`api/v1/harvest-selling-prices/${ele.id}`);
+            if (resPrice.status === 200) {
+              if (resPrice.data[0]) {
+                harvest.price = resPrice.data[0].price;
+              }
+            }
+            dataHarvestTraiCayTmp.push(harvest);
+          }
+        }
+
+        if (dataHarvestCuTmp.length < 3) {
+          if (ele.harvest.product.product_type.id === cuCategory) {
+            const harvest = {
+              harvestName: ele.harvest.name,
+              price: 0,
+              status: ele.status,
+              image: tmpImg,
+              src: `/harvests/harvestdetail/${ele.id}`,
+            };
+            const resImage = await getDataByPath(`api/v1/harvest-pictures/${ele.harvest.id}`);
+            if (resImage.status === 200) {
+              if (resImage.data[0]) {
+                harvest.image = resImage.data[0].src;
+              }
+            }
+            const resPrice = await getDataByPath(`api/v1/harvest-selling-prices/${ele.id}`);
+            if (resPrice.status === 200) {
+              if (resPrice.data[0]) {
+                harvest.price = resPrice.data[0].price;
+              }
+            }
+            dataHarvestCuTmp.push(harvest);
+          }
+        }
+
+        if (dataHarvestRauTmp.length < 3) {
+          if (ele.harvest.product.product_type.id === rauCategory) {
+            const harvest = {
+              harvestName: ele.harvest.name,
+              price: 0,
+              status: ele.status,
+              image: tmpImg,
+              src: `/harvests/harvestdetail/${ele.id}`,
+            };
+            const resImage = await getDataByPath(`api/v1/harvest-pictures/${ele.harvest.id}`);
+            if (resImage.status === 200) {
+              if (resImage.data[0]) {
+                harvest.image = resImage.data[0].src;
+              }
+            }
+            const resPrice = await getDataByPath(`api/v1/harvest-selling-prices/${ele.id}`);
+            if (resPrice.status === 200) {
+              if (resPrice.data[0]) {
+                harvest.price = resPrice.data[0].price;
+              }
+            }
+            dataHarvestRauTmp.push(harvest);
+          }
+        }
+      }
+
       setDataHarvest(dataHarvestTmp);
+      setDataHarvestTraiCay(dataHarvestTraiCayTmp);
+      setDataHarvestCu(dataHarvestCuTmp);
+      setDataHarvestRau(dataHarvestRauTmp);
     }
   }
 
@@ -177,60 +212,15 @@ export default function BodyProduction() {
           <Container style={{ width: '70%', float: 'center' }}>
             <Col md="12">
               <Row style={{ borderBottom: '3px groove' }}>
-                <Col md="9">
+                <Col md="10">
                   <h4 className="section-title" style={{ fontWeight: 'bold' }}>
-                    Best Deal Today
+                    Nhiều người đặt
                   </h4>
                 </Col>
-                <Col md="3">
+                <Col md="2">
                   <h6 style={{ marginTop: '20px' }}>
-                    <a href="/production" className="mr-1 btn btn-link">
-                      More information &gt;&gt;
-                    </a>
-                  </h6>
-                </Col>
-              </Row>
-              <br />
-              <Row>
-                {dataProduct.map((ele) => {
-                  return (
-                    <Col md="4">
-                      <Card className="card-product card-plain-custom">
-                        <div className="card-image">
-                          <a href={ele.src}>
-                            <img alt="..." src={ele.image} />
-                          </a>
-                          <CardBody>
-                            <div className="card-description">
-                              <CardTitle tag="h5">
-                                <a href={ele.src} class="mr-1 btn btn-link">
-                                  {ele.productName}
-                                </a>
-                              </CardTitle>
-                            </div>
-                            <div className="price">
-                              <s className="mr-1">{ele.originPrice}</s>
-                              <span className="text-danger" style={{ fontWeight: 'bold' }}>
-                                {ele.salePrice}
-                              </span>
-                            </div>
-                          </CardBody>
-                        </div>
-                      </Card>
-                    </Col>
-                  );
-                })}
-              </Row>
-              <Row style={{ borderBottom: '3px groove' }}>
-                <Col md="9">
-                  <h4 className="section-title" style={{ fontWeight: 'bold' }}>
-                    Top Harvest Ordered
-                  </h4>
-                </Col>
-                <Col md="3">
-                  <h6 style={{ marginTop: '20px' }}>
-                    <a href="/harvests" className="mr-1 btn btn-link">
-                      More information &gt;&gt;
+                    <a href="/harvests/tat-ca" className="mr-1 btn btn-link">
+                      Xem thêm &gt;&gt;
                     </a>
                   </h6>
                 </Col>
@@ -252,9 +242,9 @@ export default function BodyProduction() {
                                   {ele.harvestName}
                                 </a>
                               </CardTitle>
-                              <p className="card-description" style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
-                                {ele.description}
-                              </p>
+                              <span className="text-danger" style={{ fontWeight: 'bold' }}>
+                                {convertPrice(ele.price)} vnđ/kg
+                              </span>
                             </div>
                             {/* <h6 style={{ textAlign: 'right' }}>
                               Đã đặt <i className="fa fa-handshake-o" /> {ele.ordered}
@@ -268,94 +258,157 @@ export default function BodyProduction() {
               </Row>
 
               <Row style={{ borderBottom: '3px groove' }}>
-                <Col md="9">
+                <Col md="10">
                   <h4 className="section-title" style={{ fontWeight: 'bold' }}>
-                    Vegetable
+                    Trái cây
                   </h4>
                 </Col>
-                <Col md="3">
+                <Col md="2">
                   <h6 style={{ marginTop: '20px' }}>
-                    <a href="/production#vegetable" className="mr-1 btn btn-link">
-                      More information &gt;&gt;
+                    <a href="/harvests/trai-cay" className="mr-1 btn btn-link">
+                      Xem thêm &gt;&gt;
                     </a>
                   </h6>
                 </Col>
               </Row>
               <br />
-              <Row>
-                {dataProduct.map((ele) => {
-                  return (
-                    <Col md="4">
-                      <Card className="card-product card-plain-custom">
-                        <div className="card-image">
-                          <a href={ele.src}>
-                            <img alt="..." src={ele.image} />
-                          </a>
-                          <CardBody>
-                            <div className="card-description">
-                              <CardTitle tag="h5">
-                                <a href={ele.src} class="mr-1 btn btn-link">
-                                  {ele.productName}
-                                </a>
-                              </CardTitle>
-                            </div>
-                            <div className="price">
-                              <span className="text-danger" style={{ fontWeight: 'bold' }}>
-                                {ele.salePrice}
-                              </span>
-                            </div>
-                          </CardBody>
-                        </div>
-                      </Card>
-                    </Col>
-                  );
-                })}
-              </Row>
+              {dataHarvestTraiCay !== null ? (
+                <Row>
+                  {dataHarvestTraiCay?.map((ele) => {
+                    return (
+                      <Col md="4">
+                        <Card className="card-product card-plain-custom">
+                          <div className="card-image">
+                            <a href={ele.src}>
+                              <img alt="..." src={ele.image} />
+                            </a>
+                            <CardBody>
+                              <div className="card-description">
+                                <CardTitle tag="h5">
+                                  <a href={ele.src} class="mr-1 btn btn-link">
+                                    {ele.harvestName}
+                                  </a>
+                                </CardTitle>
+                              </div>
+                              <div className="price">
+                                <span className="text-danger" style={{ fontWeight: 'bold' }}>
+                                  {convertPrice(ele.price)} vnđ/kg
+                                </span>
+                              </div>
+                            </CardBody>
+                          </div>
+                        </Card>
+                      </Col>
+                    );
+                  })}
+                </Row>
+              ) : (
+                <div className="uil-reload-css reload-background" style={{ display: 'block', margin: 'auto' }}>
+                  <div />
+                </div>
+              )}
 
               <Row style={{ borderBottom: '3px groove' }}>
-                <Col md="9">
+                <Col md="10">
                   <h4 className="section-title" style={{ fontWeight: 'bold' }}>
-                    Fruits
+                    Rau
                   </h4>
                 </Col>
-                <Col md="3">
+                <Col md="2">
                   <h6 style={{ marginTop: '20px' }}>
-                    <a href="/production#fruit" className="mr-1 btn btn-link">
-                      More information &gt;&gt;
+                    <a href="/harvests/rau" className="mr-1 btn btn-link">
+                      Xem thêm &gt;&gt;
                     </a>
                   </h6>
                 </Col>
               </Row>
               <br />
-              <Row>
-                {dataFruit.map((ele) => {
-                  return (
-                    <Col md="4">
-                      <Card className="card-product card-plain-custom">
-                        <div className="card-image">
-                          <a href={ele.src}>
-                            <img alt="..." src={ele.image} />
-                          </a>
-                          <CardBody>
-                            <div className="card-description">
-                              <CardTitle tag="h5">
-                                <a href={ele.src} class="mr-1 btn btn-link">
-                                  {ele.productName}
-                                </a>
-                              </CardTitle>
-                            </div>
-                            <div className="price">
-                              <span className="text-danger" style={{ fontWeight: 'bold' }}>
-                                {ele.salePrice}
-                              </span>
-                            </div>
-                          </CardBody>
-                        </div>
-                      </Card>
-                    </Col>
-                  );
-                })}
+              {dataHarvestRau !== null ? (
+                <Row>
+                  {dataHarvestRau?.map((ele) => {
+                    return (
+                      <Col md="4">
+                        <Card className="card-product card-plain-custom">
+                          <div className="card-image">
+                            <a href={ele.src}>
+                              <img alt="..." src={ele.image} />
+                            </a>
+                            <CardBody>
+                              <div className="card-description">
+                                <CardTitle tag="h5">
+                                  <a href={ele.src} class="mr-1 btn btn-link">
+                                    {ele.harvestName}
+                                  </a>
+                                </CardTitle>
+                              </div>
+                              <div className="price">
+                                <span className="text-danger" style={{ fontWeight: 'bold' }}>
+                                  {convertPrice(ele.price)} vnđ/kg
+                                </span>
+                              </div>
+                            </CardBody>
+                          </div>
+                        </Card>
+                      </Col>
+                    );
+                  })}
+                </Row>
+              ) : (
+                <div className="uil-reload-css reload-background" style={{ display: 'block', margin: 'auto' }}>
+                  <div />
+                </div>
+              )}
+
+              <Row style={{ borderBottom: '3px groove' }}>
+                <Col md="10">
+                  <h4 className="section-title" style={{ fontWeight: 'bold' }}>
+                    Củ
+                  </h4>
+                </Col>
+                <Col md="2">
+                  <h6 style={{ marginTop: '20px' }}>
+                    <a href="/harvests/cu" className="mr-1 btn btn-link">
+                      Xem thêm &gt;&gt;
+                    </a>
+                  </h6>
+                </Col>
               </Row>
+              <br />
+              {dataHarvest !== null ? (
+                <Row>
+                  {dataHarvestCu?.map((ele) => {
+                    return (
+                      <Col md="4">
+                        <Card className="card-product card-plain-custom">
+                          <div className="card-image">
+                            <a href={ele.src}>
+                              <img alt="..." src={ele.image} />
+                            </a>
+                            <CardBody>
+                              <div className="card-description">
+                                <CardTitle tag="h5">
+                                  <a href={ele.src} class="mr-1 btn btn-link">
+                                    {ele.harvestName}
+                                  </a>
+                                </CardTitle>
+                              </div>
+                              <div className="price">
+                                <span className="text-danger" style={{ fontWeight: 'bold' }}>
+                                  {convertPrice(ele.price)} vnđ/kg
+                                </span>
+                              </div>
+                            </CardBody>
+                          </div>
+                        </Card>
+                      </Col>
+                    );
+                  })}
+                </Row>
+              ) : (
+                <div className="uil-reload-css reload-background" style={{ display: 'block', margin: 'auto' }}>
+                  <div />
+                </div>
+              )}
             </Col>
           </Container>
           {/* <div style={{ paddingBottom: '2000px' }}>test</div> */}

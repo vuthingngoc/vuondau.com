@@ -1,52 +1,86 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import ColorNavbar from 'components/Navbars/ColorNavbarCustomize';
 import FooterBlack from 'components/Footers/FooterBlack';
 import FarmPageHeader from 'components/Headers/FarmPageHeader';
 import { Container, Row } from 'reactstrap';
 import ListFarm from './ListFarmItem';
-import { getDataByPath } from 'services/data.service';
+import { getItems, getItem } from 'services/data.service';
 
-export default function FarmByRegion(props) {
-  document.documentElement.classList.remove('nav-open');
-  React.useEffect(() => {
-    document.body.classList.add('register-page');
-    document.body.classList.add('full-screen');
-    window.scrollTo(0, 0);
-    document.body.scrollTop = 0;
+export default class FarmByRegion extends React.Component {
 
-    return function cleanup() {
-      document.body.classList.remove('register-page');
-      document.body.classList.remove('full-screen');
+  constructor(props) {
+    super(props);
+    this.state = {
+      isDataloaded: false,
+      data: [],
     };
-  });
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    if (data === null) {
-      loadData(props.match.params.id);
-    }
-  });
-
-  async function loadData(id) {
-    let url = "api/v1/farms";
-    const res = await getDataByPath(url);
-    if (res?.status === 200) {
-      setData(res.data);
-    }
   }
 
-  return (
-    <>
-      <ColorNavbar />
-      <FarmPageHeader />
-      <div className="section section-gray">
-          <Container>
-            <Row>
-              <ListFarm items={data !== null ? data : []} />
-            </Row>
-          </Container>
-        </div>
-      <FooterBlack />
-    </>
-  );
+  componentDidMount() {
+    this.loadData();
+  }
+
+  loadData() {
+    let url = "api/v1/farms";
+    let get_items = getItems(url);
+    Promise.all([get_items]).then(values => {
+      if (values[0]?.status === 200) {
+        let _temp = [];
+        let request$ = [];
+        for (let item of values[0].data) {
+          _temp.push(item)
+          request$.push(getItem("api/v1/farm-pictures", item.id))
+        }
+        Promise.all(request$).then(images => {
+          for (let i = 0; i < images.length; i++) {
+            let result = images[i].data;
+            if (result.length > 0) {
+              _temp[i]["src"] = result[0].src;
+              _temp[i]["alt"] = result[0].alt;
+            }
+          }
+          let _data = [];
+          switch(this.props.match.url) {
+            case "/farms/mien-bac": 
+              _data = _temp.filter(item => {
+                return item.area.name.toLowerCase().indexOf('bắc') > -1;
+              });
+              break;
+            case "/farms/mien-trung": 
+              _data = _temp.filter(item => {
+                return item.area.name.toLowerCase().indexOf('trung') > -1;
+              });
+              break;
+            case "/farms/mien-nam": 
+              _data = _temp.filter(item => {
+                return item.area.name.toLowerCase().indexOf('nam') > -1;
+              });
+              break;
+            default: break;
+          }
+          this.setState({
+            data: _data,
+          });
+        })
+      }
+    })
+  }
+
+  render() {
+    return (
+      <>
+        <ColorNavbar />
+        <FarmPageHeader />
+        <div className="section section-gray">
+            <Container>
+              <Row>
+                <ListFarm items={this.state.data} />
+              </Row>
+            </Container>
+          </div>
+        <FooterBlack />
+      </>
+    );
+  }
+  
 }

@@ -22,22 +22,12 @@ import jwtDecode from 'jwt-decode';
 
 const dataNavbar = [
   {
-    title: 'Category',
-    child: [
-      { name: 'All Productions', src: '/production' },
-      { name: 'Vegetable', src: '/production/vegetable' },
-      { name: 'Fruit', src: '/production/fruit' },
-      { name: 'Meat', src: '/production/meat' },
-      { name: 'Fish', src: '/production/fish' },
-    ],
-  },
-  {
     title: 'Harvests',
     child: [
-      { name: 'Spring', src: '/harvests/spring' },
-      { name: 'Summer', src: '/harvests/summer' },
-      { name: 'Fall', src: '/harvests/fall' },
-      { name: 'Winter', src: '/harvests/winter' },
+      { name: 'Tất cả', src: '/harvests/tat-ca' },
+      { name: 'Trái cây', src: '/harvests/trai-cay' },
+      { name: 'Rau', src: '/harvests/rau' },
+      { name: 'Củ', src: '/harvests/cu' },
     ],
   },
   {
@@ -74,6 +64,8 @@ function WhiteNavbar() {
   const [collapseOpen, setCollapseOpen] = React.useState(false);
   const [role, setRole] = useState(1);
   const { currentUser, logout } = useAuth();
+  const [fullname, setFullname] = useState(null);
+
   React.useEffect(() => {
     let headroom = new Headroom(document.getElementById('navbar-main'));
     // initialise
@@ -82,10 +74,14 @@ function WhiteNavbar() {
   React.useEffect(() => {
     if (localStorage) {
       if (localStorage.getItem('accessToken') !== null) {
-        const userRole = jwtDecode(localStorage.getItem('accessToken')).ROLE === '2' ? 2 : 1;
+        const jwtData = jwtDecode(localStorage.getItem('accessToken'));
+        const userRole = jwtData.ROLE === '2' ? 2 : 1;
         if (userRole === 2 && role !== userRole) {
           setRole(userRole);
         }
+        if (userRole === 2) {
+          setFullname('Admin');
+        } else setFullname(jwtData.FULLNAME);
       }
     }
   }, [role]);
@@ -162,16 +158,22 @@ function WhiteNavbar() {
                   </DropdownMenu>
                 </UncontrolledDropdown>
               )}
-              {currentUser !== null && localStorage.getItem('accessToken') !== null ? (
+              {currentUser !== null && localStorage.getItem('accessToken') !== null && fullname !== null ? (
                 <UncontrolledDropdown nav inNavbar>
                   <DropdownToggle color="default" caret nav>
-                    {currentUser.email}
+                    {fullname}
                   </DropdownToggle>
                   <DropdownMenu className="dropdown-danger" right>
                     <DropdownItem to="/profile" tag={NavLink}>
                       <i className="nc-icon nc-circle-10" />
                       Profile
                     </DropdownItem>
+                    {role !== 2 && (
+                      <DropdownItem to="/order" tag={NavLink}>
+                        <i className="nc-icon nc-paper" />
+                        Order
+                      </DropdownItem>
+                    )}
                     <DropdownItem
                       to="/login"
                       tag={Link}

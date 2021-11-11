@@ -1,15 +1,15 @@
 import FooterBlack from 'components/Footers/FooterBlack';
 import FarmPageHeader from 'components/Headers/FarmPageHeader';
-import ColorNavbar from 'components/Navbars/ColorNavbar';
+import ColorNavbar from 'components/Navbars/ColorNavbarCustomize';
 import React from 'react';
-import CreateProfileBody from './components/CreateProfileBody';
+import CustomerOrderBody from './components/CustomerOrderBody';
 
-export default function CreateProfilePage(props) {
+export default function CustomerOrder() {
   return (
     <>
       <ColorNavbar />
       <FarmPageHeader />
-      <CreateProfileBody {...props} />
+      <CustomerOrderBody />f
       <FooterBlack />
     </>
   );

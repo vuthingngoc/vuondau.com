@@ -3,14 +3,18 @@ import React from 'react';
 import { Container, Row } from 'reactstrap';
 import { Col } from 'react-bootstrap';
 import ListFarm from './ListFarmItem';
-import { getItems } from 'services/data.service';
+import { getItems, getItem } from 'services/data.service';
 
 export default class FarmDetailBody extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isDataloaded: false,
-      data: [],
+      data: {
+        northern: [],
+        central: [],
+        southern: []
+      },
     };
   }
 
@@ -38,7 +42,7 @@ export default class FarmDetailBody extends React.Component {
               </Col>
             </Row>
             <Row>
-              <ListFarm items={this.state.data} />
+              <ListFarm items={this.state.data.northern} displayItem={3} />
             </Row>
             <Row className="section-row">
               <Col md="9">
@@ -55,7 +59,7 @@ export default class FarmDetailBody extends React.Component {
               </Col>
             </Row>
             <Row>
-              <ListFarm items={this.state.data} />
+              <ListFarm items={this.state.data.central} displayItem={3} />
             </Row>
             <Row className="section-row">
               <Col md="9">
@@ -72,7 +76,7 @@ export default class FarmDetailBody extends React.Component {
               </Col>
             </Row>
             <Row>
-              <ListFarm items={this.state.data} />
+              <ListFarm items={this.state.data.southern} displayItem={3} />
             </Row>
           </Container>
         </div>
@@ -85,17 +89,39 @@ export default class FarmDetailBody extends React.Component {
     let get_items = getItems(url);
     Promise.all([get_items]).then(values => {
       if (values[0]?.status === 200) {
-        let _data = []
-        if(values[0].data.length > 3) {
-          _data.push(values[0].data[0]);
-          _data.push(values[0].data[1]);
-          _data.push(values[0].data[2]);
-        } else {
-          _data = values[0].data;
+        let _temp = [];
+        let request$ = [];
+        for (let item of values[0].data) {
+          _temp.push(item)
+          request$.push(getItem("api/v1/farm-pictures", item.id))
         }
-        this.setState({
-          data: _data,
-        });
+        Promise.all(request$).then(images => {
+          for (let i = 0; i < images.length; i++) {
+            let result = images[i].data;
+            if (result.length > 0) {
+              _temp[i]["src"] = result[0].src;
+              _temp[i]["alt"] = result[0].alt;
+            }
+          }
+          let _data = null;
+          let northern = _temp.filter(item => {
+            return item.area.name.toLowerCase().indexOf('bắc') > -1;
+          });
+          let central = _temp.filter(item => {
+            return item.area.name.toLowerCase().indexOf('trung') > -1;
+          });
+          let southern = _temp.filter(item => {
+            return item.area.name.toLowerCase().indexOf('nam') > -1;
+          });
+          _data = {
+            northern: northern,
+            central: central,
+            southern: southern
+          }
+          this.setState({
+            data: _data,
+          });
+        })
       }
     })
   }
