@@ -101,6 +101,7 @@ export default function CheckoutBody() {
         address: address,
         total_price: totalPrice,
       };
+      console.log(createOrder);
       const res = await createDataByPath('api/v1/orders', createOrder);
       console.log(res);
       if (res.status === 201) {
