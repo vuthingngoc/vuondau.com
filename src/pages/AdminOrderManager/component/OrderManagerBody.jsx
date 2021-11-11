@@ -55,6 +55,7 @@ export default class OrderManagerBody extends React.Component {
                     default: return '';
                 }
             case 'command':
+                let component = this;
                 let _menuProps = {
                     items: [],
                 };
@@ -63,28 +64,16 @@ export default class OrderManagerBody extends React.Component {
                         key: '0',
                         text: 'Hủy đơn',
                         onClick: () => {
-                            let approvedFarm = updateItem("api/v1/orders/status", item.id, { status: 0 });
-                            Promise.all([approvedFarm]).then(values => {
-                                if (values[0].status === 200 || values[0].status === 204) {
-                                    NotificationManager.success('Approved', 'Approved', 3000);
-                                    this.loadData();
-                                }
-                            })
+                            component.updateStatus(item.id, 2, "Success")
                         },
                     });
                 }
                 if (item.status !== 1) {
                     _menuProps.items.push({
                         key: '1',
-                        text: 'Đặt lại đơn',
+                        text: 'Đã đặt',
                         onClick: () => {
-                            let approvedFarm = updateItem("api/v1/orders/status", item.id, { status: 1 });
-                            Promise.all([approvedFarm]).then(values => {
-                                if (values[0].status === 200 || values[0].status === 204) {
-                                    NotificationManager.success('Approved', 'Approved', 3000);
-                                    this.loadData();
-                                }
-                            })
+                            component.updateStatus(item.id, 1, "Success");
                         },
                     });
                 }
@@ -93,13 +82,7 @@ export default class OrderManagerBody extends React.Component {
                         key: '2',
                         text: 'Đang giao',
                         onClick: () => {
-                            let approvedFarm = updateItem("api/v1/orders/status", item.id, { status: 2 });
-                            Promise.all([approvedFarm]).then(values => {
-                                if (values[0].status === 200 || values[0].status === 204) {
-                                    NotificationManager.success('Approved', 'Approved', 3000);
-                                    this.loadData();
-                                }
-                            })
+                            component.updateStatus(item.id, 2, "Success")
                         },
                     });
                 }
@@ -108,13 +91,7 @@ export default class OrderManagerBody extends React.Component {
                         key: '3',
                         text: 'Đã nhận',
                         onClick: () => {
-                            let approvedFarm = updateItem("api/v1/orders/status", item.id, { status: 3 });
-                            Promise.all([approvedFarm]).then(values => {
-                                if (values[0].status === 200 || values[0].status === 204) {
-                                    NotificationManager.success('Approved', 'Approved', 3000);
-                                    this.loadData();
-                                }
-                            })
+                            component.updateStatus(item.id, 3, "Approved")
                         },
                     });
                 }
@@ -129,6 +106,16 @@ export default class OrderManagerBody extends React.Component {
             default:
                 return item[column.fieldName];
         }
+    }
+
+    updateStatus(id ,status, message) {
+        let approvedFarm = updateItem("api/v1/orders/status", id, { status: status });
+        Promise.all([approvedFarm]).then(values => {
+            if (values[0].status === 200 || values[0].status === 204) {
+                NotificationManager.success(message, message, 3000);
+                this.loadData();
+            }
+        })
     }
 
     render() {
@@ -148,7 +135,7 @@ export default class OrderManagerBody extends React.Component {
                                 items={this.state.data}
                                 columns={columns}
                                 selectionMode={SelectionMode.none}
-                                onRenderItemColumn={this._onRenderItemColumn}
+                                onRenderItemColumn={(item, index, column) => this._onRenderItemColumn(item, index, column)}
                             ></DetailsList>
                         </Row>
                     </Container>

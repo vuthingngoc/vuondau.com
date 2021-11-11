@@ -6,6 +6,7 @@ import { Button, Card, CardTitle, Form, Input, Container, Row, Col, CardImg } fr
 
 import { useAuth } from 'contexts/AuthContext';
 import { useHistory } from 'react-router';
+import { NotificationManager } from 'react-notifications';
 
 export default function RegisterPage() {
   const history = useHistory();
@@ -57,7 +58,8 @@ export default function RegisterPage() {
                       register(email, password)
                         .then((response) => {
                           console.log(response);
-                          history.push('/home');
+                          NotificationManager.success('Server is busy now! Pleasy try againt', 'Server Error', 3000);
+                          history.push('/login');
                         })
                         .catch((error) => {
                           console.log(error.message);

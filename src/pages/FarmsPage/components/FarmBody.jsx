@@ -105,13 +105,13 @@ export default class FarmDetailBody extends React.Component {
           }
           let _data = null;
           let northern = _temp.filter(item => {
-            return item.area.name.toLowerCase().indexOf('bắc') > -1;
+            return item.area.name.toLowerCase().indexOf('bắc') > -1 && item.status === 1;
           });
           let central = _temp.filter(item => {
-            return item.area.name.toLowerCase().indexOf('trung') > -1;
+            return item.area.name.toLowerCase().indexOf('trung') > -1 && item.status === 1;
           });
           let southern = _temp.filter(item => {
-            return item.area.name.toLowerCase().indexOf('nam') > -1;
+            return item.area.name.toLowerCase().indexOf('nam') > -1 && item.status === 1;
           });
           _data = {
             northern: northern,

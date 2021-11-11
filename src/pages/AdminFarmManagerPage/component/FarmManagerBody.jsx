@@ -12,7 +12,32 @@ export default class FarmManagerBody extends React.Component {
     this.state = {
       isDataloaded: false,
       data: [],
+      topData: []
     };
+  }
+
+  commandBarfarItems = [
+    {
+      key: 'search',
+      text: '',
+      onRender: () => {
+        return <SearchBox className="search-box" placeholder="Search" 
+          onChange={(event, newValue) => { 
+            this.onSearchBoxChange(newValue)
+          }}
+        />;
+      },
+    },
+  ];
+
+  onSearchBoxChange(newValue) {
+    let _data = this.state.data;
+    _data = _data.filter(item => {
+      return item.name.indexOf(newValue) > -1 || item.address.indexOf(newValue) > -1 || item.farm_type.name.indexOf(newValue) > -1;
+    })
+    this.setState({
+      topData: _data
+    })
   }
 
   componentDidMount() {
@@ -29,6 +54,7 @@ export default class FarmManagerBody extends React.Component {
           this.setState({
             isDataloaded: true,
             data: _data,
+            topData: _data
           });
         }
       })
@@ -87,18 +113,21 @@ export default class FarmManagerBody extends React.Component {
               }}
             />
           }
-          <IconButton
-            iconProps={{ iconName: 'Delete' }}
-            onClick={() => {
-              let removeFarm = deleteItem("api/v1/farms", item.id);
-              Promise.all([removeFarm]).then(values => {
-                if (values[0].status === 200 || values[0].status === 204) {
-                  NotificationManager.success('Deleted', 'Deleted', 3000);
-                  this.loadData();
-                }
-              })
-            }}
-          />
+          {
+            item.status !== 0 &&
+            <IconButton
+              iconProps={{ iconName: 'Delete' }}
+              onClick={() => {
+                let removeFarm = deleteItem("api/v1/farms", item.id);
+                Promise.all([removeFarm]).then(values => {
+                  if (values[0].status === 200 || values[0].status === 204) {
+                    NotificationManager.success('Deleted', 'Deleted', 3000);
+                    this.loadData();
+                  }
+                })
+              }}
+            />
+          }
         </div>
       )
       default:
@@ -115,15 +144,15 @@ export default class FarmManagerBody extends React.Component {
               <br />
             </Row>
             <Row>
-              <CommandBar className="commandbar" items={commandBarItems} farItems={commandBarfarItems} />
+              <CommandBar className="commandbar" items={commandBarItems} farItems={this.commandBarfarItems} />
             </Row>
             <Row>
               <DetailsList
                 className="detail-list"
-                items={this.state.data}
+                items={this.state.topData}
                 columns={columns}
                 selectionMode={SelectionMode.none}
-                onRenderItemColumn={this._onRenderItemColumn}
+                onRenderItemColumn={(item, index, column) => this._onRenderItemColumn(item, index, column)}
               ></DetailsList>
             </Row>
           </Container>
@@ -188,12 +217,3 @@ const commandBarItems = [
   },
 ];
 
-const commandBarfarItems = [
-  {
-    key: 'search',
-    text: '',
-    onRender: () => {
-      return <SearchBox className="search-box" placeholder="Search" onSearch={(newValue) => console.log('value is ' + newValue)} disableAnimation />;
-    },
-  },
-];

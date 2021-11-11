@@ -43,17 +43,17 @@ export default class FarmByRegion extends React.Component {
           switch(this.props.match.url) {
             case "/farms/mien-bac": 
               _data = _temp.filter(item => {
-                return item.area.name.toLowerCase().indexOf('bắc') > -1;
+                return item.area.name.toLowerCase().indexOf('bắc') > -1 && item.status === 1;
               });
               break;
             case "/farms/mien-trung": 
               _data = _temp.filter(item => {
-                return item.area.name.toLowerCase().indexOf('trung') > -1;
+                return item.area.name.toLowerCase().indexOf('trung') > -1 && item.status === 1;
               });
               break;
             case "/farms/mien-nam": 
               _data = _temp.filter(item => {
-                return item.area.name.toLowerCase().indexOf('nam') > -1;
+                return item.area.name.toLowerCase().indexOf('nam') > -1 && item.status === 1;
               });
               break;
             default: break;

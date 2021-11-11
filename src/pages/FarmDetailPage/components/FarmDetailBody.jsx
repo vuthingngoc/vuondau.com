@@ -27,23 +27,18 @@ export default class FarmDetailBody extends React.Component {
   }
 
   loadData() {
-    let url = 'api/v1/farm-pictures';
+    let url = 'api/v1/farms';
     let id = this.props?.match?.params?.id;
     if (!this.state._util.isNullOrUndefined(id)) {
       let get_item = getItem(url, id);
       let get_havrest = getItem('api/v1/harvests', id);
-      Promise.all([get_item, get_havrest])
+      let get_picture = getItem('api/v1/farm-pictures', id);
+      Promise.all([get_item, get_havrest, get_picture])
         .then((values) => {
           if (values[0]?.status === 200) {
-            let _data = null;
-            for (let item of values[0].data) {
-              _data = _data ? _data : item["farm"];
-              _data["picture"] = _data["picture"] ? _data["picture"] : []
-              _data["picture"].push({
-                id: item["id"],
-                src: item["src"],
-                alt: item["alt"]
-              })
+            let _data = values[0].data;
+            if (values[2]?.status === 200) {
+              _data["picture"] = values[2].data
             }
             this.setState({
               data: _data
@@ -52,17 +47,23 @@ export default class FarmDetailBody extends React.Component {
           if (values[1].status === 200) {
             let request$ = [];
             for (let item of values[1].data) {
-              request$.push(getItem('api/v1/harvest-pictures', item["id"]));
+              request$.push(getItem('api/v1/harvests', item["id"]));
             }
-            Promise.all(request$).then(allHarvests => {
+            Promise.all(request$).then(async allHarvests => {
+              let harvests = [];
               let request$_2 = [];
               for (let i = 0; i < allHarvests.length; i++) {
-                request$_2.push(getItem('api/v1/harvest-sellings', allHarvests[i].data[0].harvest.id));
+                harvests.push(allHarvests[i].data);
+                request$_2.push([
+                  await getItem('api/v1/harvest-pictures', allHarvests[i].data.id),
+                  await getItem('api/v1/harvest-sellings', allHarvests[i].data.id)
+                ]);
 
               }
               Promise.all(request$_2).then(allHarvestSelling => {
                 let _harvest = [];
                 for (let i = 0; i < allHarvestSelling.length; i++) {
+                  
                   for (let hs of allHarvestSelling[i].data) {
                     let data = {
                       harvestId: hs.id,
@@ -188,7 +189,7 @@ export default class FarmDetailBody extends React.Component {
             <div className="app-section-title">Giới thiệu</div>
             <div className="app-section-content">
               <div className="app-content-middle">
-                <Image className="app-image-fit-contain" src={this.state.data?.picture[1] ? this.state.data?.picture[1].src : require('assets/img/no_image.jpg').default} />
+                <Image className="app-image-fit-contain" src={this.state.data?.picture[1] ? this.state.data?.picture[1].src : ( this.state.data?.picture[0] ? this.state.data?.picture[0].src : require('assets/img/no_image.jpg').default)} />
               </div>
               <div className="app-content-right" style={{ width: '35%' }}>
                 <div className="app-content-title">{this.state.data?.name}</div>
