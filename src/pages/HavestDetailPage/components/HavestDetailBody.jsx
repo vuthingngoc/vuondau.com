@@ -1,9 +1,11 @@
+import jwtDecode from 'jwt-decode';
 import React, { useEffect, useState } from 'react';
 import { ButtonGroup } from 'react-bootstrap';
 import { NotificationManager } from 'react-notifications';
 // import { Link } from 'react-router-dom';
 
 import { Badge, Button, Card, Media, Container, Row, Col, CardTitle } from 'reactstrap';
+import { createDataByPath } from 'services/data.service';
 import { getDataByPath } from 'services/data.service';
 
 export default function HavestDetailBody(props) {
@@ -21,32 +23,6 @@ export default function HavestDetailBody(props) {
     if (weight > 1) {
       setWeight(weight - 1);
     }
-  };
-
-  const addToCartHandle = () => {
-    const item = dataProduct;
-    item['weight'] = weight;
-    let dataCart = JSON.parse(localStorage.getItem('CART'));
-    if (dataCart === null) {
-      const array = [item];
-      localStorage.setItem('CART', JSON.stringify(array));
-    } else {
-      let checkAvaiableItem = false;
-      let pos = -1;
-      dataCart.forEach((e, index) => {
-        if (e.id === item.id) {
-          checkAvaiableItem = true;
-          pos = index;
-        }
-      });
-      if (checkAvaiableItem) {
-        dataCart[pos] = item;
-      } else {
-        dataCart.push(item);
-      }
-      localStorage.setItem('CART', JSON.stringify(dataCart));
-    }
-    NotificationManager.success('Add to Cart Success', 'Your item has been add to cart', 3000);
   };
 
   async function loadData(id) {
@@ -72,10 +48,10 @@ export default function HavestDetailBody(props) {
           dataHarvestTmp.image = resHarvestPic.data[0].src;
         }
       }
-      const resHarvestSelling = await getDataByPath(`api/v1/harvest-selling-prices/${data.id}`);
-      if (resHarvestSelling?.status === 200) {
-        if (resHarvestSelling.data[0]) {
-          dataHarvestTmp.price = resHarvestSelling.data[0].price;
+      const resHarvestSellingPrice = await getDataByPath(`api/v1/harvest-selling-prices/${data.id}`);
+      if (resHarvestSellingPrice?.status === 200) {
+        if (resHarvestSellingPrice.data[0]) {
+          dataHarvestTmp.price = resHarvestSellingPrice.data[0].price;
         }
       }
 
@@ -116,7 +92,7 @@ export default function HavestDetailBody(props) {
       setdataProduct(dataProductTmp);
 
       const tmpImg = 'https://giaoducthuydien.vn/wp-content/themes/consultix/images/no-image-found-360x250.png';
-      const resSimular = await getDataByPath(`api/v1/harvest-sellings?product-type-id=${data.harvest.product.product_type.id}`);
+      const resSimular = await getDataByPath(`api/v1/harvest-sellings`, '', `product-type-id=${data.harvest.product.product_type.id}`);
       const simularDataTmp = [];
       for (let e of resSimular.data) {
         if (simularDataTmp.length < 3) {
@@ -146,6 +122,33 @@ export default function HavestDetailBody(props) {
         }
       }
       setDataHarvestSimilar(simularDataTmp);
+    }
+  }
+
+  async function addItemToCart() {
+    let userID = '';
+    if (localStorage.getItem('accessToken') !== null && localStorage.getItem('accessToken') !== '') {
+      userID = jwtDecode(localStorage.getItem('accessToken')).ID;
+    }
+    const harvestSellingID = dataHarvest.id;
+    const price = dataHarvest.price;
+    const weightItem = weight;
+    if (userID !== '' && harvestSellingID !== '' && price !== 0 && weightItem > 0) {
+      const createData = {
+        customer_id: userID,
+        harvest_selling_id: harvestSellingID,
+        price: price,
+        quantity: weightItem,
+      };
+      console.log(createData);
+      const path = 'api/v1/productInCarts';
+      const res = await createDataByPath(path, createData);
+      console.log(res);
+      if (res?.status === 201) {
+        NotificationManager.success('Add Item Success', 'Your item has been add to cart', 3000);
+      } else {
+        NotificationManager.warning('Add Item Error', 'Server is busy now, pleasy try againt', 3000);
+      }
     }
   }
 
@@ -240,7 +243,7 @@ export default function HavestDetailBody(props) {
                             </Col>
                           </Row>
                           <Row>
-                            <Button className="btn-round" color="danger" onClick={addToCartHandle}>
+                            <Button className="btn-round" color="danger" onClick={() => addItemToCart()}>
                               Add to cart
                             </Button>
                           </Row>
@@ -299,7 +302,7 @@ export default function HavestDetailBody(props) {
                               >
                                 {ele.description}
                               </p>
-                              <span className="text-danger" style={{ fontWeight: 'bold' }}>
+                              <span className="text-danger text-right" style={{ fontWeight: 'bold', marginBottom: '10px' }}>
                                 {convertPrice(ele.price)} vnđ/kg
                               </span>
                             </Card>

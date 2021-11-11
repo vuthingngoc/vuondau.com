@@ -38,20 +38,18 @@ export default function LoginPage() {
 
   async function loginWithAccessToken(accessToken) {
     const res = await loginByPath('api/v1/login', accessToken);
-    console.log(res);
     if (res?.status === 200) {
       if (localStorage) {
         NotificationManager.success('Welcome', 'Login Success', 3000);
-        console.log('jwt', jwtDecode(res.data));
-        const role = jwtDecode(res.data).ROLE;
+        const role = jwtDecode(res.data.data).ROLE;
         setIsSubmitting(false);
         if (role === '2') {
-          localStorage.setItem('accessToken', res.data);
+          localStorage.setItem('accessToken', res.data.data);
           history.push('/admin/home');
         } else if (role === '3') {
           history.push('/newprofile');
         } else {
-          localStorage.setItem('accessToken', res.data);
+          localStorage.setItem('accessToken', res.data.data);
           history.push('/home');
         }
       }

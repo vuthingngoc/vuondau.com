@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { Link } from 'react-router-dom';
 import { Button, ButtonGroup, Table, Container, Row, Col } from 'reactstrap';
+import { deleteDataByPath } from 'services/data.service';
 import { updateDataByPath } from 'services/data.service';
 import { getDataByPath } from 'services/data.service';
 
@@ -41,6 +42,19 @@ export default function ShoppingCartBody() {
     }
   }
 
+  async function deleteItem(itemID, customerID) {
+    if (customerID !== '' && itemID !== '') {
+      const res = await deleteDataByPath(`api/v1/productInCarts/${itemID}`);
+      console.log(res);
+      if (res?.status === 204) {
+        loadData(customerID);
+        NotificationManager.success('Remove Item Success', 'Your item has been remove success', 3000);
+      } else {
+        NotificationManager.warning('Remove Item Failed', 'Something wrongs when remove', 3000);
+      }
+    }
+  }
+
   async function increateWeight(id) {
     let userID = '';
     if (localStorage.getItem('accessToken') !== null && localStorage.getItem('accessToken') !== '') {
@@ -68,14 +82,16 @@ export default function ShoppingCartBody() {
     tmpData.forEach((ele, i) => {
       if (ele.id === id) {
         index = i;
-        if (ele.weight > 1) {
+        if (ele.weight >= 0) {
           tmpData[i].weight -= 1;
-        } else if ((ele.weight = 1)) {
-          tmpData.splice(i, 1);
         }
       }
     });
-    await updateData(tmpData[index], userID);
+    if (tmpData[index].weight === 0) {
+      await deleteItem(tmpData[index].id, userID);
+    } else {
+      await updateData(tmpData[index], userID);
+    }
     calTotal();
   }
 
@@ -152,6 +168,9 @@ export default function ShoppingCartBody() {
                   <th className="text-right" style={{ fontWeight: 'bold' }}>
                     Total
                   </th>
+                  <th className="text-center" style={{ fontWeight: 'bold' }}>
+                    Action
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -187,10 +206,27 @@ export default function ShoppingCartBody() {
                             +
                           </Button>
                         </ButtonGroup>
+                        <br />
                       </td>
                       <td className="td-number">
                         {convertPrice(ele.salePrice * ele.weight)}
                         <small> vnđ</small>
+                      </td>
+                      <td className="text-right">
+                        <Button
+                          className="btn-link mr-1"
+                          color="danger"
+                          onClick={() => {
+                            let userID = '';
+                            if (localStorage.getItem('accessToken') !== null && localStorage.getItem('accessToken') !== '') {
+                              userID = jwtDecode(localStorage.getItem('accessToken')).ID;
+                            }
+                            deleteItem(ele.id, userID);
+                            calTotal();
+                          }}
+                        >
+                          Remove
+                        </Button>
                       </td>
                     </tr>
                   );
@@ -198,9 +234,10 @@ export default function ShoppingCartBody() {
                 <tr>
                   <td colSpan="2" />
                   <td />
+                  <td />
                   <td className="td-total">Total:</td>
                   <td className="td-total">
-                    {convertPrice(totalPrice)}
+                    {data?.length > 0 ? convertPrice(totalPrice) : 0}
                     <small> vnđ</small>
                   </td>
                 </tr>
