@@ -16,8 +16,8 @@ import HavestPage from 'pages/HavestPage';
 import HavestDetailPage from 'pages/HavestDetailPage';
 import AuthContextProvider from 'contexts/AuthContext';
 import FarmManagerPage from 'pages/AdminFarmManagerPage';
-import FarmByRegion from 'pages/FarmsPage/components/FarmByRegion';
-
+import FarmByRegion from 'pages/FarmsPage/components/FarmByRegion'
+import OrderManagerPage from './pages/AdminOrderManager/adminOrderManagerPage'
 import { initializeIcons } from '@fluentui/font-icons-mdl2';
 import ListAccountPage from 'pages/ListAccountPage';
 import EditAccountPage from 'pages/EditAccountPage';
@@ -64,6 +64,7 @@ function App() {
           <Route exact path="/admin/home" render={(props) => <HomePage {...props} />} />
           <Route exact path="/admin/farmManagement/:id" render={(props) => <FarmManagerDetail {...props} />} />
           <Route exact path="/admin/manageproduct" render={(props) => <ProductoManagerPage {...props} />} />
+          <Route exact path="/admin/manageorder" render={(props) => <OrderManagerPage {...props} />} />
           <Redirect to="/home" />
         </Switch>
       </BrowserRouter>
