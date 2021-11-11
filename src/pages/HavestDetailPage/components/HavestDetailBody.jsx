@@ -7,6 +7,7 @@ import { NotificationManager } from 'react-notifications';
 import { Badge, Button, Card, Media, Container, Row, Col, CardTitle } from 'reactstrap';
 import { createDataByPath } from 'services/data.service';
 import { getDataByPath } from 'services/data.service';
+import addToCartEvent from 'utils/addtocart';
 
 export default function HavestDetailBody(props) {
   const [dataHarvest, setDataHarvest] = useState(null);
@@ -140,12 +141,11 @@ export default function HavestDetailBody(props) {
         price: price,
         quantity: weightItem,
       };
-      console.log(createData);
       const path = 'api/v1/productInCarts';
       const res = await createDataByPath(path, createData);
-      console.log(res);
       if (res?.status === 201) {
         NotificationManager.success('Add Item Success', 'Your item has been add to cart', 3000);
+        addToCartEvent(dataFarm.farmName, dataHarvest.harvestName, dataProduct.productName, weightItem);
       } else {
         NotificationManager.warning('Add Item Error', 'Server is busy now, pleasy try againt', 3000);
       }

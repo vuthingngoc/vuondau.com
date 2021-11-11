@@ -16,7 +16,7 @@ import HavestPage from 'pages/HavestPage';
 import HavestDetailPage from 'pages/HavestDetailPage';
 import AuthContextProvider from 'contexts/AuthContext';
 import FarmManagerPage from 'pages/AdminFarmManagerPage';
-import FarmByRegion from 'pages/FarmsPage/components/FarmByRegion'
+import FarmByRegion from 'pages/FarmsPage/components/FarmByRegion';
 
 import { initializeIcons } from '@fluentui/font-icons-mdl2';
 import ListAccountPage from 'pages/ListAccountPage';
@@ -25,7 +25,7 @@ import { NotificationContainer } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import ProductPage from 'pages/ProductListPage';
 import HomePage from 'pages/AdminHomePage/homePage';
-import FarmManagerDetail from 'pages/AdminFarmManagerDetail/farmDetail'
+import FarmManagerDetail from 'pages/AdminFarmManagerDetail/farmDetail';
 import CheckoutPage from 'pages/CheckoutPage';
 import ProductoManagerPage from 'pages/ProductManagerPage';
 import AdminProductDetailPage from 'pages/AdminProductDetailPage';

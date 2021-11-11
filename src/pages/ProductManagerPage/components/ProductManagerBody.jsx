@@ -92,7 +92,7 @@ export default function ProductManagerBody() {
                               size="sm"
                               type="button"
                             >
-                              <i className="fa fa-user fa-2x" />
+                              <i className="fa fa-info-circle fa-2x" />
                             </Button>
                             <UncontrolledTooltip delay={0} placement="top" target="tooltip542628903">
                               View Product
