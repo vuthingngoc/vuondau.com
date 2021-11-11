@@ -16,21 +16,23 @@ export default function HomePageBody() {
     if (res.status === 200) {
       console.log(res.data);
       const tmpData = [];
-      res.data.forEach((ele) => {
-        const farm = {
-          id: ele.id,
-          farmName: ele.name,
-          farmType: ele.farm_type.name,
-          farm_type_id: ele.farm_type.id,
-          farmerName: ele.farmer.full_name,
-          farmer_id: ele.farmer.id,
-          area_id: ele.area.id,
-          address: ele.address,
-          description: ele.description,
-          status: ele.status,
-        };
-        tmpData.push(farm);
-      });
+      if(res.data.length > 0) {
+        res.data.forEach((ele) => {
+          const farm = {
+            id: ele.id,
+            farmName: ele.name,
+            farmType: ele.farm_type.name,
+            farm_type_id: ele.farm_type.id,
+            farmerName: ele.farmer.full_name,
+            farmer_id: ele.farmer.id,
+            area_id: ele.area.id,
+            address: ele.address,
+            description: ele.description,
+            status: ele.status,
+          };
+          tmpData.push(farm);
+        });
+      }
       setDataApproveFarm(tmpData);
     }
   }
@@ -100,7 +102,7 @@ export default function HomePageBody() {
             </div>
           </div>
         </a>
-        <a href="/#" class="app-appBlockLink" style={{ backgroundColor: '#DC392D' }}>
+        <a href="/admin/manageorder" class="app-appBlockLink" style={{ backgroundColor: '#DC392D' }}>
           <div className="app-appStatusDetail">
             <div className="app-appStatusText">Quản lý Hóa đơn</div>
             <div className="app-appStatusImg">

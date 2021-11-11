@@ -4,6 +4,7 @@ import { DetailsList, SelectionMode, IconButton, CommandBar, SearchBox } from 'o
 import { getItems, deleteItem } from 'services/data.service';
 import { NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
+import { updateItem } from 'services/data.service';
 
 export default class FarmManagerBody extends React.Component {
   constructor(props) {
@@ -76,8 +77,13 @@ export default class FarmManagerBody extends React.Component {
             <IconButton
               iconProps={{ iconName: 'Accept' }}
               onClick={() => {
-                NotificationManager.success('Approved', 'Approved', 3000);
-                this.loadData();
+                let approvedFarm = updateItem("api/v1/farms/update-status", item.id, { status: 1 });
+                Promise.all([approvedFarm]).then(values => {
+                  if (values[0].status === 200 || values[0].status === 204) {
+                    NotificationManager.success('Approved', 'Approved', 3000);
+                    this.loadData();
+                  }
+                })
               }}
             />
           }
