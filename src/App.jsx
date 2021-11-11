@@ -25,7 +25,7 @@ import { NotificationContainer } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import ProductPage from 'pages/ProductListPage';
 import HomePage from 'pages/AdminHomePage/homePage';
-import FarmManagerDetail from 'pages/AdminFarmManagerDetail/farmDetail'
+import FarmManagerDetail from 'pages/AdminFarmManagerDetail/farmDetail';
 import CheckoutPage from 'pages/CheckoutPage';
 import ProductoManagerPage from 'pages/ProductManagerPage';
 import AdminProductDetailPage from 'pages/AdminProductDetailPage';
