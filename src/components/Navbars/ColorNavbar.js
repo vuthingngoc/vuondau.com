@@ -76,7 +76,8 @@ function ColorNavbar() {
         if (userRole === 2 && role !== userRole) {
           setRole(userRole);
         }
-        setFullname(jwtData.FIRSTNAME);
+        console.log(jwtData);
+        setFullname(jwtData.FULLNAME);
       }
     }
   }, [role]);

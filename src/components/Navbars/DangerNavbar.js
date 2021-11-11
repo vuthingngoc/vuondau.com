@@ -81,7 +81,7 @@ function WhiteNavbar() {
         }
         if (userRole === 2) {
           setFullname('Admin');
-        } else setFullname(jwtData.FIRSTNAME);
+        } else setFullname(jwtData.FULLNAME);
       }
     }
   }, [role]);

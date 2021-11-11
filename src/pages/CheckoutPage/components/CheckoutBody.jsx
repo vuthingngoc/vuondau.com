@@ -5,6 +5,8 @@ import { Container, Input, Row, Col, Form, Button, CardBody, Label } from 'react
 import { Link } from 'react-router-dom';
 import { getDataByPath } from 'services/data.service';
 import jwtDecode from 'jwt-decode';
+import { createDataByPath } from 'services/data.service';
+import { NotificationManager } from 'react-notifications';
 
 const Step = styled.span`
   background-color: white;
@@ -43,11 +45,12 @@ export default function CheckoutBody() {
   const [fullname, setFullname] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
+  const [payment, setPayment] = useState(null);
+  const [paymentID, setPaymentID] = useState('');
 
   async function loadData(customerID) {
     const res = await getDataByPath(`api/v1/productInCarts/${customerID}`);
     const dataItem = [];
-    console.log(res);
     if (res.status === 200) {
       for (let ele of res.data) {
         let cartItemTmp = {
@@ -69,7 +72,46 @@ export default function CheckoutBody() {
       });
       setTotalPrice(total);
     }
+
+    const path = 'api/v1/payments';
+    const resPayment = await getDataByPath(path);
+    if (resPayment.status === 200) {
+      setPayment(resPayment.data);
+      if (resPayment.data[0]?.id) {
+        setPaymentID(resPayment.data[0].id);
+      }
+    }
+
     setDataCart(dataItem);
+  }
+
+  async function createOrder() {
+    let userInfo = '';
+    if (localStorage.getItem('accessToken') !== null && localStorage.getItem('accessToken') !== '') {
+      userInfo = jwtDecode(localStorage.getItem('accessToken'));
+    }
+    if (userInfo !== '') {
+      const createOrder = {
+        customer_id: userInfo.ID,
+        campaign_id: '',
+        payment_id: paymentID,
+        full_name: fullname,
+        message: '',
+        phone: phone,
+        address: address,
+        total_price: totalPrice,
+      };
+      const res = await createDataByPath('api/v1/orders', createOrder);
+      console.log(res);
+      if (res.status === 201) {
+        NotificationManager.success('Checkout Success', 'Your cart has been checkout success', 3000);
+        setStep(3);
+      } else {
+        NotificationManager.warning('Checkout Failed', 'Server is busy please try againt', 3000);
+      }
+    } else {
+      NotificationManager.warning('Login Session Invalid', 'Your login has been expired', 3000);
+    }
   }
 
   const convertPrice = (price) => {
@@ -219,22 +261,36 @@ export default function CheckoutBody() {
                 Chọn hình thức thanh toán
               </h3>
               <Col md="12" style={{ border: '1px solid black', borderRadius: '5px', padding: '10px', width: '100%' }}>
-                <div className="form-check-radio">
-                  <Label check style={{ color: 'black', fontWeight: 'bolder' }}>
-                    <Input defaultValue="option1" id="exampleRadios1" name="exampleRadios" type="radio" />
-                    Thanh toán tiền mặt khi nhận hàng <span className="form-check-sign" />
-                  </Label>
-                </div>
-                <div className="form-check-radio">
-                  <Label check style={{ color: 'black', fontWeight: 'bolder' }}>
-                    <Input defaultChecked defaultValue="option2" id="exampleRadios2" name="exampleRadios" type="radio" />
-                    Thanh toán chuyển khoản khi nhận hàng <span className="form-check-sign" />
-                  </Label>
-                </div>
+                {payment?.map((ele, index) => {
+                  return (
+                    <div className="form-check-radio">
+                      <Label check style={{ color: 'black', fontWeight: 'bolder' }}>
+                        <Input
+                          value={ele.id}
+                          id={index}
+                          name="exampleRadios"
+                          type="radio"
+                          defaultChecked={index === 0}
+                          onChange={(e) => {
+                            setPaymentID(e.target.value);
+                          }}
+                        />
+                        {ele.method} <span className="form-check-sign" />
+                      </Label>
+                    </div>
+                  );
+                })}
               </Col>
               <Row style={{ marginTop: '20px' }}>
                 <Col className="ml-auto mr-auto" md="6">
-                  <Button block className="btn-round" color="success" onClick={() => setStep(3)}>
+                  <Button
+                    block
+                    className="btn-round"
+                    color="success"
+                    onClick={() => {
+                      createOrder();
+                    }}
+                  >
                     Đặt hàng
                   </Button>
                 </Col>
